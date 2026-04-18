@@ -1,13 +1,41 @@
-<style>#inp-app-root /* ============================================================
-   掌心的它 · 开场配置菜单
-   
-   玩家打开作品后的第一画面。分 7 步引导玩家配置本局。
-   完成后生成 init 参数，传给 InPalmEngine 开始游戏。
-   
-   视觉风格与主控制台一致（默认暗黑监控风 noir）
-   ============================================================ */
-
+<style>
 #inp-app-root {
+  text-align: left;
+  box-sizing: border-box;
+}
+
+#inp-app-root input,
+#inp-app-root textarea,
+#inp-app-root select,
+#inp-app-root button {
+  all: unset;
+  box-sizing: border-box;
+  font-family: inherit;
+  color: inherit;
+}
+
+#inp-app-root input[type="text"],
+#inp-app-root input[type="number"],
+#inp-app-root textarea {
+  display: block;
+  cursor: text;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+#inp-app-root button {
+  cursor: pointer;
+  user-select: none;
+}
+
+#inp-app-root input[type="checkbox"],
+#inp-app-root input[type="radio"] {
+  cursor: pointer;
+  -webkit-appearance: auto;
+  appearance: auto;
+}
+
+#inp-app-root #in-palm-app {
   --bg-main: #0a0a0c;
   --bg-panel: #131317;
   --bg-card: #1a1a1f;
@@ -29,48 +57,64 @@
   --font-mono: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
   --radius-sm: 3px;
   --radius-md: 4px;
-}#inp-app-root * { box-sizing: border-box; margin: 0; padding: 0; }#inp-app-root {
+}
+
+#inp-app-root #in-palm-app * { box-sizing: border-box; margin: 0; padding: 0; }
+
+#inp-app-root #in-palm-app {
   background: var(--bg-main);
   color: var(--text-primary);
   font-family: var(--font-main);
   font-size: 14px;
   line-height: 1.6;
   padding: 20px;
-}#inp-app-root .wrapper {
+}
+
+#inp-app-root .wrapper {
   max-width: 720px;
   margin: 0 auto;
-}#inp-app-root /* ---------- 顶部标题 ---------- */
+}
 
 #inp-app-root .header {
   text-align: center;
   padding: 30px 20px 20px;
   border-bottom: 1px solid var(--border-subtle);
   margin-bottom: 20px;
-}#inp-app-root .title {
+}
+
+#inp-app-root .title {
   font-size: 22px;
   letter-spacing: 6px;
   color: var(--text-primary);
   margin-bottom: 6px;
   font-weight: 300;
-}#inp-app-root .subtitle {
+}
+
+#inp-app-root .subtitle {
   font-size: 11px;
   letter-spacing: 3px;
   color: var(--text-muted);
   text-transform: uppercase;
   font-family: var(--font-mono);
-}#inp-app-root /* ---------- 步骤指示器 ---------- */
+}
 
 #inp-app-root .steps-indicator {
   display: flex;
   justify-content: center;
   gap: 6px;
   margin-bottom: 24px;
-}#inp-app-root .step-dot {
+}
+
+#inp-app-root .step-dot {
   width: 24px;
   height: 2px;
   background: var(--border-subtle);
   transition: background 0.3s;
-}#inp-app-root .step-dot.done { background: var(--accent-info); }#inp-app-root .step-dot.current { background: var(--accent-primary); }#inp-app-root /* ---------- 步骤面板 ---------- */
+}
+
+#inp-app-root .step-dot.done { background: var(--accent-info); }
+
+#inp-app-root .step-dot.current { background: var(--accent-primary); }
 
 #inp-app-root .step-panel {
   background: var(--bg-panel);
@@ -78,64 +122,92 @@
   border-radius: var(--radius-md);
   padding: 24px;
   margin-bottom: 16px;
-}#inp-app-root .step-number {
+}
+
+#inp-app-root .step-number {
   font-family: var(--font-mono);
   font-size: 10px;
   color: var(--text-muted);
   letter-spacing: 2px;
   margin-bottom: 6px;
-}#inp-app-root .step-question {
+}
+
+#inp-app-root .step-question {
   font-size: 17px;
   color: var(--text-primary);
   margin-bottom: 8px;
   font-weight: 400;
-}#inp-app-root .step-hint {
+}
+
+#inp-app-root .step-hint {
   font-size: 12px;
   color: var(--text-secondary);
   margin-bottom: 18px;
   line-height: 1.7;
-}#inp-app-root /* ---------- 选项卡片 ---------- */
+}
 
 #inp-app-root .option-list {
   display: flex;
   flex-direction: column;
   gap: 8px;
-}#inp-app-root .option-card {
+}
+
+#inp-app-root .option-card {
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
   padding: 14px 16px;
   cursor: pointer;
   transition: all 0.15s;
-}#inp-app-root .option-card:hover {
+}
+
+#inp-app-root .option-card:hover {
   background: var(--bg-hover);
   border-color: var(--border-medium);
-}#inp-app-root .option-card.selected {
+}
+
+#inp-app-root .option-card.selected {
   background: var(--bg-active);
   border-color: var(--accent-info);
   box-shadow: inset 3px 0 0 var(--accent-info);
-}#inp-app-root .option-card.danger.selected {
+}
+
+#inp-app-root .option-card.danger.selected {
   border-color: var(--accent-primary);
   box-shadow: inset 3px 0 0 var(--accent-primary);
-}#inp-app-root .option-card.warning.selected {
+}
+
+#inp-app-root .option-card.warning.selected {
   border-color: var(--accent-warning);
   box-shadow: inset 3px 0 0 var(--accent-warning);
-}#inp-app-root .option-label {
+}
+
+#inp-app-root .option-label {
   font-size: 14px;
   color: var(--text-primary);
   margin-bottom: 3px;
   font-weight: 500;
-}#inp-app-root .option-desc {
+}
+
+#inp-app-root .option-desc {
   font-size: 11px;
   color: var(--text-secondary);
   line-height: 1.6;
-}#inp-app-root .option-card.selected .option-label { color: var(--accent-info); }#inp-app-root .option-card.danger.selected .option-label { color: var(--accent-danger); }#inp-app-root .option-card.warning.selected .option-label { color: var(--accent-warning); }#inp-app-root /* ---------- 多选标签（性格） ---------- */
+}
+
+#inp-app-root .option-card.selected .option-label { color: var(--accent-info); }
+
+#inp-app-root .option-card.danger.selected .option-label { color: var(--accent-danger); }
+
+#inp-app-root .option-card.warning.selected .option-label { color: var(--accent-warning); }
 
 #inp-app-root .tag-cloud {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-}#inp-app-root .tag-chip {
+}
+
+#inp-app-root .tag-chip {
   padding: 6px 12px;
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
@@ -145,19 +217,27 @@
   border-radius: var(--radius-sm);
   transition: all 0.15s;
   user-select: none;
-}#inp-app-root .tag-chip:hover {
+}
+
+#inp-app-root .tag-chip:hover {
   border-color: var(--border-medium);
   color: var(--text-primary);
-}#inp-app-root .tag-chip.selected {
+}
+
+#inp-app-root .tag-chip.selected {
   background: var(--bg-active);
   border-color: var(--accent-info);
   color: var(--accent-info);
-}#inp-app-root .tag-chip.selected::before { content: "✓ "; }#inp-app-root .tag-counter {
+}
+
+#inp-app-root .tag-chip.selected::before { content: "✓ "; }
+
+#inp-app-root .tag-counter {
   font-size: 11px;
   color: var(--text-muted);
   margin-top: 8px;
   font-family: var(--font-mono);
-}#inp-app-root /* ---------- 文本输入 ---------- */
+}
 
 #inp-app-root .text-input {
   width: 100%;
@@ -168,16 +248,20 @@
   font-family: var(--font-main);
   font-size: 14px;
   border-radius: var(--radius-sm);
-}#inp-app-root .text-input:focus {
+}
+
+#inp-app-root .text-input:focus {
   outline: none;
   border-color: var(--accent-info);
-}#inp-app-root /* ---------- 档位档级条（特殊样式） ---------- */
+}
 
 #inp-app-root .depth-scale {
   display: flex;
   gap: 4px;
   margin-bottom: 10px;
-}#inp-app-root .depth-level {
+}
+
+#inp-app-root .depth-level {
   flex: 1;
   padding: 16px 12px;
   background: var(--bg-card);
@@ -186,69 +270,125 @@
   text-align: center;
   cursor: pointer;
   transition: all 0.15s;
-}#inp-app-root .depth-level:hover {
+}
+
+#inp-app-root .depth-level:hover {
   border-color: var(--border-medium);
-}#inp-app-root .depth-level.selected {
+}
+
+#inp-app-root .depth-level.selected {
   background: var(--bg-active);
   border-color: var(--accent-warning);
-}#inp-app-root .depth-level-name {
+}
+
+#inp-app-root .depth-level-name {
   font-size: 13px;
   color: var(--text-primary);
   letter-spacing: 2px;
   margin-bottom: 3px;
   font-family: var(--font-mono);
-}#inp-app-root .depth-level.selected .depth-level-name {
+}
+
+#inp-app-root .depth-level.selected .depth-level-name {
   color: var(--accent-warning);
-}#inp-app-root .depth-level-note {
+}
+
+#inp-app-root .depth-level-note {
   font-size: 10px;
   color: var(--text-muted);
-}#inp-app-root /* ---------- 主题选择（视觉预览） ---------- */
+}
 
 #inp-app-root .theme-preview-row {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
-}#inp-app-root .theme-preview {
+}
+
+#inp-app-root .theme-preview {
   padding: 14px;
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-sm);
   cursor: pointer;
   text-align: center;
   transition: all 0.15s;
-}#inp-app-root .theme-preview:hover {
+}
+
+#inp-app-root .theme-preview:hover {
   border-color: var(--border-medium);
-}#inp-app-root .theme-preview.selected {
+}
+
+#inp-app-root .theme-preview.selected {
   border-color: var(--accent-info);
-}#inp-app-root .theme-preview.noir {
+}
+
+#inp-app-root .theme-preview.noir {
   background: #131317;
-}#inp-app-root .theme-preview.ornate {
+}
+
+#inp-app-root .theme-preview.ornate {
   background: #1e1618;
-}#inp-app-root .theme-preview.raw {
+}
+
+#inp-app-root .theme-preview.raw {
   background: #1a130e;
-}#inp-app-root .theme-preview-swatches {
+}
+
+#inp-app-root .theme-preview-swatches {
   display: flex;
   gap: 3px;
   justify-content: center;
   margin-bottom: 8px;
-}#inp-app-root .theme-swatch {
+}
+
+#inp-app-root .theme-swatch {
   width: 14px;
   height: 14px;
   border-radius: 2px;
-}#inp-app-root .theme-preview.noir .theme-swatch:nth-child(1) { background: #0a0a0c; }#inp-app-root .theme-preview.noir .theme-swatch:nth-child(2) { background: #7f77dd; }#inp-app-root .theme-preview.noir .theme-swatch:nth-child(3) { background: #e24b4a; }#inp-app-root .theme-preview.noir .theme-swatch:nth-child(4) { background: #d4d4dc; }#inp-app-root .theme-preview.ornate .theme-swatch:nth-child(1) { background: #161011; }#inp-app-root .theme-preview.ornate .theme-swatch:nth-child(2) { background: #c94545; }#inp-app-root .theme-preview.ornate .theme-swatch:nth-child(3) { background: #d4a04a; }#inp-app-root .theme-preview.ornate .theme-swatch:nth-child(4) { background: #e8d8cc; }#inp-app-root .theme-preview.raw .theme-swatch:nth-child(1) { background: #0f0a08; }#inp-app-root .theme-preview.raw .theme-swatch:nth-child(2) { background: #a84020; }#inp-app-root .theme-preview.raw .theme-swatch:nth-child(3) { background: #c57838; }#inp-app-root .theme-preview.raw .theme-swatch:nth-child(4) { background: #c8b095; }#inp-app-root .theme-name {
+}
+
+#inp-app-root .theme-preview.noir .theme-swatch:nth-child(1) { background: #0a0a0c; }
+
+#inp-app-root .theme-preview.noir .theme-swatch:nth-child(2) { background: #7f77dd; }
+
+#inp-app-root .theme-preview.noir .theme-swatch:nth-child(3) { background: #e24b4a; }
+
+#inp-app-root .theme-preview.noir .theme-swatch:nth-child(4) { background: #d4d4dc; }
+
+#inp-app-root .theme-preview.ornate .theme-swatch:nth-child(1) { background: #161011; }
+
+#inp-app-root .theme-preview.ornate .theme-swatch:nth-child(2) { background: #c94545; }
+
+#inp-app-root .theme-preview.ornate .theme-swatch:nth-child(3) { background: #d4a04a; }
+
+#inp-app-root .theme-preview.ornate .theme-swatch:nth-child(4) { background: #e8d8cc; }
+
+#inp-app-root .theme-preview.raw .theme-swatch:nth-child(1) { background: #0f0a08; }
+
+#inp-app-root .theme-preview.raw .theme-swatch:nth-child(2) { background: #a84020; }
+
+#inp-app-root .theme-preview.raw .theme-swatch:nth-child(3) { background: #c57838; }
+
+#inp-app-root .theme-preview.raw .theme-swatch:nth-child(4) { background: #c8b095; }
+
+#inp-app-root .theme-name {
   font-size: 12px;
   color: var(--text-primary);
   font-family: var(--font-mono);
   letter-spacing: 1px;
-}#inp-app-root .theme-preview.selected .theme-name {
+}
+
+#inp-app-root .theme-preview.selected .theme-name {
   color: var(--accent-info);
-}#inp-app-root /* ---------- 底部导航 ---------- */
+}
 
 #inp-app-root .nav-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 16px 0;
-}#inp-app-root .nav-btn {
+}
+
+#inp-app-root .nav-btn {
   padding: 8px 20px;
   background: transparent;
   border: 1px solid var(--border-medium);
@@ -259,34 +399,48 @@
   border-radius: var(--radius-sm);
   letter-spacing: 1px;
   transition: all 0.15s;
-}#inp-app-root .nav-btn:hover:not(:disabled) {
+}
+
+#inp-app-root .nav-btn:hover:not(:disabled) {
   background: var(--bg-card);
   color: var(--text-primary);
   border-color: var(--border-strong);
-}#inp-app-root .nav-btn:disabled {
+}
+
+#inp-app-root .nav-btn:disabled {
   opacity: 0.3;
   cursor: not-allowed;
-}#inp-app-root .nav-btn.primary {
+}
+
+#inp-app-root .nav-btn.primary {
   background: var(--bg-active);
   color: var(--accent-info);
   border-color: var(--accent-info);
-}#inp-app-root .nav-btn.primary:hover:not(:disabled) {
+}
+
+#inp-app-root .nav-btn.primary:hover:not(:disabled) {
   background: var(--accent-info);
   color: #fff;
-}#inp-app-root .nav-btn.final {
+}
+
+#inp-app-root .nav-btn.final {
   background: var(--accent-primary);
   color: #fff;
   border-color: var(--accent-primary);
   padding: 10px 28px;
   font-size: 14px;
-}#inp-app-root .nav-btn.final:hover:not(:disabled) {
+}
+
+#inp-app-root .nav-btn.final:hover:not(:disabled) {
   background: #c53938;
-}#inp-app-root .nav-step-label {
+}
+
+#inp-app-root .nav-step-label {
   font-size: 11px;
   color: var(--text-muted);
   font-family: var(--font-mono);
   letter-spacing: 2px;
-}#inp-app-root /* ---------- 最终确认界面 ---------- */
+}
 
 #inp-app-root .final-summary {
   background: var(--bg-card);
@@ -294,24 +448,36 @@
   border-radius: var(--radius-sm);
   padding: 16px 20px;
   margin-bottom: 16px;
-}#inp-app-root .summary-title {
+}
+
+#inp-app-root .summary-title {
   font-size: 11px;
   color: var(--text-muted);
   letter-spacing: 2px;
   margin-bottom: 12px;
   font-family: var(--font-mono);
-}#inp-app-root .summary-row {
+}
+
+#inp-app-root .summary-row {
   display: flex;
   padding: 5px 0;
   border-bottom: 1px solid var(--border-subtle);
   font-size: 13px;
-}#inp-app-root .summary-row:last-child { border: none; }#inp-app-root .summary-key {
+}
+
+#inp-app-root .summary-row:last-child { border: none; }
+
+#inp-app-root .summary-key {
   color: var(--text-secondary);
   min-width: 100px;
   flex-shrink: 0;
-}#inp-app-root .summary-value {
+}
+
+#inp-app-root .summary-value {
   color: var(--text-primary);
-}#inp-app-root .final-warning {
+}
+
+#inp-app-root .final-warning {
   padding: 14px 16px;
   background: var(--bg-card);
   border-left: 3px solid var(--accent-warning);
@@ -319,9 +485,11 @@
   color: var(--text-secondary);
   margin-bottom: 16px;
   line-height: 1.8;
-}#inp-app-root .final-warning strong {
+}
+
+#inp-app-root .final-warning strong {
   color: var(--accent-warning);
-}#inp-app-root /* ---------- 开场叙事预告 ---------- */
+}
 
 #inp-app-root .narrative-preview {
   display: none;
@@ -334,20 +502,14 @@
   color: var(--text-primary);
   line-height: 1.9;
   font-style: italic;
-}#inp-app-root .narrative-preview.visible {
+}
+
+#inp-app-root .narrative-preview.visible {
   display: block;
-}#inp-app-root /* ============================================================
-   掌心的它 · 主控制台 UI
-   
-   此文件为独立预览版本。在最终部署时：
-   - <style> 部分会被拆分成三套主题 CSS
-   - <script> 会去除模拟数据，换成连接真正的 InPalmEngine API
-   - 整个文件会嵌入到酒馆角色卡的首条消息 HTML 里
-   ============================================================ */
+}
 
-/* ---------- 根变量：主题通过切换根变量实现 ---------- */
-
-#inp-app-root, #inp-app-root .theme-noir {
+#inp-app-root #in-palm-app,
+#inp-app-root #in-palm-app .theme-noir {
   --bg-main: #0a0a0c;
   --bg-panel: #131317;
   --bg-card: #1a1a1f;
@@ -371,7 +533,9 @@
   --radius-md: 4px;
   --radius-lg: 6px;
   --scanline: rgba(255, 255, 255, 0.015);
-}#inp-app-root .theme-ornate {
+}
+
+#inp-app-root #in-palm-app .theme-ornate {
   --bg-main: #161011;
   --bg-panel: #1e1618;
   --bg-card: #2a1e21;
@@ -390,7 +554,9 @@
   --accent-shame: #c5607a;
   --font-display: Georgia, "Times New Roman", serif;
   --scanline: rgba(212, 160, 74, 0.015);
-}#inp-app-root .theme-raw {
+}
+
+#inp-app-root #in-palm-app .theme-raw {
   --bg-main: #0f0a08;
   --bg-panel: #1a130e;
   --bg-card: #251811;
@@ -409,20 +575,24 @@
   --accent-shame: #a55555;
   --font-display: "Courier New", monospace;
   --scanline: rgba(168, 64, 32, 0.02);
-}#inp-app-root /* ---------- 全局 ---------- */
+}
 
-#inp-app-root * { box-sizing: border-box; margin: 0; padding: 0; }#inp-app-root {
+#inp-app-root #in-palm-app * { box-sizing: border-box; margin: 0; padding: 0; }
+
+#inp-app-root #in-palm-app {
   background: var(--bg-main);
   color: var(--text-primary);
   font-family: var(--font-main);
   font-size: 13px;
   line-height: 1.5;
   padding: 16px;
-}#inp-app-root .console-root {
+}
+
+#inp-app-root .console-root {
   max-width: 920px;
   margin: 0 auto;
   position: relative;
-}#inp-app-root /* ---------- 顶栏 ---------- */
+}
 
 #inp-app-root .top-bar {
   display: flex;
@@ -433,7 +603,9 @@
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md) var(--radius-md) 0 0;
   border-bottom: none;
-}#inp-app-root .top-bar-left {
+}
+
+#inp-app-root .top-bar-left {
   display: flex;
   align-items: center;
   gap: 14px;
@@ -441,7 +613,9 @@
   font-size: 11px;
   letter-spacing: 1px;
   color: var(--text-secondary);
-}#inp-app-root .rec-dot {
+}
+
+#inp-app-root .rec-dot {
   display: inline-block;
   width: 8px;
   height: 8px;
@@ -451,15 +625,23 @@
 }@keyframes pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.3; }
-}#inp-app-root .top-bar-time {
+}
+
+#inp-app-root .top-bar-time {
   color: var(--text-primary);
-}#inp-app-root .top-bar-separator {
+}
+
+#inp-app-root .top-bar-separator {
   color: var(--border-medium);
-}#inp-app-root .top-bar-right {
+}
+
+#inp-app-root .top-bar-right {
   display: flex;
   align-items: center;
   gap: 6px;
-}#inp-app-root .icon-button {
+}
+
+#inp-app-root .icon-button {
   background: transparent;
   border: 1px solid var(--border-subtle);
   color: var(--text-secondary);
@@ -470,15 +652,19 @@
   cursor: pointer;
   border-radius: var(--radius-sm);
   transition: all 0.15s;
-}#inp-app-root .icon-button:hover {
+}
+
+#inp-app-root .icon-button:hover {
   border-color: var(--border-medium);
   color: var(--text-primary);
   background: var(--bg-card);
-}#inp-app-root .icon-button.active {
+}
+
+#inp-app-root .icon-button.active {
   background: var(--bg-active);
   color: var(--text-primary);
   border-color: var(--accent-info);
-}#inp-app-root /* ---------- 监控视图 ---------- */
+}
 
 #inp-app-root .monitor-frame {
   background: var(--bg-panel);
@@ -486,7 +672,9 @@
   border-top: none;
   border-bottom: none;
   padding: 12px;
-}#inp-app-root .monitor-screen {
+}
+
+#inp-app-root .monitor-screen {
   position: relative;
   background: #050506;
   border: 1px solid var(--border-medium);
@@ -494,7 +682,9 @@
   aspect-ratio: 16 / 9;
   overflow: hidden;
   font-family: var(--font-mono);
-}#inp-app-root .monitor-screen::before {
+}
+
+#inp-app-root .monitor-screen::before {
   content: "";
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
@@ -507,12 +697,16 @@
   );
   pointer-events: none;
   z-index: 2;
-}#inp-app-root .monitor-svg {
+}
+
+#inp-app-root .monitor-svg {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-}#inp-app-root .monitor-osd {
+}
+
+#inp-app-root .monitor-osd {
   position: absolute;
   padding: 6px 10px;
   font-size: 10px;
@@ -522,13 +716,27 @@
   z-index: 3;
   font-family: var(--font-mono);
   pointer-events: none;
-}#inp-app-root .osd-topleft { top: 0; left: 0; }#inp-app-root .osd-topright { top: 0; right: 0; text-align: right; }#inp-app-root .osd-bottomleft { bottom: 0; left: 0; }#inp-app-root .osd-bottomright { bottom: 0; right: 0; text-align: right; }#inp-app-root .osd-rec {
+}
+
+#inp-app-root .osd-topleft { top: 0; left: 0; }
+
+#inp-app-root .osd-topright { top: 0; right: 0; text-align: right; }
+
+#inp-app-root .osd-bottomleft { bottom: 0; left: 0; }
+
+#inp-app-root .osd-bottomright { bottom: 0; right: 0; text-align: right; }
+
+#inp-app-root .osd-rec {
   color: var(--accent-primary);
-}#inp-app-root .monitor-tabs {
+}
+
+#inp-app-root .monitor-tabs {
   display: flex;
   margin-top: 8px;
   gap: 4px;
-}#inp-app-root .monitor-tab {
+}
+
+#inp-app-root .monitor-tab {
   flex: 1;
   padding: 6px 8px;
   background: var(--bg-card);
@@ -541,14 +749,18 @@
   text-align: center;
   border-radius: var(--radius-sm);
   transition: all 0.15s;
-}#inp-app-root .monitor-tab:hover {
+}
+
+#inp-app-root .monitor-tab:hover {
   border-color: var(--border-medium);
   color: var(--text-secondary);
-}#inp-app-root .monitor-tab.active {
+}
+
+#inp-app-root .monitor-tab.active {
   background: var(--bg-active);
   border-color: var(--accent-info);
   color: var(--text-primary);
-}#inp-app-root /* ---------- 标签页操作区 ---------- */
+}
 
 #inp-app-root .tabs-bar {
   display: flex;
@@ -557,7 +769,9 @@
   border-bottom: 1px solid var(--border-medium);
   border-top: 1px solid var(--border-subtle);
   overflow-x: auto;
-}#inp-app-root .tab-button {
+}
+
+#inp-app-root .tab-button {
   padding: 10px 14px;
   background: transparent;
   border: none;
@@ -569,39 +783,59 @@
   white-space: nowrap;
   transition: all 0.15s;
   letter-spacing: 0.5px;
-}#inp-app-root .tab-button:hover {
+}
+
+#inp-app-root .tab-button:hover {
   background: var(--bg-card);
   color: var(--text-primary);
-}#inp-app-root .tab-button.active {
+}
+
+#inp-app-root .tab-button.active {
   background: var(--bg-active);
   color: var(--text-primary);
   box-shadow: inset 0 -2px 0 var(--accent-info);
-}#inp-app-root .tab-content {
+}
+
+#inp-app-root .tab-content {
   background: var(--bg-panel);
   border: 1px solid var(--border-subtle);
   border-top: none;
   padding: 14px;
   min-height: 240px;
-}#inp-app-root .tab-panel {
+}
+
+#inp-app-root .tab-panel {
   display: none;
-}#inp-app-root .tab-panel.active {
+}
+
+#inp-app-root .tab-panel.active {
   display: block;
-}#inp-app-root .tab-section {
+}
+
+#inp-app-root .tab-section {
   margin-bottom: 14px;
-}#inp-app-root .tab-section:last-child {
+}
+
+#inp-app-root .tab-section:last-child {
   margin-bottom: 0;
-}#inp-app-root .section-label {
+}
+
+#inp-app-root .section-label {
   font-size: 10px;
   letter-spacing: 1.5px;
   color: var(--text-muted);
   margin-bottom: 6px;
   text-transform: uppercase;
   font-family: var(--font-mono);
-}#inp-app-root .btn-grid {
+}
+
+#inp-app-root .btn-grid {
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
-}#inp-app-root .action-btn {
+}
+
+#inp-app-root .action-btn {
   padding: 6px 10px;
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
@@ -612,21 +846,39 @@
   border-radius: var(--radius-sm);
   transition: all 0.1s;
   white-space: nowrap;
-}#inp-app-root .action-btn:hover {
+}
+
+#inp-app-root .action-btn:hover {
   background: var(--bg-active);
   border-color: var(--border-medium);
-}#inp-app-root .action-btn:active {
+}
+
+#inp-app-root .action-btn:active {
   transform: scale(0.97);
-}#inp-app-root .action-btn:disabled {
+}
+
+#inp-app-root .action-btn:disabled {
   opacity: 0.35;
   cursor: not-allowed;
-}#inp-app-root .action-btn.danger { border-color: var(--accent-primary); color: var(--accent-danger); }#inp-app-root .action-btn.info { border-color: var(--accent-info); color: var(--accent-info); }#inp-app-root .action-btn.warning { border-color: var(--accent-warning); color: var(--accent-warning); }#inp-app-root .action-btn.shame { border-color: var(--accent-shame); color: var(--accent-shame); }#inp-app-root .action-btn.success { border-color: var(--accent-success); color: var(--accent-success); }#inp-app-root /* ---------- 自定义动作 ---------- */
+}
+
+#inp-app-root .action-btn.danger { border-color: var(--accent-primary); color: var(--accent-danger); }
+
+#inp-app-root .action-btn.info { border-color: var(--accent-info); color: var(--accent-info); }
+
+#inp-app-root .action-btn.warning { border-color: var(--accent-warning); color: var(--accent-warning); }
+
+#inp-app-root .action-btn.shame { border-color: var(--accent-shame); color: var(--accent-shame); }
+
+#inp-app-root .action-btn.success { border-color: var(--accent-success); color: var(--accent-success); }
 
 #inp-app-root .custom-input-area {
   display: flex;
   flex-direction: column;
   gap: 8px;
-}#inp-app-root .custom-textarea {
+}
+
+#inp-app-root .custom-textarea {
   width: 100%;
   min-height: 80px;
   padding: 8px 10px;
@@ -638,15 +890,22 @@
   line-height: 1.5;
   resize: vertical;
   border-radius: var(--radius-sm);
-}#inp-app-root .custom-textarea:focus {
+}
+
+#inp-app-root .custom-textarea:focus {
   outline: none;
   border-color: var(--accent-info);
-}#inp-app-root .custom-controls {
+}
+
+#inp-app-root .custom-controls {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
   align-items: center;
-}#inp-app-root .custom-select, #inp-app-root .custom-number {
+}
+
+#inp-app-root .custom-select,
+#inp-app-root .custom-number {
   padding: 5px 8px;
   background: var(--bg-main);
   border: 1px solid var(--border-subtle);
@@ -654,37 +913,54 @@
   font-family: var(--font-main);
   font-size: 12px;
   border-radius: var(--radius-sm);
-}#inp-app-root .custom-number { width: 70px; }#inp-app-root .custom-select:focus, #inp-app-root .custom-number:focus {
+}
+
+#inp-app-root .custom-number { width: 70px; }
+
+#inp-app-root .custom-select:focus,
+#inp-app-root .custom-number:focus {
   outline: none;
   border-color: var(--accent-info);
-}#inp-app-root .preset-item {
+}
+
+#inp-app-root .preset-item {
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-sm);
   padding: 8px 10px;
   margin-bottom: 6px;
   font-size: 11px;
-}#inp-app-root .preset-item-header {
+}
+
+#inp-app-root .preset-item-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 4px;
-}#inp-app-root .preset-name {
+}
+
+#inp-app-root .preset-name {
   color: var(--accent-info);
   font-weight: 500;
-}#inp-app-root .preset-category {
+}
+
+#inp-app-root .preset-category {
   font-size: 10px;
   color: var(--text-muted);
   font-family: var(--font-mono);
-}#inp-app-root .preset-desc {
+}
+
+#inp-app-root .preset-desc {
   color: var(--text-secondary);
   font-size: 11px;
   line-height: 1.4;
   margin-bottom: 6px;
-}#inp-app-root .preset-actions {
+}
+
+#inp-app-root .preset-actions {
   display: flex;
   gap: 4px;
-}#inp-app-root /* ---------- 右侧抽屉 ---------- */
+}
 
 #inp-app-root .drawer-overlay {
   display: none;
@@ -692,9 +968,13 @@
   inset: 0;
   background: rgba(0, 0, 0, 0.5);
   z-index: 9;
-}#inp-app-root .drawer-overlay.open {
+}
+
+#inp-app-root .drawer-overlay.open {
   display: block;
-}#inp-app-root .drawer {
+}
+
+#inp-app-root .drawer {
   display: none;
   position: absolute;
   top: 0;
@@ -705,9 +985,13 @@
   border-left: 1px solid var(--border-medium);
   z-index: 10;
   overflow-y: auto;
-}#inp-app-root .drawer.open {
+}
+
+#inp-app-root .drawer.open {
   display: block;
-}#inp-app-root .drawer-header {
+}
+
+#inp-app-root .drawer-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -717,13 +1001,17 @@
   position: sticky;
   top: 0;
   z-index: 1;
-}#inp-app-root .drawer-title {
+}
+
+#inp-app-root .drawer-title {
   font-size: 12px;
   letter-spacing: 1.5px;
   text-transform: uppercase;
   font-family: var(--font-mono);
   color: var(--text-secondary);
-}#inp-app-root .drawer-close {
+}
+
+#inp-app-root .drawer-close {
   background: transparent;
   border: 1px solid var(--border-subtle);
   color: var(--text-secondary);
@@ -731,22 +1019,30 @@
   font-size: 11px;
   cursor: pointer;
   border-radius: var(--radius-sm);
-}#inp-app-root .drawer-close:hover {
+}
+
+#inp-app-root .drawer-close:hover {
   color: var(--text-primary);
   border-color: var(--border-medium);
-}#inp-app-root .drawer-section {
+}
+
+#inp-app-root .drawer-section {
   padding: 14px;
   border-bottom: 1px solid var(--border-subtle);
-}#inp-app-root .drawer-section:last-child {
+}
+
+#inp-app-root .drawer-section:last-child {
   border-bottom: none;
-}#inp-app-root .drawer-section-title {
+}
+
+#inp-app-root .drawer-section-title {
   font-size: 10px;
   letter-spacing: 1.5px;
   color: var(--text-muted);
   margin-bottom: 10px;
   text-transform: uppercase;
   font-family: var(--font-mono);
-}#inp-app-root /* ---------- 状态条 ---------- */
+}
 
 #inp-app-root .stat-bar {
   display: flex;
@@ -754,35 +1050,53 @@
   align-items: center;
   font-size: 11px;
   margin: 5px 0;
-}#inp-app-root .stat-label {
+}
+
+#inp-app-root .stat-label {
   color: var(--text-secondary);
   min-width: 72px;
   font-family: var(--font-main);
-}#inp-app-root .stat-track {
+}
+
+#inp-app-root .stat-track {
   flex: 1;
   height: 4px;
   background: var(--bg-main);
   margin: 0 8px;
   border-radius: 2px;
   overflow: hidden;
-}#inp-app-root .stat-fill {
+}
+
+#inp-app-root .stat-fill {
   height: 100%;
   background: var(--accent-success);
   transition: width 0.4s, background 0.4s;
-}#inp-app-root .stat-fill.low { background: var(--accent-primary); }#inp-app-root .stat-fill.mid { background: var(--accent-warning); }#inp-app-root .stat-fill.high-warning { background: var(--accent-info); }#inp-app-root .stat-fill.shame { background: var(--accent-shame); }#inp-app-root .stat-value {
+}
+
+#inp-app-root .stat-fill.low { background: var(--accent-primary); }
+
+#inp-app-root .stat-fill.mid { background: var(--accent-warning); }
+
+#inp-app-root .stat-fill.high-warning { background: var(--accent-info); }
+
+#inp-app-root .stat-fill.shame { background: var(--accent-shame); }
+
+#inp-app-root .stat-value {
   min-width: 28px;
   text-align: right;
   color: var(--text-primary);
   font-family: var(--font-mono);
   font-size: 11px;
-}#inp-app-root /* ---------- 状态徽章（物理状态） ---------- */
+}
 
 #inp-app-root .badge-row {
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
   margin-top: 4px;
-}#inp-app-root .status-badge {
+}
+
+#inp-app-root .status-badge {
   padding: 2px 8px;
   font-size: 10px;
   background: var(--bg-card);
@@ -791,17 +1105,21 @@
   color: var(--text-muted);
   font-family: var(--font-mono);
   letter-spacing: 0.5px;
-}#inp-app-root .status-badge.active {
+}
+
+#inp-app-root .status-badge.active {
   background: var(--bg-active);
   border-color: var(--accent-info);
   color: var(--accent-info);
-}#inp-app-root /* ---------- 库存道具列表 ---------- */
+}
 
 #inp-app-root .toy-list {
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
-}#inp-app-root .toy-chip {
+}
+
+#inp-app-root .toy-chip {
   padding: 4px 10px;
   font-size: 11px;
   background: var(--bg-card);
@@ -809,41 +1127,69 @@
   border-radius: var(--radius-sm);
   cursor: pointer;
   transition: all 0.15s;
-}#inp-app-root .toy-chip:hover {
+}
+
+#inp-app-root .toy-chip:hover {
   border-color: var(--border-medium);
-}#inp-app-root .toy-chip.inventory {
+}
+
+#inp-app-root .toy-chip.inventory {
   color: var(--accent-warning);
   border-color: var(--accent-warning);
-}#inp-app-root .toy-chip.equipped {
+}
+
+#inp-app-root .toy-chip.equipped {
   background: var(--bg-active);
   border-color: var(--accent-info);
   color: var(--accent-info);
-}#inp-app-root .toy-chip.equipped::before {
+}
+
+#inp-app-root .toy-chip.equipped::before {
   content: "✓ ";
-}#inp-app-root .empty-state {
+}
+
+#inp-app-root .empty-state {
   font-size: 11px;
   color: var(--text-muted);
   font-style: italic;
   padding: 4px 0;
-}#inp-app-root /* ---------- 日志 ---------- */
+}
 
 #inp-app-root .log-area {
   max-height: 320px;
   overflow-y: auto;
   padding: 6px 0;
-}#inp-app-root .log-entry {
+}
+
+#inp-app-root .log-entry {
   display: flex;
   padding: 3px 0;
   font-size: 11px;
   font-family: var(--font-mono);
-}#inp-app-root .log-ts {
+}
+
+#inp-app-root .log-ts {
   color: var(--text-muted);
   margin-right: 10px;
   flex-shrink: 0;
   min-width: 60px;
-}#inp-app-root .log-text {
+}
+
+#inp-app-root .log-text {
   color: var(--text-secondary);
-}#inp-app-root .log-entry.system .log-text { color: var(--accent-success); }#inp-app-root .log-entry.risk .log-text { color: var(--accent-danger); }#inp-app-root .log-entry.milestone .log-text { color: var(--accent-info); }#inp-app-root .log-entry.toy .log-text { color: var(--accent-shame); }#inp-app-root .log-entry.dialogue .log-text { color: var(--accent-info); }#inp-app-root .log-entry.action .log-text { color: var(--text-primary); }#inp-app-root /* ---------- 对话模式提示条 ---------- */
+}
+
+#inp-app-root .log-entry.system .log-text { color: var(--accent-success); }
+
+#inp-app-root .log-entry.risk .log-text { color: var(--accent-danger); }
+
+#inp-app-root .log-entry.milestone .log-text { color: var(--accent-info); }
+
+#inp-app-root .log-entry.toy .log-text { color: var(--accent-shame); }
+
+#inp-app-root .log-entry.dialogue .log-text { color: var(--accent-info); }
+
+#inp-app-root .log-entry.action .log-text { color: var(--text-primary); }
 
 #inp-app-root .dialogue-bar {
   display: none;
@@ -852,9 +1198,15 @@
   border-left: 3px solid var(--accent-info);
   margin-bottom: 10px;
   font-size: 12px;
-}#inp-app-root .dialogue-bar.active { display: flex; justify-content: space-between; align-items: center; }#inp-app-root .dialogue-bar-content {
+}
+
+#inp-app-root .dialogue-bar.active { display: flex; justify-content: space-between; align-items: center; }
+
+#inp-app-root .dialogue-bar-content {
   color: var(--accent-info);
-}#inp-app-root .dialogue-bar-exit {
+}
+
+#inp-app-root .dialogue-bar-exit {
   padding: 4px 10px;
   background: transparent;
   border: 1px solid var(--accent-primary);
@@ -862,7 +1214,7 @@
   font-size: 11px;
   cursor: pointer;
   border-radius: var(--radius-sm);
-}#inp-app-root /* ---------- 里程碑横幅 ---------- */
+}
 
 #inp-app-root .milestone-banner {
   padding: 10px 14px;
@@ -875,7 +1227,7 @@
 }@keyframes fadeIn {
   from { opacity: 0; transform: translateY(-4px); }
   to { opacity: 1; transform: translateY(0); }
-}#inp-app-root /* ---------- 主题选择菜单 ---------- */
+}
 
 #inp-app-root .theme-menu {
   display: none;
@@ -888,7 +1240,11 @@
   padding: 6px;
   z-index: 20;
   min-width: 140px;
-}#inp-app-root .theme-menu.open { display: block; }#inp-app-root .theme-option {
+}
+
+#inp-app-root .theme-menu.open { display: block; }
+
+#inp-app-root .theme-option {
   padding: 6px 10px;
   font-size: 11px;
   color: var(--text-secondary);
@@ -896,13 +1252,17 @@
   border-radius: var(--radius-sm);
   font-family: var(--font-mono);
   letter-spacing: 0.5px;
-}#inp-app-root .theme-option:hover {
+}
+
+#inp-app-root .theme-option:hover {
   background: var(--bg-card);
   color: var(--text-primary);
-}#inp-app-root .theme-option.current {
+}
+
+#inp-app-root .theme-option.current {
   background: var(--bg-active);
   color: var(--accent-info);
-}#inp-app-root /* ---------- 调试响应区（可折叠） ---------- */
+}
 
 #inp-app-root .debug-panel {
   background: var(--bg-panel);
@@ -910,17 +1270,27 @@
   border-top: none;
   padding: 10px 14px;
   transition: padding 0.2s;
-}#inp-app-root .debug-panel.collapsed {
+}
+
+#inp-app-root .debug-panel.collapsed {
   padding: 6px 14px;
-}#inp-app-root .debug-panel-header {
+}
+
+#inp-app-root .debug-panel-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-}#inp-app-root .debug-panel.collapsed .debug-panel-header {
+}
+
+#inp-app-root .debug-panel.collapsed .debug-panel-header {
   margin: 0;
-}#inp-app-root .debug-panel:not(.collapsed) .debug-panel-header {
+}
+
+#inp-app-root .debug-panel:not(.collapsed) .debug-panel-header {
   margin-bottom: 8px;
-}#inp-app-root .debug-panel-title {
+}
+
+#inp-app-root .debug-panel-title {
   font-size: 10px;
   letter-spacing: 1.5px;
   text-transform: uppercase;
@@ -931,37 +1301,57 @@
   display: flex;
   align-items: center;
   gap: 8px;
-}#inp-app-root .debug-panel-title:hover {
+}
+
+#inp-app-root .debug-panel-title:hover {
   color: var(--text-secondary);
-}#inp-app-root .debug-caret {
+}
+
+#inp-app-root .debug-caret {
   display: inline-block;
   transition: transform 0.2s;
   font-size: 9px;
   color: var(--text-muted);
-}#inp-app-root .debug-panel:not(.collapsed) .debug-caret {
+}
+
+#inp-app-root .debug-panel:not(.collapsed) .debug-caret {
   transform: rotate(90deg);
-}#inp-app-root .debug-has-new {
+}
+
+#inp-app-root .debug-has-new {
   display: none;
   width: 6px;
   height: 6px;
   background: var(--accent-primary);
   border-radius: 50%;
   animation: pulse 2s ease-in-out infinite;
-}#inp-app-root .debug-panel.collapsed.has-new .debug-has-new {
+}
+
+#inp-app-root .debug-panel.collapsed.has-new .debug-has-new {
   display: inline-block;
-}#inp-app-root .debug-panel-body {
+}
+
+#inp-app-root .debug-panel-body {
   overflow: hidden;
   transition: max-height 0.25s, opacity 0.2s;
-}#inp-app-root .debug-panel.collapsed .debug-panel-body {
+}
+
+#inp-app-root .debug-panel.collapsed .debug-panel-body {
   max-height: 0;
   opacity: 0;
-}#inp-app-root .debug-panel:not(.collapsed) .debug-panel-body {
+}
+
+#inp-app-root .debug-panel:not(.collapsed) .debug-panel-body {
   max-height: 500px;
   opacity: 1;
-}#inp-app-root .debug-tabs {
+}
+
+#inp-app-root .debug-tabs {
   display: flex;
   gap: 4px;
-}#inp-app-root .debug-tab {
+}
+
+#inp-app-root .debug-tab {
   padding: 3px 8px;
   background: transparent;
   border: 1px solid var(--border-subtle);
@@ -970,14 +1360,20 @@
   font-family: var(--font-mono);
   cursor: pointer;
   border-radius: var(--radius-sm);
-}#inp-app-root .debug-tab:hover {
+}
+
+#inp-app-root .debug-tab:hover {
   color: var(--text-secondary);
   border-color: var(--border-medium);
-}#inp-app-root .debug-tab.active {
+}
+
+#inp-app-root .debug-tab.active {
   background: var(--bg-active);
   color: var(--accent-info);
   border-color: var(--accent-info);
-}#inp-app-root .debug-output {
+}
+
+#inp-app-root .debug-output {
   background: var(--bg-main);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-sm);
@@ -990,7 +1386,15 @@
   overflow-y: auto;
   white-space: pre-wrap;
   word-break: break-word;
-}#inp-app-root .debug-output .key { color: var(--accent-info); }#inp-app-root .debug-output .str { color: var(--accent-success); }#inp-app-root .debug-output .num { color: var(--accent-warning); }#inp-app-root .debug-output .prompt-text {
+}
+
+#inp-app-root .debug-output .key { color: var(--accent-info); }
+
+#inp-app-root .debug-output .str { color: var(--accent-success); }
+
+#inp-app-root .debug-output .num { color: var(--accent-warning); }
+
+#inp-app-root .debug-output .prompt-text {
   display: block;
   padding: 8px 10px;
   background: var(--bg-card);
@@ -1000,12 +1404,16 @@
   font-family: var(--font-main);
   font-size: 12px;
   line-height: 1.6;
-}#inp-app-root .debug-empty {
+}
+
+#inp-app-root .debug-empty {
   color: var(--text-muted);
   font-style: italic;
   font-family: var(--font-main);
   font-size: 11px;
-}#inp-app-root .debug-send-hint {
+}
+
+#inp-app-root .debug-send-hint {
   margin-top: 8px;
   padding: 8px 12px;
   background: var(--bg-card);
@@ -1013,9 +1421,11 @@
   font-size: 11px;
   color: var(--text-secondary);
   line-height: 1.6;
-}#inp-app-root .debug-send-hint strong {
+}
+
+#inp-app-root .debug-send-hint strong {
   color: var(--accent-warning);
-}#inp-app-root /* ---------- 底部：结束本局 ---------- */
+}
 
 #inp-app-root .bottom-actions {
   padding: 12px;
@@ -1027,11 +1437,15 @@
   justify-content: space-between;
   align-items: center;
   font-size: 11px;
-}#inp-app-root .engine-info {
+}
+
+#inp-app-root .engine-info {
   color: var(--text-muted);
   font-family: var(--font-mono);
   letter-spacing: 0.5px;
-}#inp-app-root .end-session-btn {
+}
+
+#inp-app-root .end-session-btn {
   padding: 6px 16px;
   background: transparent;
   border: 1px solid var(--accent-primary);
@@ -1040,17 +1454,23 @@
   cursor: pointer;
   border-radius: var(--radius-sm);
   font-family: var(--font-main);
-}#inp-app-root .end-session-btn:hover {
+}
+
+#inp-app-root .end-session-btn:hover {
   background: var(--accent-primary);
   color: #fff;
-}#inp-app-root .inp-stage { animation: inpStageFadeIn 0.4s; }@keyframes inpStageFadeIn {
+}
+
+#inp-app-root .inp-stage { animation: inpStageFadeIn 0.4s; }
+@keyframes inpStageFadeIn {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
-}</style>
+}
+</style>
 
 <div id="inp-app-root">
   <div id="inp-stage-opening" class="inp-stage">
-    <div class="wrapper">
+<div class="wrapper">
   
   <div class="header">
     <div class="title">掌心的它</div>
@@ -1069,9 +1489,9 @@
   </div>
   
 </div>
-  </div>
+</div>
   <div id="inp-stage-console" class="inp-stage" style="display:none;">
-    <div class="console-root theme-noir" id="console-root">
+<div class="console-root theme-noir" id="console-root">
 
   <!-- =============== 顶栏 =============== -->
   <div class="top-bar">
@@ -1402,7 +1822,7 @@
   </div>
 
 </div>
-  </div>
+</div>
 </div>
 
 <script>
@@ -2892,21 +3312,14 @@ init();
 
 <script>
 (function() {
-  // 扩展集成层：暴露 InPalmConsole 给 index.js
-  
   window.InPalmConsole = {
     init: function(options) {
       options = options || {};
-      
-      // 记住回调
       window.InPalmConsole._onActionPrompt = options.onActionPrompt || null;
       window.InPalmConsole._autoSend = options.autoSend !== false;
       window.InPalmConsole._defaultTheme = options.theme || 'theme-noir';
-      
-      console.log('[掌心的它] 控制台初始化，autoSend=' + window.InPalmConsole._autoSend);
+      console.log('[掌心的它] 控制台初始化完成');
     },
-    
-    // 引擎 packet 更新时调用这个，index.js 会接到 packet 去发 prompt
     notifyPacket: function(packet) {
       if (typeof window.InPalmConsole._onActionPrompt === 'function') {
         window.InPalmConsole._onActionPrompt(packet);
@@ -2914,20 +3327,15 @@ init();
     }
   };
   
-  // 覆盖 opening_menu.html 的 startGame 函数
   window.startGame = function() {
     if (typeof InPalmEngine !== 'undefined') {
       InPalmEngine.init(config);
     }
-    
     const openingStage = document.getElementById('inp-stage-opening');
     if (openingStage) openingStage.style.display = 'none';
-    
     const consoleStage = document.getElementById('inp-stage-console');
     if (consoleStage) {
       consoleStage.style.display = 'block';
-      
-      // 应用选择的主题
       const consoleRoot = document.getElementById('console-root');
       const theme = config.theme || window.InPalmConsole._defaultTheme;
       if (consoleRoot && theme) {
@@ -2937,20 +3345,15 @@ init();
           opt.classList.toggle('current', opt.dataset.theme === theme);
         });
       }
-      
       if (typeof refreshAll === 'function') refreshAll();
     }
   };
   
-  // 在引擎成功执行动作后，通知 index.js
-  // 方法：包装原引擎的 action / customAction / enterDialogue / visitScene / endSession
   if (window.InPalmEngine) {
     const engine = window.InPalmEngine;
-    
     ['action', 'customAction', 'enterDialogue', 'visitScene', 'executePreset', 'endSession'].forEach(methodName => {
       const original = engine[methodName];
       if (typeof original !== 'function') return;
-      
       engine[methodName] = function(...args) {
         const packet = original.apply(engine, args);
         if (packet && !packet.blocked && window.InPalmConsole._autoSend !== false) {
