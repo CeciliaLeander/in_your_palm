@@ -15,7 +15,7 @@ import { saveSettingsDebounced } from '../../../../script.js';
 
 const EXTENSION_NAME = 'in_your_palm';
 const EXTENSION_FOLDER_NAME = 'third-party/in_your_palm';
-const VERSION = '0.4.1';
+const VERSION = '0.4.2';
 
 // 默认设置
 const defaultSettings = {
