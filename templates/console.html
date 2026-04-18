@@ -1,41 +1,26 @@
 <style>
-#inp-app-root {
-  text-align: left;
-  box-sizing: border-box;
+/* ======================================================
+   Opening Menu Styles (Modal) - scoped to #inp-opening-root
+   ====================================================== */
+
+
+/* 模态窗的 opening root */
+#inp-opening-root {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  color: var(--text-primary);
+  background: var(--bg-main);
+  min-height: 100vh;
 }
 
-#inp-app-root input,
-#inp-app-root textarea,
-#inp-app-root select,
-#inp-app-root button {
-  all: unset;
-  box-sizing: border-box;
-  font-family: inherit;
-  color: inherit;
+#inp-opening-root .wrapper {
+  max-width: 720px;
+  margin: 0 auto;
 }
 
-#inp-app-root input[type="text"],
-#inp-app-root input[type="number"],
-#inp-app-root textarea {
-  display: block;
-  cursor: text;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-}
 
-#inp-app-root button {
-  cursor: pointer;
-  user-select: none;
-}
-
-#inp-app-root input[type="checkbox"],
-#inp-app-root input[type="radio"] {
-  cursor: pointer;
-  -webkit-appearance: auto;
-  appearance: auto;
-}
-
-#inp-app-root #in-palm-app {
+#inp-opening-root #in-palm-app {
   --bg-main: #0a0a0c;
   --bg-panel: #131317;
   --bg-card: #1a1a1f;
@@ -59,9 +44,9 @@
   --radius-md: 4px;
 }
 
-#inp-app-root #in-palm-app * { box-sizing: border-box; margin: 0; padding: 0; }
+#inp-opening-root #in-palm-app * { box-sizing: border-box; margin: 0; padding: 0; }
 
-#inp-app-root #in-palm-app {
+#inp-opening-root #in-palm-app {
   background: var(--bg-main);
   color: var(--text-primary);
   font-family: var(--font-main);
@@ -70,19 +55,19 @@
   padding: 20px;
 }
 
-#inp-app-root .wrapper {
+#inp-opening-root .wrapper {
   max-width: 720px;
   margin: 0 auto;
 }
 
-#inp-app-root .header {
+#inp-opening-root .header {
   text-align: center;
   padding: 30px 20px 20px;
   border-bottom: 1px solid var(--border-subtle);
   margin-bottom: 20px;
 }
 
-#inp-app-root .title {
+#inp-opening-root .title {
   font-size: 22px;
   letter-spacing: 6px;
   color: var(--text-primary);
@@ -90,7 +75,7 @@
   font-weight: 300;
 }
 
-#inp-app-root .subtitle {
+#inp-opening-root .subtitle {
   font-size: 11px;
   letter-spacing: 3px;
   color: var(--text-muted);
@@ -98,25 +83,25 @@
   font-family: var(--font-mono);
 }
 
-#inp-app-root .steps-indicator {
+#inp-opening-root .steps-indicator {
   display: flex;
   justify-content: center;
   gap: 6px;
   margin-bottom: 24px;
 }
 
-#inp-app-root .step-dot {
+#inp-opening-root .step-dot {
   width: 24px;
   height: 2px;
   background: var(--border-subtle);
   transition: background 0.3s;
 }
 
-#inp-app-root .step-dot.done { background: var(--accent-info); }
+#inp-opening-root .step-dot.done { background: var(--accent-info); }
 
-#inp-app-root .step-dot.current { background: var(--accent-primary); }
+#inp-opening-root .step-dot.current { background: var(--accent-primary); }
 
-#inp-app-root .step-panel {
+#inp-opening-root .step-panel {
   background: var(--bg-panel);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
@@ -124,7 +109,7 @@
   margin-bottom: 16px;
 }
 
-#inp-app-root .step-number {
+#inp-opening-root .step-number {
   font-family: var(--font-mono);
   font-size: 10px;
   color: var(--text-muted);
@@ -132,27 +117,27 @@
   margin-bottom: 6px;
 }
 
-#inp-app-root .step-question {
+#inp-opening-root .step-question {
   font-size: 17px;
   color: var(--text-primary);
   margin-bottom: 8px;
   font-weight: 400;
 }
 
-#inp-app-root .step-hint {
+#inp-opening-root .step-hint {
   font-size: 12px;
   color: var(--text-secondary);
   margin-bottom: 18px;
   line-height: 1.7;
 }
 
-#inp-app-root .option-list {
+#inp-opening-root .option-list {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-#inp-app-root .option-card {
+#inp-opening-root .option-card {
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
@@ -161,53 +146,53 @@
   transition: all 0.15s;
 }
 
-#inp-app-root .option-card:hover {
+#inp-opening-root .option-card:hover {
   background: var(--bg-hover);
   border-color: var(--border-medium);
 }
 
-#inp-app-root .option-card.selected {
+#inp-opening-root .option-card.selected {
   background: var(--bg-active);
   border-color: var(--accent-info);
   box-shadow: inset 3px 0 0 var(--accent-info);
 }
 
-#inp-app-root .option-card.danger.selected {
+#inp-opening-root .option-card.danger.selected {
   border-color: var(--accent-primary);
   box-shadow: inset 3px 0 0 var(--accent-primary);
 }
 
-#inp-app-root .option-card.warning.selected {
+#inp-opening-root .option-card.warning.selected {
   border-color: var(--accent-warning);
   box-shadow: inset 3px 0 0 var(--accent-warning);
 }
 
-#inp-app-root .option-label {
+#inp-opening-root .option-label {
   font-size: 14px;
   color: var(--text-primary);
   margin-bottom: 3px;
   font-weight: 500;
 }
 
-#inp-app-root .option-desc {
+#inp-opening-root .option-desc {
   font-size: 11px;
   color: var(--text-secondary);
   line-height: 1.6;
 }
 
-#inp-app-root .option-card.selected .option-label { color: var(--accent-info); }
+#inp-opening-root .option-card.selected .option-label { color: var(--accent-info); }
 
-#inp-app-root .option-card.danger.selected .option-label { color: var(--accent-danger); }
+#inp-opening-root .option-card.danger.selected .option-label { color: var(--accent-danger); }
 
-#inp-app-root .option-card.warning.selected .option-label { color: var(--accent-warning); }
+#inp-opening-root .option-card.warning.selected .option-label { color: var(--accent-warning); }
 
-#inp-app-root .tag-cloud {
+#inp-opening-root .tag-cloud {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
 }
 
-#inp-app-root .tag-chip {
+#inp-opening-root .tag-chip {
   padding: 6px 12px;
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
@@ -219,27 +204,27 @@
   user-select: none;
 }
 
-#inp-app-root .tag-chip:hover {
+#inp-opening-root .tag-chip:hover {
   border-color: var(--border-medium);
   color: var(--text-primary);
 }
 
-#inp-app-root .tag-chip.selected {
+#inp-opening-root .tag-chip.selected {
   background: var(--bg-active);
   border-color: var(--accent-info);
   color: var(--accent-info);
 }
 
-#inp-app-root .tag-chip.selected::before { content: "✓ "; }
+#inp-opening-root .tag-chip.selected::before { content: "✓ "; }
 
-#inp-app-root .tag-counter {
+#inp-opening-root .tag-counter {
   font-size: 11px;
   color: var(--text-muted);
   margin-top: 8px;
   font-family: var(--font-mono);
 }
 
-#inp-app-root .text-input {
+#inp-opening-root .text-input {
   width: 100%;
   padding: 10px 12px;
   background: var(--bg-card);
@@ -250,18 +235,18 @@
   border-radius: var(--radius-sm);
 }
 
-#inp-app-root .text-input:focus {
+#inp-opening-root .text-input:focus {
   outline: none;
   border-color: var(--accent-info);
 }
 
-#inp-app-root .depth-scale {
+#inp-opening-root .depth-scale {
   display: flex;
   gap: 4px;
   margin-bottom: 10px;
 }
 
-#inp-app-root .depth-level {
+#inp-opening-root .depth-level {
   flex: 1;
   padding: 16px 12px;
   background: var(--bg-card);
@@ -272,16 +257,16 @@
   transition: all 0.15s;
 }
 
-#inp-app-root .depth-level:hover {
+#inp-opening-root .depth-level:hover {
   border-color: var(--border-medium);
 }
 
-#inp-app-root .depth-level.selected {
+#inp-opening-root .depth-level.selected {
   background: var(--bg-active);
   border-color: var(--accent-warning);
 }
 
-#inp-app-root .depth-level-name {
+#inp-opening-root .depth-level-name {
   font-size: 13px;
   color: var(--text-primary);
   letter-spacing: 2px;
@@ -289,22 +274,22 @@
   font-family: var(--font-mono);
 }
 
-#inp-app-root .depth-level.selected .depth-level-name {
+#inp-opening-root .depth-level.selected .depth-level-name {
   color: var(--accent-warning);
 }
 
-#inp-app-root .depth-level-note {
+#inp-opening-root .depth-level-note {
   font-size: 10px;
   color: var(--text-muted);
 }
 
-#inp-app-root .theme-preview-row {
+#inp-opening-root .theme-preview-row {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
 }
 
-#inp-app-root .theme-preview {
+#inp-opening-root .theme-preview {
   padding: 14px;
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-sm);
@@ -313,82 +298,82 @@
   transition: all 0.15s;
 }
 
-#inp-app-root .theme-preview:hover {
+#inp-opening-root .theme-preview:hover {
   border-color: var(--border-medium);
 }
 
-#inp-app-root .theme-preview.selected {
+#inp-opening-root .theme-preview.selected {
   border-color: var(--accent-info);
 }
 
-#inp-app-root .theme-preview.noir {
+#inp-opening-root .theme-preview.noir {
   background: #131317;
 }
 
-#inp-app-root .theme-preview.ornate {
+#inp-opening-root .theme-preview.ornate {
   background: #1e1618;
 }
 
-#inp-app-root .theme-preview.raw {
+#inp-opening-root .theme-preview.raw {
   background: #1a130e;
 }
 
-#inp-app-root .theme-preview-swatches {
+#inp-opening-root .theme-preview-swatches {
   display: flex;
   gap: 3px;
   justify-content: center;
   margin-bottom: 8px;
 }
 
-#inp-app-root .theme-swatch {
+#inp-opening-root .theme-swatch {
   width: 14px;
   height: 14px;
   border-radius: 2px;
 }
 
-#inp-app-root .theme-preview.noir .theme-swatch:nth-child(1) { background: #0a0a0c; }
+#inp-opening-root .theme-preview.noir .theme-swatch:nth-child(1) { background: #0a0a0c; }
 
-#inp-app-root .theme-preview.noir .theme-swatch:nth-child(2) { background: #7f77dd; }
+#inp-opening-root .theme-preview.noir .theme-swatch:nth-child(2) { background: #7f77dd; }
 
-#inp-app-root .theme-preview.noir .theme-swatch:nth-child(3) { background: #e24b4a; }
+#inp-opening-root .theme-preview.noir .theme-swatch:nth-child(3) { background: #e24b4a; }
 
-#inp-app-root .theme-preview.noir .theme-swatch:nth-child(4) { background: #d4d4dc; }
+#inp-opening-root .theme-preview.noir .theme-swatch:nth-child(4) { background: #d4d4dc; }
 
-#inp-app-root .theme-preview.ornate .theme-swatch:nth-child(1) { background: #161011; }
+#inp-opening-root .theme-preview.ornate .theme-swatch:nth-child(1) { background: #161011; }
 
-#inp-app-root .theme-preview.ornate .theme-swatch:nth-child(2) { background: #c94545; }
+#inp-opening-root .theme-preview.ornate .theme-swatch:nth-child(2) { background: #c94545; }
 
-#inp-app-root .theme-preview.ornate .theme-swatch:nth-child(3) { background: #d4a04a; }
+#inp-opening-root .theme-preview.ornate .theme-swatch:nth-child(3) { background: #d4a04a; }
 
-#inp-app-root .theme-preview.ornate .theme-swatch:nth-child(4) { background: #e8d8cc; }
+#inp-opening-root .theme-preview.ornate .theme-swatch:nth-child(4) { background: #e8d8cc; }
 
-#inp-app-root .theme-preview.raw .theme-swatch:nth-child(1) { background: #0f0a08; }
+#inp-opening-root .theme-preview.raw .theme-swatch:nth-child(1) { background: #0f0a08; }
 
-#inp-app-root .theme-preview.raw .theme-swatch:nth-child(2) { background: #a84020; }
+#inp-opening-root .theme-preview.raw .theme-swatch:nth-child(2) { background: #a84020; }
 
-#inp-app-root .theme-preview.raw .theme-swatch:nth-child(3) { background: #c57838; }
+#inp-opening-root .theme-preview.raw .theme-swatch:nth-child(3) { background: #c57838; }
 
-#inp-app-root .theme-preview.raw .theme-swatch:nth-child(4) { background: #c8b095; }
+#inp-opening-root .theme-preview.raw .theme-swatch:nth-child(4) { background: #c8b095; }
 
-#inp-app-root .theme-name {
+#inp-opening-root .theme-name {
   font-size: 12px;
   color: var(--text-primary);
   font-family: var(--font-mono);
   letter-spacing: 1px;
 }
 
-#inp-app-root .theme-preview.selected .theme-name {
+#inp-opening-root .theme-preview.selected .theme-name {
   color: var(--accent-info);
 }
 
-#inp-app-root .nav-bar {
+#inp-opening-root .nav-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 16px 0;
 }
 
-#inp-app-root .nav-btn {
+#inp-opening-root .nav-btn {
   padding: 8px 20px;
   background: transparent;
   border: 1px solid var(--border-medium);
@@ -401,29 +386,29 @@
   transition: all 0.15s;
 }
 
-#inp-app-root .nav-btn:hover:not(:disabled) {
+#inp-opening-root .nav-btn:hover:not(:disabled) {
   background: var(--bg-card);
   color: var(--text-primary);
   border-color: var(--border-strong);
 }
 
-#inp-app-root .nav-btn:disabled {
+#inp-opening-root .nav-btn:disabled {
   opacity: 0.3;
   cursor: not-allowed;
 }
 
-#inp-app-root .nav-btn.primary {
+#inp-opening-root .nav-btn.primary {
   background: var(--bg-active);
   color: var(--accent-info);
   border-color: var(--accent-info);
 }
 
-#inp-app-root .nav-btn.primary:hover:not(:disabled) {
+#inp-opening-root .nav-btn.primary:hover:not(:disabled) {
   background: var(--accent-info);
   color: #fff;
 }
 
-#inp-app-root .nav-btn.final {
+#inp-opening-root .nav-btn.final {
   background: var(--accent-primary);
   color: #fff;
   border-color: var(--accent-primary);
@@ -431,18 +416,18 @@
   font-size: 14px;
 }
 
-#inp-app-root .nav-btn.final:hover:not(:disabled) {
+#inp-opening-root .nav-btn.final:hover:not(:disabled) {
   background: #c53938;
 }
 
-#inp-app-root .nav-step-label {
+#inp-opening-root .nav-step-label {
   font-size: 11px;
   color: var(--text-muted);
   font-family: var(--font-mono);
   letter-spacing: 2px;
 }
 
-#inp-app-root .final-summary {
+#inp-opening-root .final-summary {
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-sm);
@@ -450,7 +435,7 @@
   margin-bottom: 16px;
 }
 
-#inp-app-root .summary-title {
+#inp-opening-root .summary-title {
   font-size: 11px;
   color: var(--text-muted);
   letter-spacing: 2px;
@@ -458,26 +443,26 @@
   font-family: var(--font-mono);
 }
 
-#inp-app-root .summary-row {
+#inp-opening-root .summary-row {
   display: flex;
   padding: 5px 0;
   border-bottom: 1px solid var(--border-subtle);
   font-size: 13px;
 }
 
-#inp-app-root .summary-row:last-child { border: none; }
+#inp-opening-root .summary-row:last-child { border: none; }
 
-#inp-app-root .summary-key {
+#inp-opening-root .summary-key {
   color: var(--text-secondary);
   min-width: 100px;
   flex-shrink: 0;
 }
 
-#inp-app-root .summary-value {
+#inp-opening-root .summary-value {
   color: var(--text-primary);
 }
 
-#inp-app-root .final-warning {
+#inp-opening-root .final-warning {
   padding: 14px 16px;
   background: var(--bg-card);
   border-left: 3px solid var(--accent-warning);
@@ -487,11 +472,11 @@
   line-height: 1.8;
 }
 
-#inp-app-root .final-warning strong {
+#inp-opening-root .final-warning strong {
   color: var(--accent-warning);
 }
 
-#inp-app-root .narrative-preview {
+#inp-opening-root .narrative-preview {
   display: none;
   background: var(--bg-card);
   border-left: 3px solid var(--accent-info);
@@ -504,16 +489,100 @@
   font-style: italic;
 }
 
-#inp-app-root .narrative-preview.visible {
+#inp-opening-root .narrative-preview.visible {
   display: block;
 }
 
-#inp-app-root #in-palm-app,
-#inp-app-root #in-palm-app .theme-noir {
+/* ======================================================
+   Drawer Console Styles - scoped to #inp-drawer
+   ====================================================== */
+
+
+/* ==== 抽屉框架 ==== */
+
+/* 收起时的小标签（屏幕右边缘） */
+#inp-drawer-tab {
+  position: fixed;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  background: #1a1a1f;
+  border: 1px solid #3a3a45;
+  border-right: none;
+  border-radius: 8px 0 0 8px;
+  padding: 14px 8px;
+  cursor: pointer;
+  z-index: 9998;
+  color: #e24b4a;
+  font-size: 20px;
+  writing-mode: vertical-rl;
+  letter-spacing: 2px;
+  user-select: none;
+  transition: all 0.2s;
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+#inp-drawer-tab:hover {
+  background: #242431;
+  border-color: #e24b4a;
+  padding-right: 12px;
+}
+
+#inp-drawer-tab .drawer-tab-icon {
+  font-size: 18px;
+  writing-mode: horizontal-tb;
+}
+
+#inp-drawer-tab .drawer-tab-label {
+  font-size: 11px;
+  color: #8a8a95;
+  font-family: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+  text-transform: uppercase;
+}
+
+/* 抽屉本体 */
+#inp-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(420px, 95vw);
+  background: #0a0a0c;
+  border-left: 1px solid #3a3a45;
+  z-index: 9999;
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  box-shadow: -8px 0 24px rgba(0, 0, 0, 0.5);
+  color: #d4d4dc;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+#inp-drawer.open {
+  transform: translateX(0);
+}
+
+/* 抽屉打开时，小标签就隐藏 */
+#inp-drawer.open ~ #inp-drawer-tab,
+body.inp-drawer-open #inp-drawer-tab {
+  display: none;
+}
+
+/* ==== 抽屉内部：CSS 变量与主题 ==== */
+
+#inp-drawer,
+#inp-drawer.theme-noir {
   --bg-main: #0a0a0c;
   --bg-panel: #131317;
   --bg-card: #1a1a1f;
   --bg-active: #242431;
+  --bg-hover: #1f1f26;
   --border-subtle: #2a2a33;
   --border-medium: #3a3a45;
   --border-strong: #4a4a58;
@@ -526,951 +595,704 @@
   --accent-success: #5dcaa5;
   --accent-danger: #f09595;
   --accent-shame: #d4537e;
-  --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-mono: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
-  --font-display: var(--font-main);
-  --radius-sm: 3px;
-  --radius-md: 4px;
-  --radius-lg: 6px;
-  --scanline: rgba(255, 255, 255, 0.015);
 }
 
-#inp-app-root #in-palm-app .theme-ornate {
-  --bg-main: #161011;
-  --bg-panel: #1e1618;
-  --bg-card: #2a1e21;
-  --bg-active: #3a2830;
-  --border-subtle: #4a3a3e;
-  --border-medium: #6a4a4e;
-  --border-strong: #8a6a6e;
-  --text-primary: #e8d8cc;
-  --text-secondary: #a89088;
-  --text-muted: #6a5a55;
-  --accent-primary: #c94545;
-  --accent-warning: #d4a04a;
-  --accent-info: #8a6db5;
-  --accent-success: #6ba585;
-  --accent-danger: #d88080;
-  --accent-shame: #c5607a;
-  --font-display: Georgia, "Times New Roman", serif;
-  --scanline: rgba(212, 160, 74, 0.015);
+#inp-drawer.theme-ornate {
+  --bg-main: #120806;
+  --bg-panel: #1d100c;
+  --bg-card: #2a1712;
+  --bg-active: #3a1f18;
+  --bg-hover: #24130f;
+  --border-subtle: #3a2118;
+  --border-medium: #5a3020;
+  --border-strong: #8a5030;
+  --text-primary: #e8d4b0;
+  --text-secondary: #a8906c;
+  --text-muted: #6a5840;
+  --accent-primary: #c08040;
+  --accent-warning: #e8a840;
+  --accent-info: #d09860;
+  --accent-success: #a0b870;
+  --accent-danger: #c86050;
+  --accent-shame: #a85878;
+  --font-mono: "Georgia", serif;
 }
 
-#inp-app-root #in-palm-app .theme-raw {
-  --bg-main: #0f0a08;
-  --bg-panel: #1a130e;
-  --bg-card: #251811;
-  --bg-active: #332018;
-  --border-subtle: #3a2818;
-  --border-medium: #553820;
-  --border-strong: #6b4828;
-  --text-primary: #c8b095;
-  --text-secondary: #8c7560;
-  --text-muted: #5a4a3a;
-  --accent-primary: #a84020;
-  --accent-warning: #c57838;
-  --accent-info: #706050;
-  --accent-success: #80704a;
-  --accent-danger: #bc5d3a;
-  --accent-shame: #a55555;
-  --font-display: "Courier New", monospace;
-  --scanline: rgba(168, 64, 32, 0.02);
+#inp-drawer.theme-raw {
+  --bg-main: #0c0a09;
+  --bg-panel: #181512;
+  --bg-card: #22201c;
+  --bg-active: #2e2a24;
+  --bg-hover: #1e1c18;
+  --border-subtle: #3a3530;
+  --border-medium: #55453a;
+  --border-strong: #80604a;
+  --text-primary: #d8cec0;
+  --text-secondary: #988874;
+  --text-muted: #5a4e3e;
+  --accent-primary: #d06030;
+  --accent-warning: #e88830;
+  --accent-info: #b08860;
+  --accent-success: #8ca058;
+  --accent-danger: #c04830;
+  --accent-shame: #986050;
+  --font-mono: "Courier New", monospace;
 }
 
-#inp-app-root #in-palm-app * { box-sizing: border-box; margin: 0; padding: 0; }
-
-#inp-app-root #in-palm-app {
+#inp-drawer {
   background: var(--bg-main);
   color: var(--text-primary);
-  font-family: var(--font-main);
-  font-size: 13px;
-  line-height: 1.5;
-  padding: 16px;
 }
 
-#inp-app-root .console-root {
-  max-width: 920px;
-  margin: 0 auto;
-  position: relative;
+/* ==== 防御性样式（对抗酒馆全局样式） ==== */
+
+#inp-drawer * {
+  box-sizing: border-box;
 }
 
-#inp-app-root .top-bar {
+#inp-drawer input,
+#inp-drawer textarea,
+#inp-drawer select,
+#inp-drawer button {
+  all: unset;
+  box-sizing: border-box;
+  font-family: inherit;
+  color: inherit;
+}
+
+#inp-drawer input[type="text"],
+#inp-drawer textarea {
+  display: block;
+  cursor: text;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+#inp-drawer button {
+  cursor: pointer;
+  user-select: none;
+}
+
+/* ==== 抽屉头部：标题 + 关闭 ==== */
+
+#inp-drawer .drawer-header {
+  padding: 12px 14px 10px;
+  border-bottom: 1px solid var(--border-subtle);
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
-  padding: 10px 14px;
-  background: var(--bg-panel);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md) var(--radius-md) 0 0;
-  border-bottom: none;
+  flex-shrink: 0;
 }
 
-#inp-app-root .top-bar-left {
+#inp-drawer .drawer-title {
   display: flex;
   align-items: center;
-  gap: 14px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 1px;
-  color: var(--text-secondary);
+  gap: 8px;
+  font-size: 14px;
+  color: var(--text-primary);
+  letter-spacing: 2px;
 }
 
-#inp-app-root .rec-dot {
-  display: inline-block;
+#inp-drawer .rec-dot {
   width: 8px;
   height: 8px;
-  background: var(--accent-primary);
   border-radius: 50%;
-  animation: pulse 2s ease-in-out infinite;
-}@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
+  background: var(--accent-primary);
+  box-shadow: 0 0 8px var(--accent-primary);
+  animation: recBlink 1.5s infinite;
 }
 
-#inp-app-root .top-bar-time {
-  color: var(--text-primary);
+@keyframes recBlink {
+  0%, 40% { opacity: 1; }
+  60%, 100% { opacity: 0.3; }
 }
 
-#inp-app-root .top-bar-separator {
-  color: var(--border-medium);
-}
-
-#inp-app-root .top-bar-right {
+#inp-drawer .drawer-actions {
   display: flex;
-  align-items: center;
   gap: 6px;
 }
 
-#inp-app-root .icon-button {
-  background: transparent;
-  border: 1px solid var(--border-subtle);
-  color: var(--text-secondary);
-  padding: 4px 10px;
+#inp-drawer .icon-btn {
   font-size: 11px;
-  font-family: var(--font-mono);
-  letter-spacing: 0.5px;
-  cursor: pointer;
-  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  padding: 4px 8px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 3px;
   transition: all 0.15s;
+  font-family: var(--font-mono);
 }
 
-#inp-app-root .icon-button:hover {
-  border-color: var(--border-medium);
-  color: var(--text-primary);
-  background: var(--bg-card);
-}
-
-#inp-app-root .icon-button.active {
-  background: var(--bg-active);
+#inp-drawer .icon-btn:hover {
   color: var(--text-primary);
   border-color: var(--accent-info);
 }
 
-#inp-app-root .monitor-frame {
-  background: var(--bg-panel);
+#inp-drawer .close-btn {
+  font-size: 18px;
+  color: var(--text-secondary);
+  padding: 2px 8px;
   border: 1px solid var(--border-subtle);
-  border-top: none;
-  border-bottom: none;
-  padding: 12px;
+  border-radius: 3px;
+  line-height: 1;
 }
 
-#inp-app-root .monitor-screen {
-  position: relative;
-  background: #050506;
-  border: 1px solid var(--border-medium);
-  border-radius: var(--radius-sm);
-  aspect-ratio: 16 / 9;
-  overflow: hidden;
-  font-family: var(--font-mono);
-}
-
-#inp-app-root .monitor-screen::before {
-  content: "";
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    var(--scanline),
-    var(--scanline) 1px,
-    transparent 1px,
-    transparent 3px
-  );
-  pointer-events: none;
-  z-index: 2;
-}
-
-#inp-app-root .monitor-svg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-
-#inp-app-root .monitor-osd {
-  position: absolute;
-  padding: 6px 10px;
-  font-size: 10px;
-  color: rgba(220, 220, 220, 0.5);
-  letter-spacing: 1px;
-  text-transform: lowercase;
-  z-index: 3;
-  font-family: var(--font-mono);
-  pointer-events: none;
-}
-
-#inp-app-root .osd-topleft { top: 0; left: 0; }
-
-#inp-app-root .osd-topright { top: 0; right: 0; text-align: right; }
-
-#inp-app-root .osd-bottomleft { bottom: 0; left: 0; }
-
-#inp-app-root .osd-bottomright { bottom: 0; right: 0; text-align: right; }
-
-#inp-app-root .osd-rec {
+#inp-drawer .close-btn:hover {
   color: var(--accent-primary);
+  border-color: var(--accent-primary);
 }
 
-#inp-app-root .monitor-tabs {
-  display: flex;
-  margin-top: 8px;
-  gap: 4px;
-}
+/* ==== 状态条：Day / 时间 / 阶段 / 关键数值 ==== */
 
-#inp-app-root .monitor-tab {
-  flex: 1;
-  padding: 6px 8px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  color: var(--text-muted);
-  font-size: 10px;
-  font-family: var(--font-mono);
-  letter-spacing: 1px;
-  cursor: pointer;
-  text-align: center;
-  border-radius: var(--radius-sm);
-  transition: all 0.15s;
-}
-
-#inp-app-root .monitor-tab:hover {
-  border-color: var(--border-medium);
-  color: var(--text-secondary);
-}
-
-#inp-app-root .monitor-tab.active {
-  background: var(--bg-active);
-  border-color: var(--accent-info);
-  color: var(--text-primary);
-}
-
-#inp-app-root .tabs-bar {
-  display: flex;
-  background: var(--bg-panel);
-  border: 1px solid var(--border-subtle);
-  border-bottom: 1px solid var(--border-medium);
-  border-top: 1px solid var(--border-subtle);
-  overflow-x: auto;
-}
-
-#inp-app-root .tab-button {
+#inp-drawer .status-bar {
   padding: 10px 14px;
-  background: transparent;
-  border: none;
-  border-right: 1px solid var(--border-subtle);
-  color: var(--text-secondary);
-  font-size: 12px;
-  font-family: var(--font-main);
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all 0.15s;
-  letter-spacing: 0.5px;
-}
-
-#inp-app-root .tab-button:hover {
-  background: var(--bg-card);
-  color: var(--text-primary);
-}
-
-#inp-app-root .tab-button.active {
-  background: var(--bg-active);
-  color: var(--text-primary);
-  box-shadow: inset 0 -2px 0 var(--accent-info);
-}
-
-#inp-app-root .tab-content {
+  border-bottom: 1px solid var(--border-subtle);
   background: var(--bg-panel);
-  border: 1px solid var(--border-subtle);
-  border-top: none;
-  padding: 14px;
-  min-height: 240px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  flex-shrink: 0;
 }
 
-#inp-app-root .tab-panel {
-  display: none;
+#inp-drawer .status-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+  color: var(--text-secondary);
 }
 
-#inp-app-root .tab-panel.active {
-  display: block;
-}
-
-#inp-app-root .tab-section {
-  margin-bottom: 14px;
-}
-
-#inp-app-root .tab-section:last-child {
+#inp-drawer .status-row:last-child {
   margin-bottom: 0;
 }
 
-#inp-app-root .section-label {
+#inp-drawer .status-row strong {
+  color: var(--text-primary);
+  font-weight: normal;
+}
+
+#inp-drawer .status-stage {
+  color: var(--accent-warning);
+  padding: 2px 6px;
+  border: 1px solid var(--accent-warning);
+  border-radius: 2px;
   font-size: 10px;
-  letter-spacing: 1.5px;
+  letter-spacing: 1px;
+}
+
+/* 数值条：紧凑的水平长条 */
+#inp-drawer .stats-compact {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px 14px;
+  margin-top: 6px;
+}
+
+#inp-drawer .stat-mini {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+}
+
+#inp-drawer .stat-mini-label {
+  color: var(--text-secondary);
+  width: 28px;
+  flex-shrink: 0;
+}
+
+#inp-drawer .stat-mini-bar {
+  flex: 1;
+  height: 5px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+
+#inp-drawer .stat-mini-fill {
+  height: 100%;
+  background: var(--accent-info);
+  transition: width 0.3s;
+}
+
+#inp-drawer .stat-mini-value {
+  width: 24px;
+  text-align: right;
   color: var(--text-muted);
-  margin-bottom: 6px;
-  text-transform: uppercase;
   font-family: var(--font-mono);
 }
 
-#inp-app-root .btn-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
+/* ==== 对话模式提示条 ==== */
+
+#inp-drawer .dialogue-bar {
+  display: none;
+  padding: 8px 14px;
+  background: rgba(127, 119, 221, 0.1);
+  border-bottom: 1px solid var(--accent-info);
+  color: var(--accent-info);
+  font-size: 11px;
+  align-items: center;
+  justify-content: space-between;
 }
 
-#inp-app-root .action-btn {
-  padding: 6px 10px;
+#inp-drawer .dialogue-bar.active {
+  display: flex;
+}
+
+#inp-drawer .dialogue-exit {
+  font-size: 10px;
+  color: var(--text-secondary);
+  padding: 3px 8px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 3px;
+}
+
+/* ==== 里程碑提示区 ==== */
+
+#inp-drawer .milestones-area {
+  padding: 0;
+}
+
+#inp-drawer .milestone-alert {
+  padding: 8px 14px;
+  background: rgba(226, 75, 74, 0.1);
+  border-bottom: 1px solid var(--accent-primary);
+  color: var(--accent-warning);
+  font-size: 11px;
+  animation: alertFlash 0.6s;
+}
+
+@keyframes alertFlash {
+  0% { background: rgba(226, 75, 74, 0.3); }
+  100% { background: rgba(226, 75, 74, 0.1); }
+}
+
+/* ==== 标签条：8 个分类 ==== */
+
+#inp-drawer .tabs-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+}
+
+#inp-drawer .tab-btn {
+  background: var(--bg-panel);
+  color: var(--text-secondary);
+  padding: 10px 4px;
+  font-size: 12px;
+  text-align: center;
+  border-radius: 0;
+  transition: all 0.15s;
+  letter-spacing: 1px;
+}
+
+#inp-drawer .tab-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+#inp-drawer .tab-btn.active {
+  background: var(--bg-active);
+  color: var(--accent-info);
+  border-bottom: 2px solid var(--accent-info);
+}
+
+/* ==== 内容区（按钮面板） ==== */
+
+#inp-drawer .content-area {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 12px;
+}
+
+#inp-drawer .content-area::-webkit-scrollbar {
+  width: 6px;
+}
+
+#inp-drawer .content-area::-webkit-scrollbar-track {
+  background: var(--bg-panel);
+}
+
+#inp-drawer .content-area::-webkit-scrollbar-thumb {
+  background: var(--border-medium);
+  border-radius: 3px;
+}
+
+#inp-drawer .panel {
+  display: none;
+  animation: panelFadeIn 0.2s;
+}
+
+#inp-drawer .panel.active {
+  display: block;
+}
+
+@keyframes panelFadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+#inp-drawer .panel-title {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+  font-family: var(--font-mono);
+}
+
+#inp-drawer .action-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+#inp-drawer .action-btn {
+  padding: 10px 8px;
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
   color: var(--text-primary);
   font-size: 12px;
-  font-family: var(--font-main);
-  cursor: pointer;
-  border-radius: var(--radius-sm);
-  transition: all 0.1s;
-  white-space: nowrap;
+  text-align: center;
+  transition: all 0.15s;
+  border-radius: 3px;
+  line-height: 1.4;
 }
 
-#inp-app-root .action-btn:hover {
-  background: var(--bg-active);
-  border-color: var(--border-medium);
+#inp-drawer .action-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--accent-info);
+  color: var(--accent-info);
 }
 
-#inp-app-root .action-btn:active {
-  transform: scale(0.97);
+#inp-drawer .action-btn:active {
+  transform: scale(0.98);
 }
 
-#inp-app-root .action-btn:disabled {
-  opacity: 0.35;
+#inp-drawer .action-btn:disabled {
+  opacity: 0.4;
   cursor: not-allowed;
 }
 
-#inp-app-root .action-btn.danger { border-color: var(--accent-primary); color: var(--accent-danger); }
+#inp-drawer .action-btn.danger { border-color: var(--accent-primary); color: var(--accent-danger); }
+#inp-drawer .action-btn.info { border-color: var(--accent-info); color: var(--accent-info); }
+#inp-drawer .action-btn.success { border-color: var(--accent-success); color: var(--accent-success); }
 
-#inp-app-root .action-btn.info { border-color: var(--accent-info); color: var(--accent-info); }
+#inp-drawer .action-btn-full {
+  grid-column: 1 / -1;
+}
 
-#inp-app-root .action-btn.warning { border-color: var(--accent-warning); color: var(--accent-warning); }
+#inp-drawer .action-btn-desc {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
 
-#inp-app-root .action-btn.shame { border-color: var(--accent-shame); color: var(--accent-shame); }
+/* 对话切入点样式 */
 
-#inp-app-root .action-btn.success { border-color: var(--accent-success); color: var(--accent-success); }
+#inp-drawer .dialogue-entry {
+  padding: 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-left: 3px solid var(--accent-info);
+  margin-bottom: 6px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
 
-#inp-app-root .custom-input-area {
+#inp-drawer .dialogue-entry:hover {
+  background: var(--bg-hover);
+  border-left-color: var(--accent-warning);
+}
+
+#inp-drawer .dialogue-entry-title {
+  font-size: 12px;
+  color: var(--text-primary);
+  margin-bottom: 3px;
+}
+
+#inp-drawer .dialogue-entry-desc {
+  font-size: 10px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* 自定义动作 */
+
+#inp-drawer .custom-form {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-#inp-app-root .custom-textarea {
-  width: 100%;
-  min-height: 80px;
-  padding: 8px 10px;
-  background: var(--bg-main);
+#inp-drawer .custom-category {
+  padding: 6px 10px;
+  background: var(--bg-card);
   border: 1px solid var(--border-subtle);
+  border-radius: 3px;
+  font-size: 11px;
   color: var(--text-primary);
-  font-family: var(--font-main);
+}
+
+#inp-drawer .custom-category.selected {
+  border-color: var(--accent-info);
+  color: var(--accent-info);
+}
+
+#inp-drawer .custom-textarea {
+  min-height: 80px;
+  padding: 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 3px;
+  color: var(--text-primary);
   font-size: 12px;
   line-height: 1.5;
   resize: vertical;
-  border-radius: var(--radius-sm);
 }
 
-#inp-app-root .custom-textarea:focus {
+#inp-drawer .custom-textarea:focus {
+  border-color: var(--accent-info);
   outline: none;
-  border-color: var(--accent-info);
 }
 
-#inp-app-root .custom-controls {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-#inp-app-root .custom-select,
-#inp-app-root .custom-number {
-  padding: 5px 8px;
-  background: var(--bg-main);
-  border: 1px solid var(--border-subtle);
-  color: var(--text-primary);
-  font-family: var(--font-main);
+#inp-drawer .submit-btn {
+  padding: 10px;
+  background: var(--accent-info);
+  color: white;
+  border-radius: 3px;
   font-size: 12px;
-  border-radius: var(--radius-sm);
+  text-align: center;
+  letter-spacing: 1px;
 }
 
-#inp-app-root .custom-number { width: 70px; }
-
-#inp-app-root .custom-select:focus,
-#inp-app-root .custom-number:focus {
-  outline: none;
-  border-color: var(--accent-info);
+#inp-drawer .submit-btn:hover {
+  background: var(--accent-warning);
 }
 
-#inp-app-root .preset-item {
+/* 场景列表（外出） */
+
+#inp-drawer .scene-item {
+  padding: 10px;
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-  padding: 8px 10px;
   margin-bottom: 6px;
-  font-size: 11px;
-}
-
-#inp-app-root .preset-item-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 4px;
-}
-
-#inp-app-root .preset-name {
-  color: var(--accent-info);
-  font-weight: 500;
-}
-
-#inp-app-root .preset-category {
-  font-size: 10px;
-  color: var(--text-muted);
-  font-family: var(--font-mono);
-}
-
-#inp-app-root .preset-desc {
-  color: var(--text-secondary);
-  font-size: 11px;
-  line-height: 1.4;
-  margin-bottom: 6px;
-}
-
-#inp-app-root .preset-actions {
-  display: flex;
-  gap: 4px;
-}
-
-#inp-app-root .drawer-overlay {
-  display: none;
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 9;
-}
-
-#inp-app-root .drawer-overlay.open {
-  display: block;
-}
-
-#inp-app-root .drawer {
-  display: none;
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: min(360px, 80vw);
-  background: var(--bg-panel);
-  border-left: 1px solid var(--border-medium);
-  z-index: 10;
-  overflow-y: auto;
-}
-
-#inp-app-root .drawer.open {
-  display: block;
-}
-
-#inp-app-root .drawer-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 14px;
-  border-bottom: 1px solid var(--border-subtle);
-  background: var(--bg-card);
-  position: sticky;
-  top: 0;
-  z-index: 1;
-}
-
-#inp-app-root .drawer-title {
-  font-size: 12px;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  font-family: var(--font-mono);
-  color: var(--text-secondary);
-}
-
-#inp-app-root .drawer-close {
-  background: transparent;
-  border: 1px solid var(--border-subtle);
-  color: var(--text-secondary);
-  padding: 4px 10px;
-  font-size: 11px;
-  cursor: pointer;
-  border-radius: var(--radius-sm);
-}
-
-#inp-app-root .drawer-close:hover {
-  color: var(--text-primary);
-  border-color: var(--border-medium);
-}
-
-#inp-app-root .drawer-section {
-  padding: 14px;
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-#inp-app-root .drawer-section:last-child {
-  border-bottom: none;
-}
-
-#inp-app-root .drawer-section-title {
-  font-size: 10px;
-  letter-spacing: 1.5px;
-  color: var(--text-muted);
-  margin-bottom: 10px;
-  text-transform: uppercase;
-  font-family: var(--font-mono);
-}
-
-#inp-app-root .stat-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 11px;
-  margin: 5px 0;
-}
-
-#inp-app-root .stat-label {
-  color: var(--text-secondary);
-  min-width: 72px;
-  font-family: var(--font-main);
-}
-
-#inp-app-root .stat-track {
-  flex: 1;
-  height: 4px;
-  background: var(--bg-main);
-  margin: 0 8px;
-  border-radius: 2px;
-  overflow: hidden;
-}
-
-#inp-app-root .stat-fill {
-  height: 100%;
-  background: var(--accent-success);
-  transition: width 0.4s, background 0.4s;
-}
-
-#inp-app-root .stat-fill.low { background: var(--accent-primary); }
-
-#inp-app-root .stat-fill.mid { background: var(--accent-warning); }
-
-#inp-app-root .stat-fill.high-warning { background: var(--accent-info); }
-
-#inp-app-root .stat-fill.shame { background: var(--accent-shame); }
-
-#inp-app-root .stat-value {
-  min-width: 28px;
-  text-align: right;
-  color: var(--text-primary);
-  font-family: var(--font-mono);
-  font-size: 11px;
-}
-
-#inp-app-root .badge-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  margin-top: 4px;
-}
-
-#inp-app-root .status-badge {
-  padding: 2px 8px;
-  font-size: 10px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-  color: var(--text-muted);
-  font-family: var(--font-mono);
-  letter-spacing: 0.5px;
-}
-
-#inp-app-root .status-badge.active {
-  background: var(--bg-active);
-  border-color: var(--accent-info);
-  color: var(--accent-info);
-}
-
-#inp-app-root .toy-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-}
-
-#inp-app-root .toy-chip {
-  padding: 4px 10px;
-  font-size: 11px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
+  border-radius: 3px;
   cursor: pointer;
   transition: all 0.15s;
-}
-
-#inp-app-root .toy-chip:hover {
-  border-color: var(--border-medium);
-}
-
-#inp-app-root .toy-chip.inventory {
-  color: var(--accent-warning);
-  border-color: var(--accent-warning);
-}
-
-#inp-app-root .toy-chip.equipped {
-  background: var(--bg-active);
-  border-color: var(--accent-info);
-  color: var(--accent-info);
-}
-
-#inp-app-root .toy-chip.equipped::before {
-  content: "✓ ";
-}
-
-#inp-app-root .empty-state {
-  font-size: 11px;
-  color: var(--text-muted);
-  font-style: italic;
-  padding: 4px 0;
-}
-
-#inp-app-root .log-area {
-  max-height: 320px;
-  overflow-y: auto;
-  padding: 6px 0;
-}
-
-#inp-app-root .log-entry {
   display: flex;
-  padding: 3px 0;
-  font-size: 11px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#inp-drawer .scene-item:hover {
+  border-color: var(--accent-info);
+  background: var(--bg-hover);
+}
+
+#inp-drawer .scene-name {
+  font-size: 12px;
+  color: var(--text-primary);
+}
+
+#inp-drawer .scene-duration {
+  font-size: 10px;
+  color: var(--text-muted);
   font-family: var(--font-mono);
 }
 
-#inp-app-root .log-ts {
-  color: var(--text-muted);
-  margin-right: 10px;
-  flex-shrink: 0;
-  min-width: 60px;
-}
+/* 主题菜单 */
 
-#inp-app-root .log-text {
-  color: var(--text-secondary);
-}
-
-#inp-app-root .log-entry.system .log-text { color: var(--accent-success); }
-
-#inp-app-root .log-entry.risk .log-text { color: var(--accent-danger); }
-
-#inp-app-root .log-entry.milestone .log-text { color: var(--accent-info); }
-
-#inp-app-root .log-entry.toy .log-text { color: var(--accent-shame); }
-
-#inp-app-root .log-entry.dialogue .log-text { color: var(--accent-info); }
-
-#inp-app-root .log-entry.action .log-text { color: var(--text-primary); }
-
-#inp-app-root .dialogue-bar {
-  display: none;
-  padding: 10px 14px;
-  background: var(--bg-active);
-  border-left: 3px solid var(--accent-info);
-  margin-bottom: 10px;
-  font-size: 12px;
-}
-
-#inp-app-root .dialogue-bar.active { display: flex; justify-content: space-between; align-items: center; }
-
-#inp-app-root .dialogue-bar-content {
-  color: var(--accent-info);
-}
-
-#inp-app-root .dialogue-bar-exit {
-  padding: 4px 10px;
-  background: transparent;
-  border: 1px solid var(--accent-primary);
-  color: var(--accent-danger);
-  font-size: 11px;
-  cursor: pointer;
-  border-radius: var(--radius-sm);
-}
-
-#inp-app-root .milestone-banner {
-  padding: 10px 14px;
-  background: var(--bg-active);
-  border-left: 3px solid var(--accent-info);
-  margin-bottom: 8px;
-  font-size: 12px;
-  color: var(--accent-info);
-  animation: fadeIn 0.5s;
-}@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-4px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-#inp-app-root .theme-menu {
+#inp-drawer .theme-menu {
   display: none;
   position: absolute;
-  top: 44px;
-  right: 16px;
-  background: var(--bg-panel);
+  top: 52px;
+  right: 14px;
+  background: var(--bg-card);
   border: 1px solid var(--border-medium);
-  border-radius: var(--radius-sm);
-  padding: 6px;
-  z-index: 20;
-  min-width: 140px;
+  border-radius: 4px;
+  padding: 4px;
+  z-index: 10;
+  min-width: 160px;
 }
 
-#inp-app-root .theme-menu.open { display: block; }
+#inp-drawer .theme-menu.show {
+  display: block;
+}
 
-#inp-app-root .theme-option {
+#inp-drawer .theme-option {
   padding: 6px 10px;
   font-size: 11px;
   color: var(--text-secondary);
+  border-radius: 2px;
   cursor: pointer;
-  border-radius: var(--radius-sm);
-  font-family: var(--font-mono);
-  letter-spacing: 0.5px;
 }
 
-#inp-app-root .theme-option:hover {
-  background: var(--bg-card);
+#inp-drawer .theme-option:hover {
+  background: var(--bg-hover);
   color: var(--text-primary);
 }
 
-#inp-app-root .theme-option.current {
+#inp-drawer .theme-option.current {
   background: var(--bg-active);
   color: var(--accent-info);
 }
 
-#inp-app-root .debug-panel {
-  background: var(--bg-panel);
-  border: 1px solid var(--border-subtle);
-  border-top: none;
-  padding: 10px 14px;
-  transition: padding 0.2s;
-}
+/* 底栏：结束局 / 版本 */
 
-#inp-app-root .debug-panel.collapsed {
-  padding: 6px 14px;
-}
-
-#inp-app-root .debug-panel-header {
+#inp-drawer .drawer-footer {
+  padding: 8px 14px;
+  border-top: 1px solid var(--border-subtle);
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-#inp-app-root .debug-panel.collapsed .debug-panel-header {
-  margin: 0;
-}
-
-#inp-app-root .debug-panel:not(.collapsed) .debug-panel-header {
-  margin-bottom: 8px;
-}
-
-#inp-app-root .debug-panel-title {
   font-size: 10px;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
   color: var(--text-muted);
   font-family: var(--font-mono);
-  cursor: pointer;
-  user-select: none;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  flex-shrink: 0;
 }
 
-#inp-app-root .debug-panel-title:hover {
-  color: var(--text-secondary);
+#inp-drawer .end-session-btn {
+  padding: 4px 10px;
+  border: 1px solid var(--accent-danger);
+  color: var(--accent-danger);
+  border-radius: 3px;
+  font-size: 10px;
 }
 
-#inp-app-root .debug-caret {
-  display: inline-block;
-  transition: transform 0.2s;
-  font-size: 9px;
+#inp-drawer .end-session-btn:hover {
+  background: rgba(240, 149, 149, 0.1);
+}
+
+/* 调试响应区 */
+
+#inp-drawer .debug-area {
+  margin-top: 12px;
+  border-top: 1px dashed var(--border-subtle);
+  padding-top: 10px;
+}
+
+#inp-drawer .debug-toggle {
+  font-size: 10px;
   color: var(--text-muted);
+  padding: 4px 8px;
+  cursor: pointer;
 }
 
-#inp-app-root .debug-panel:not(.collapsed) .debug-caret {
-  transform: rotate(90deg);
-}
-
-#inp-app-root .debug-has-new {
+#inp-drawer .debug-content {
   display: none;
-  width: 6px;
-  height: 6px;
-  background: var(--accent-primary);
-  border-radius: 50%;
-  animation: pulse 2s ease-in-out infinite;
-}
-
-#inp-app-root .debug-panel.collapsed.has-new .debug-has-new {
-  display: inline-block;
-}
-
-#inp-app-root .debug-panel-body {
-  overflow: hidden;
-  transition: max-height 0.25s, opacity 0.2s;
-}
-
-#inp-app-root .debug-panel.collapsed .debug-panel-body {
-  max-height: 0;
-  opacity: 0;
-}
-
-#inp-app-root .debug-panel:not(.collapsed) .debug-panel-body {
-  max-height: 500px;
-  opacity: 1;
-}
-
-#inp-app-root .debug-tabs {
-  display: flex;
-  gap: 4px;
-}
-
-#inp-app-root .debug-tab {
-  padding: 3px 8px;
-  background: transparent;
+  margin-top: 6px;
+  padding: 8px;
+  background: var(--bg-card);
   border: 1px solid var(--border-subtle);
-  color: var(--text-muted);
+  border-radius: 3px;
+  font-family: var(--font-mono);
   font-size: 10px;
-  font-family: var(--font-mono);
-  cursor: pointer;
-  border-radius: var(--radius-sm);
-}
-
-#inp-app-root .debug-tab:hover {
   color: var(--text-secondary);
-  border-color: var(--border-medium);
-}
-
-#inp-app-root .debug-tab.active {
-  background: var(--bg-active);
-  color: var(--accent-info);
-  border-color: var(--accent-info);
-}
-
-#inp-app-root .debug-output {
-  background: var(--bg-main);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-  padding: 10px 12px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--text-secondary);
-  line-height: 1.6;
-  max-height: 260px;
+  max-height: 200px;
   overflow-y: auto;
   white-space: pre-wrap;
-  word-break: break-word;
 }
 
-#inp-app-root .debug-output .key { color: var(--accent-info); }
-
-#inp-app-root .debug-output .str { color: var(--accent-success); }
-
-#inp-app-root .debug-output .num { color: var(--accent-warning); }
-
-#inp-app-root .debug-output .prompt-text {
+#inp-drawer .debug-content.show {
   display: block;
-  padding: 8px 10px;
-  background: var(--bg-card);
-  border-left: 2px solid var(--accent-info);
-  margin: 6px 0;
-  color: var(--text-primary);
-  font-family: var(--font-main);
-  font-size: 12px;
-  line-height: 1.6;
 }
 
-#inp-app-root .debug-empty {
-  color: var(--text-muted);
-  font-style: italic;
-  font-family: var(--font-main);
-  font-size: 11px;
+/* 响应式 */
+@media (max-width: 600px) {
+  #inp-drawer {
+    width: 100vw;
+  }
+  
+  #inp-drawer .tabs-bar {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  #inp-drawer .action-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
-#inp-app-root .debug-send-hint {
-  margin-top: 8px;
-  padding: 8px 12px;
-  background: var(--bg-card);
-  border-left: 2px solid var(--accent-warning);
-  font-size: 11px;
-  color: var(--text-secondary);
-  line-height: 1.6;
+
+/* ======================================================
+   Modal overlay (for opening menu) & shared
+   ====================================================== */
+
+#inp-opening-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 9997;
+  display: none;
 }
 
-#inp-app-root .debug-send-hint strong {
-  color: var(--accent-warning);
+#inp-opening-modal-overlay.show {
+  display: block;
 }
 
-#inp-app-root .bottom-actions {
-  padding: 12px;
-  background: var(--bg-panel);
-  border: 1px solid var(--border-subtle);
-  border-top: none;
-  border-radius: 0 0 var(--radius-md) var(--radius-md);
+#inp-opening-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(920px, 96vw);
+  height: min(800px, 92vh);
+  background: #0a0a0c;
+  border: 1px solid #3a3a45;
+  border-radius: 6px;
+  z-index: 9998;
+  overflow: hidden;
+  display: none;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+}
+
+#inp-opening-modal.show {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 11px;
 }
 
-#inp-app-root .engine-info {
-  color: var(--text-muted);
-  font-family: var(--font-mono);
-  letter-spacing: 0.5px;
+#inp-opening-modal-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
-#inp-app-root .end-session-btn {
-  padding: 6px 16px;
+#inp-opening-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
   background: transparent;
-  border: 1px solid var(--accent-primary);
-  color: var(--accent-danger);
-  font-size: 12px;
+  border: 1px solid #3a3a45;
+  color: #8a8a95;
+  font-size: 20px;
   cursor: pointer;
-  border-radius: var(--radius-sm);
-  font-family: var(--font-main);
+  border-radius: 4px;
+  z-index: 2;
 }
 
-#inp-app-root .end-session-btn:hover {
-  background: var(--accent-primary);
-  color: #fff;
-}
-
-#inp-app-root .inp-stage { animation: inpStageFadeIn 0.4s; }
-@keyframes inpStageFadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+#inp-opening-modal-close:hover {
+  color: #d4d4dc;
+  border-color: #e24b4a;
 }
 </style>
 
-<div id="inp-app-root">
-  <div id="inp-stage-opening" class="inp-stage">
-<div class="wrapper">
+<!-- ============ 开场菜单（模态窗，一次性使用）============ -->
+<div id="inp-opening-modal-overlay"></div>
+
+<div id="inp-opening-modal">
+  <button id="inp-opening-modal-close" title="关闭">×</button>
+  <div id="inp-opening-modal-content">
+    <div id="inp-opening-root">
+      <div class="wrapper">
   
   <div class="header">
     <div class="title">掌心的它</div>
@@ -1489,342 +1311,575 @@
   </div>
   
 </div>
+    </div>
+  </div>
 </div>
-  <div id="inp-stage-console" class="inp-stage" style="display:none;">
-<div class="console-root theme-noir" id="console-root">
 
-  <!-- =============== 顶栏 =============== -->
-  <div class="top-bar">
-    <div class="top-bar-left">
+<!-- ============ 主控制台抽屉 + 小标签 ============ -->
+<!-- ==== 抽屉小标签（收起时） ==== -->
+<div id="inp-drawer-tab" onclick="InPalmDrawer.toggle()" title="展开掌心控制台">
+  <span class="drawer-tab-icon">🖐</span>
+  <span class="drawer-tab-label">掌心控制台</span>
+</div>
+
+<!-- ==== 抽屉本体 ==== -->
+<div id="inp-drawer" class="theme-noir">
+
+  <!-- 头部 -->
+  <div class="drawer-header">
+    <div class="drawer-title">
       <span class="rec-dot"></span>
-      <span>rec · live</span>
-      <span class="top-bar-separator">|</span>
-      <span class="top-bar-time" id="top-time">day 1 · 20:00</span>
-      <span class="top-bar-separator">|</span>
-      <span id="top-stage">震惊期</span>
-      <span class="top-bar-separator">|</span>
-      <span id="top-location">家 · 主房间</span>
+      <span>掌心 · captor console</span>
     </div>
-    <div class="top-bar-right">
-      <button class="icon-button" id="btn-theme" onclick="toggleThemeMenu()" title="切换主题">主题</button>
-      <button class="icon-button" id="btn-status" onclick="openDrawer('status')" title="状态面板">状态</button>
-      <button class="icon-button" id="btn-inventory" onclick="openDrawer('inventory')" title="库存">库存</button>
-      <button class="icon-button" id="btn-log" onclick="openDrawer('log')" title="日志">日志</button>
+    <div class="drawer-actions">
+      <button class="icon-btn" onclick="InPalmDrawer.toggleThemeMenu()">主题</button>
+      <button class="close-btn" onclick="InPalmDrawer.toggle()" title="收起">−</button>
     </div>
-    <div class="theme-menu" id="theme-menu">
-      <div class="theme-option current" onclick="setTheme('theme-noir')" data-theme="theme-noir">暗黑监控 noir</div>
-      <div class="theme-option" onclick="setTheme('theme-ornate')" data-theme="theme-ornate">暗金奢华 ornate</div>
-      <div class="theme-option" onclick="setTheme('theme-raw')" data-theme="theme-raw">粗粝铁锈 raw</div>
+    
+    <div class="theme-menu" id="inp-theme-menu">
+      <div class="theme-option current" data-theme="theme-noir" onclick="InPalmDrawer.setTheme('theme-noir')">暗黑监控 noir</div>
+      <div class="theme-option" data-theme="theme-ornate" onclick="InPalmDrawer.setTheme('theme-ornate')">暗金奢华 ornate</div>
+      <div class="theme-option" data-theme="theme-raw" onclick="InPalmDrawer.setTheme('theme-raw')">粗粝铁锈 raw</div>
     </div>
   </div>
 
-  <!-- =============== 里程碑提示区 =============== -->
-  <div id="milestones-area"></div>
-
-  <!-- =============== 对话模式提示 =============== -->
-  <div class="dialogue-bar" id="dialogue-bar">
-    <div class="dialogue-bar-content">
-      对话模式 · <strong id="dialogue-name">—</strong> · 已 <span id="dialogue-turns">0</span> 轮
+  <!-- 状态条 -->
+  <div class="status-bar">
+    <div class="status-row">
+      <span><strong id="inp-day">Day 1</strong> · <span id="inp-time">20:00</span></span>
+      <span class="status-stage" id="inp-stage">震惊期</span>
     </div>
-    <button class="dialogue-bar-exit" onclick="exitDialogue()">退出对话</button>
-  </div>
-
-  <!-- =============== 监控视图 =============== -->
-  <div class="monitor-frame">
-    <div class="monitor-screen">
-      <svg class="monitor-svg" viewBox="0 0 400 225" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
-        <!-- 房间轮廓 -->
-        <rect x="30" y="35" width="340" height="155" fill="none" stroke="#2a2a33" stroke-width="0.8" stroke-dasharray="2 3"/>
-        <!-- 床 -->
-        <rect x="60" y="115" width="90" height="50" fill="#1a1416" stroke="#3a2a2e" stroke-width="0.5"/>
-        <rect x="62" y="117" width="86" height="14" fill="#24181c" stroke="none"/>
-        <!-- 桌子 -->
-        <rect x="260" y="70" width="60" height="95" fill="#14141a" stroke="#30303a" stroke-width="0.5"/>
-        <!-- 水池/洗手台 -->
-        <rect x="260" y="50" width="60" height="18" fill="#1e1a14" stroke="#3a3020" stroke-width="0.5"/>
-        <!-- 主体（角色） -->
-        <g id="subject-figure">
-          <circle cx="105" cy="138" r="6" fill="#3a2a2a" opacity="0.9"/>
-          <rect x="102" y="144" width="6" height="18" fill="#3a2a2a" opacity="0.9"/>
-        </g>
-        <!-- 门 -->
-        <line x1="200" y1="35" x2="220" y2="35" stroke="#554030" stroke-width="2"/>
-        <!-- 监控视角中心十字 -->
-        <line x1="200" y1="108" x2="200" y2="118" stroke="rgba(220,220,220,0.2)" stroke-width="0.5"/>
-        <line x1="195" y1="113" x2="205" y2="113" stroke="rgba(220,220,220,0.2)" stroke-width="0.5"/>
-      </svg>
-      <div class="monitor-osd osd-topleft">
-        cam_01 · main cell · ir_mode<br>
-        1920×1080 · 30fps
-      </div>
-      <div class="monitor-osd osd-topright osd-rec">
-        ● rec
-      </div>
-      <div class="monitor-osd osd-bottomleft" id="monitor-status">
-        subject: stationary · 22°c
-      </div>
-      <div class="monitor-osd osd-bottomright" id="monitor-time">
-        20:00:14
-      </div>
+    <div class="status-row">
+      <span id="inp-location">家 · 主房间</span>
+      <span id="inp-relation">关系 <strong id="inp-distortion">0</strong></span>
     </div>
-    <div class="monitor-tabs">
-      <div class="monitor-tab active" onclick="switchCam(this, 1)">cam 01 · main</div>
-      <div class="monitor-tab" onclick="switchCam(this, 2)">cam 02 · door</div>
-      <div class="monitor-tab" onclick="switchCam(this, 3)">cam 03 · bath</div>
-      <div class="monitor-tab" onclick="switchCam(this, 'ir')">ir / 红外</div>
-      <div class="monitor-tab" onclick="switchCam(this, 'audio')">audio only</div>
+    <div class="stats-compact">
+      <div class="stat-mini">
+        <span class="stat-mini-label">理智</span>
+        <div class="stat-mini-bar"><div class="stat-mini-fill" id="bar-sanity" style="width: 80%"></div></div>
+        <span class="stat-mini-value" id="val-sanity">80</span>
+      </div>
+      <div class="stat-mini">
+        <span class="stat-mini-label">心情</span>
+        <div class="stat-mini-bar"><div class="stat-mini-fill" id="bar-mood" style="width: 50%"></div></div>
+        <span class="stat-mini-value" id="val-mood">50</span>
+      </div>
+      <div class="stat-mini">
+        <span class="stat-mini-label">体力</span>
+        <div class="stat-mini-bar"><div class="stat-mini-fill" id="bar-stamina" style="width: 80%"></div></div>
+        <span class="stat-mini-value" id="val-stamina">80</span>
+      </div>
+      <div class="stat-mini">
+        <span class="stat-mini-label">羞耻</span>
+        <div class="stat-mini-bar"><div class="stat-mini-fill" id="bar-shame" style="width: 20%"></div></div>
+        <span class="stat-mini-value" id="val-shame">20</span>
+      </div>
     </div>
   </div>
+  
+  <!-- 对话模式条（仅对话中显示） -->
+  <div class="dialogue-bar" id="inp-dialogue-bar">
+    <div>对话模式 · <strong id="inp-dialogue-name">—</strong> · <span id="inp-dialogue-turns">0</span> 轮</div>
+    <button class="dialogue-exit" onclick="InPalmDrawer.exitDialogue()">退出</button>
+  </div>
+  
+  <!-- 里程碑提示 -->
+  <div class="milestones-area" id="inp-milestones"></div>
 
-  <!-- =============== 标签页 =============== -->
+  <!-- 标签条 -->
   <div class="tabs-bar">
-    <button class="tab-button active" onclick="switchTab(this, 'env')">环境</button>
-    <button class="tab-button" onclick="switchTab(this, 'deliver')">递送</button>
-    <button class="tab-button" onclick="switchTab(this, 'contact')">接触</button>
-    <button class="tab-button" onclick="switchTab(this, 'dialogue')">对话</button>
-    <button class="tab-button" onclick="switchTab(this, 'train')">调教</button>
-    <button class="tab-button" onclick="switchTab(this, 'toys')">道具</button>
-    <button class="tab-button" onclick="switchTab(this, 'scenes')">外出</button>
-    <button class="tab-button" onclick="switchTab(this, 'custom')">自定义</button>
+    <button class="tab-btn active" data-panel="env" onclick="InPalmDrawer.switchTab(this, 'env')">环境</button>
+    <button class="tab-btn" data-panel="deliver" onclick="InPalmDrawer.switchTab(this, 'deliver')">递送</button>
+    <button class="tab-btn" data-panel="contact" onclick="InPalmDrawer.switchTab(this, 'contact')">接触</button>
+    <button class="tab-btn" data-panel="dialogue" onclick="InPalmDrawer.switchTab(this, 'dialogue')">对话</button>
+    <button class="tab-btn" data-panel="train" onclick="InPalmDrawer.switchTab(this, 'train')">调教</button>
+    <button class="tab-btn" data-panel="toys" onclick="InPalmDrawer.switchTab(this, 'toys')">道具</button>
+    <button class="tab-btn" data-panel="scenes" onclick="InPalmDrawer.switchTab(this, 'scenes')">外出</button>
+    <button class="tab-btn" data-panel="custom" onclick="InPalmDrawer.switchTab(this, 'custom')">自定义</button>
   </div>
 
-  <div class="tab-content">
-
-    <!-- ========== 环境 ========== -->
-    <div class="tab-panel active" id="tab-env">
-      <div class="tab-section">
-        <div class="section-label">光线与温度</div>
-        <div class="btn-grid">
-          <button class="action-btn" onclick="engineAction('cut_lights')">切断照明</button>
-          <button class="action-btn" onclick="engineAction('restore_lights')">恢复照明</button>
-          <button class="action-btn" onclick="engineAction('lower_temp')">降低室温</button>
-        </div>
-      </div>
-      <div class="tab-section">
-        <div class="section-label">声音与水</div>
-        <div class="btn-grid">
-          <button class="action-btn" onclick="engineAction('play_audio')">播放音频</button>
-          <button class="action-btn" onclick="engineAction('cut_water')">切断供水</button>
-        </div>
+  <!-- 内容区 -->
+  <div class="content-area">
+    
+    <!-- 环境 -->
+    <div class="panel active" id="inp-panel-env">
+      <div class="panel-title">环境控制</div>
+      <div class="action-grid">
+        <button class="action-btn" onclick="InPalmDrawer.doAction('env_lights_on')">开灯</button>
+        <button class="action-btn" onclick="InPalmDrawer.doAction('env_lights_off')">关灯</button>
+        <button class="action-btn" onclick="InPalmDrawer.doAction('env_lights_dim')">调暗</button>
+        <button class="action-btn" onclick="InPalmDrawer.doAction('env_temperature_up')">升温</button>
+        <button class="action-btn" onclick="InPalmDrawer.doAction('env_temperature_down')">降温</button>
+        <button class="action-btn" onclick="InPalmDrawer.doAction('env_music_soft')">放柔和音乐</button>
+        <button class="action-btn" onclick="InPalmDrawer.doAction('env_music_unsettling')">放诡异音乐</button>
+        <button class="action-btn" onclick="InPalmDrawer.doAction('env_silence')">制造寂静</button>
       </div>
     </div>
 
-    <!-- ========== 递送 ========== -->
-    <div class="tab-panel" id="tab-deliver">
-      <div class="tab-section">
-        <div class="section-label">递送食物（需库存）</div>
-        <div class="btn-grid">
-          <button class="action-btn warning" onclick="engineAction('deliver_food_basic')">送入简单食物</button>
-          <button class="action-btn warning" onclick="engineAction('deliver_food_premium')">送入精致食物</button>
-          <button class="action-btn" onclick="engineAction('take_away_food')">收走食物</button>
-        </div>
+    <!-- 递送 -->
+    <div class="panel" id="inp-panel-deliver">
+      <div class="panel-title">递送物品（直接递进去，不进入空间）</div>
+      <div class="action-grid">
+        <button class="action-btn" onclick="InPalmDrawer.doAction('deliver_meal_basic')">普通食物</button>
+        <button class="action-btn" onclick="InPalmDrawer.doAction('deliver_meal_nice')">精致食物</button>
+        <button class="action-btn" onclick="InPalmDrawer.doAction('deliver_water')">水</button>
+        <button class="action-btn" onclick="InPalmDrawer.doAction('deliver_hygiene')">洗漱用品</button>
+        <button class="action-btn" onclick="InPalmDrawer.doAction('deliver_clothing')">衣物</button>
+        <button class="action-btn" onclick="InPalmDrawer.doAction('deliver_book')">书籍</button>
+        <button class="action-btn" onclick="InPalmDrawer.doAction('deliver_empty_plate')">收走餐具</button>
       </div>
     </div>
 
-    <!-- ========== 接触 ========== -->
-    <div class="tab-panel" id="tab-contact">
-      <div class="tab-section">
-        <div class="section-label">远距接触</div>
-        <div class="btn-grid">
-          <button class="action-btn" onclick="engineAction('broadcast_message')">广播讯息</button>
-          <button class="action-btn" onclick="engineAction('letter_slot')">递纸条</button>
-        </div>
-      </div>
-      <div class="tab-section">
-        <div class="section-label">近距接触</div>
-        <div class="btn-grid">
-          <button class="action-btn info" onclick="engineAction('enter_room')">进入密室</button>
-          <button class="action-btn" onclick="engineAction('silence_day')">沉默一整天</button>
-        </div>
-      </div>
-      <div class="tab-section">
-        <div class="section-label">特殊触发</div>
-        <div class="btn-grid">
-          <button class="action-btn danger" onclick="engineAction('fake_rescue_signal')">伪造救援信号</button>
-          <button class="action-btn danger" onclick="engineAction('reveal_truth')">揭示真相</button>
-          <button class="action-btn danger" onclick="engineAction('wait_24h')">不干预 24 小时</button>
-          <button class="action-btn shame" onclick="engineAction('show_memento')">展示旧物</button>
-        </div>
+    <!-- 接触 -->
+    <div class="panel" id="inp-panel-contact">
+      <div class="panel-title">近距离接触</div>
+      <div class="action-grid">
+        <button class="action-btn" onclick="InPalmDrawer.doAction('contact_enter')">进入房间</button>
+        <button class="action-btn" onclick="InPalmDrawer.doAction('contact_silent_observe')">沉默注视</button>
+        <button class="action-btn" onclick="InPalmDrawer.doAction('contact_gentle_touch')">温柔触碰</button>
+        <button class="action-btn" onclick="InPalmDrawer.doAction('contact_restrain')">控制 / 压制</button>
+        <button class="action-btn danger" onclick="InPalmDrawer.doAction('contact_strike')">打击 / 惩罚</button>
+        <button class="action-btn" onclick="InPalmDrawer.doAction('contact_undress')">剥除衣物</button>
+        <button class="action-btn" onclick="InPalmDrawer.doAction('contact_leave')">离开房间</button>
       </div>
     </div>
 
-    <!-- ========== 对话 ========== -->
-    <div class="tab-panel" id="tab-dialogue">
-      <div class="tab-section">
-        <div class="section-label">选择对话切入点（进入后专注对话）</div>
-        <div class="btn-grid" id="dialogue-buttons">
-          <!-- 动态生成 -->
-        </div>
+    <!-- 对话 -->
+    <div class="panel" id="inp-panel-dialogue">
+      <div class="panel-title">对话切入点（进入后 AI 按这个基调对话）</div>
+      <div id="inp-dialogue-entries">
+        <!-- JS 动态渲染 -->
       </div>
     </div>
 
-    <!-- ========== 调教 ========== -->
-    <div class="tab-panel" id="tab-train">
-      <div class="tab-section">
-        <div class="section-label">触碰</div>
-        <div class="btn-grid">
-          <button class="action-btn" onclick="engineAction('touch_hair')">抚摸头发</button>
-          <button class="action-btn" onclick="engineAction('touch_face')">触摸脸庞</button>
-          <button class="action-btn" onclick="engineAction('hold_hand')">握手</button>
-          <button class="action-btn" onclick="engineAction('embrace')">拥抱</button>
-          <button class="action-btn info" onclick="engineAction('brush_hair')">梳头 [需梳子]</button>
-        </div>
-      </div>
-      <div class="tab-section">
-        <div class="section-label">束缚（需已装备道具）</div>
-        <div class="btn-grid">
-          <button class="action-btn info" onclick="engineAction('bind_wrists')">束缚手腕</button>
-          <button class="action-btn info" onclick="engineAction('bind_full')">全身束缚</button>
-        </div>
-      </div>
-      <div class="tab-section">
-        <div class="section-label">训练</div>
-        <div class="btn-grid">
-          <button class="action-btn" onclick="engineAction('train_sit')">训练姿势</button>
-          <button class="action-btn" onclick="engineAction('train_response')">训练回应</button>
-          <button class="action-btn" onclick="engineAction('train_feeding')">训练进食</button>
-        </div>
-      </div>
-      <div class="tab-section">
-        <div class="section-label">刺激（需 body/r18 档位）</div>
-        <div class="btn-grid">
-          <button class="action-btn shame" onclick="engineAction('tease_light')">轻度挑逗</button>
-          <button class="action-btn shame" onclick="engineAction('stimulate_direct')">直接刺激</button>
-          <button class="action-btn shame" onclick="engineAction('use_toy_stimulation')">使用刺激道具</button>
-          <button class="action-btn shame" onclick="engineAction('edge')">边缘控制</button>
-        </div>
-      </div>
-      <div class="tab-section">
-        <div class="section-label">药物与意识</div>
-        <div class="btn-grid">
-          <button class="action-btn warning" onclick="engineAction('drug_sedative')">给予镇静剂</button>
-          <button class="action-btn" onclick="engineAction('wake_up')">唤醒</button>
-          <button class="action-btn" onclick="engineAction('put_to_sleep')">让其睡眠</button>
-        </div>
+    <!-- 调教 -->
+    <div class="panel" id="inp-panel-train">
+      <div class="panel-title">身体调教（取决于深度档位）</div>
+      <div class="action-grid" id="inp-train-actions">
+        <!-- JS 动态渲染 -->
       </div>
     </div>
 
-    <!-- ========== 道具 ========== -->
-    <div class="tab-panel" id="tab-toys">
-      <div class="tab-section">
-        <div class="section-label">已购道具（点击装备）</div>
-        <div class="toy-list" id="owned-toys">
-          <div class="empty-state">未购入任何道具。请先去外部场景购买。</div>
-        </div>
-      </div>
-      <div class="tab-section">
-        <div class="section-label">已装备（点击卸下）</div>
-        <div class="toy-list" id="equipped-toys">
-          <div class="empty-state">未装备道具。</div>
-        </div>
-      </div>
-      <div class="tab-section">
-        <div class="section-label">快速购买（测试用，实际作品需外出购买）</div>
-        <div id="toy-shop"></div>
+    <!-- 道具 -->
+    <div class="panel" id="inp-panel-toys">
+      <div class="panel-title">玩具库存 · 装备中: <span id="inp-equipped-count">0</span></div>
+      <div id="inp-toys-list">
+        <!-- JS 动态渲染 -->
       </div>
     </div>
 
-    <!-- ========== 外出 ========== -->
-    <div class="tab-panel" id="tab-scenes">
-      <div class="tab-section">
-        <div class="section-label">通用外部场景</div>
-        <div class="btn-grid">
-          <button class="action-btn" onclick="engineVisit('supermarket')">去超市</button>
-          <button class="action-btn" onclick="engineVisit('pharmacy')">去药店</button>
-          <button class="action-btn" onclick="engineVisit('street')">走上街道</button>
-          <button class="action-btn" onclick="engineVisit('cafe')">去咖啡厅</button>
-        </div>
-      </div>
-      <div class="tab-section">
-        <div class="section-label">身份限定场景</div>
-        <div class="empty-state">（等待玩家身份列表填充）</div>
+    <!-- 外出 -->
+    <div class="panel" id="inp-panel-scenes">
+      <div class="panel-title">外出场景（{{user}} 离开 {{char}} 去别处）</div>
+      <div id="inp-scenes-list">
+        <!-- JS 动态渲染 -->
       </div>
     </div>
 
-    <!-- ========== 自定义 ========== -->
-    <div class="tab-panel" id="tab-custom">
-      <div class="tab-section">
-        <div class="section-label">自由描述你的行动</div>
-        <div class="custom-input-area">
-          <textarea class="custom-textarea" id="custom-desc"
-            placeholder="例：我走到他身后，一只手轻轻覆上他的眼睛，另一只手缓慢地从他的颈侧滑下，用气音说：'今天不许动。'"></textarea>
-          <div class="custom-controls">
-            <label style="font-size:11px;color:var(--text-secondary);">类别：</label>
-            <select class="custom-select" id="custom-category">
-              <option value="touch_gentle">温柔触碰</option>
-              <option value="touch_rough">粗暴接触</option>
-              <option value="stimulation_mild">轻度刺激 [body+]</option>
-              <option value="stimulation_heavy">强烈刺激 [r18]</option>
-              <option value="training_soft">温和训练</option>
-              <option value="training_harsh">严苛训练</option>
-              <option value="verbal_sweet">温柔言语</option>
-              <option value="verbal_harsh">恶意言语</option>
-              <option value="punishment">惩罚</option>
-              <option value="reward">奖励</option>
-              <option value="observe">观察（无接触）</option>
-              <option value="neutral">中性动作</option>
-            </select>
-            <label style="font-size:11px;color:var(--text-secondary);">时长(分)：</label>
-            <input class="custom-number" type="number" min="1" max="480" placeholder="默认" id="custom-duration">
-            <button class="action-btn info" onclick="executeCustomAction()">执行</button>
-            <button class="action-btn" onclick="saveCustomPresetUI()">保存为预设</button>
-            <button class="action-btn" onclick="clearCustomInput()">清空</button>
+    <!-- 自定义 -->
+    <div class="panel" id="inp-panel-custom">
+      <div class="panel-title">自由动作（描述 {{user}} 要做什么，AI 生成 {{char}} 反应）</div>
+      <div class="custom-form">
+        <div class="panel-title" style="margin-bottom: 2px;">类别</div>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px;" id="inp-custom-cats">
+          <!-- JS 动态渲染 -->
+        </div>
+        <div class="panel-title" style="margin-bottom: 2px; margin-top: 6px;">描述你的动作</div>
+        <textarea class="custom-textarea" id="inp-custom-text" placeholder="例如：我在她的餐盘里放了一张她女儿的照片，然后离开房间..."></textarea>
+        <button class="submit-btn" onclick="InPalmDrawer.submitCustomAction()">执行动作</button>
+      </div>
+    </div>
+
+    <!-- 调试响应区 -->
+    <div class="debug-area">
+      <div class="debug-toggle" onclick="InPalmDrawer.toggleDebug()">▶ 调试响应区 · 看 AI 会收到什么</div>
+      <div class="debug-content" id="inp-debug">点击任何动作按钮，这里会显示发送给 AI 的 prompt 和完整的状态上下文包。</div>
+    </div>
+  </div>
+
+  <!-- 底栏 -->
+  <div class="drawer-footer">
+    <span>in your palm · v0.5.0</span>
+    <button class="end-session-btn" onclick="InPalmDrawer.endSession()">我要结束了</button>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// 抽屉控制器 + 引擎连接
+// ============================================================
+
+(function() {
+  'use strict';
+  
+  if (window.InPalmDrawer) {
+    console.log('[InPalmDrawer] 已存在，跳过初始化');
+    return;
+  }
+  
+  const Drawer = {
+    _onActionPrompt: null,
+    _autoSend: true,
+    _currentCategory: 'status',  // custom 面板的当前选中类别
+    
+    init(options) {
+      options = options || {};
+      this._onActionPrompt = options.onActionPrompt || null;
+      this._autoSend = options.autoSend !== false;
+      
+      // 应用默认主题
+      if (options.theme) this.setTheme(options.theme);
+      
+      // 渲染动态内容
+      this._renderDialogueEntries();
+      this._renderTrainActions();
+      this._renderToys();
+      this._renderScenes();
+      this._renderCustomCats();
+      
+      // 刷新状态
+      this.refreshAll();
+      
+      // 监听引擎事件
+      if (window.InPalmEngine?.on) {
+        window.InPalmEngine.on('state_updated', () => this.refreshAll());
+        window.InPalmEngine.on('milestone', (e) => this._showMilestone(e));
+      }
+      
+      console.log('[InPalmDrawer] 初始化完成');
+    },
+    
+    // ==== 抽屉开关 ====
+    
+    toggle() {
+      const drawer = document.getElementById('inp-drawer');
+      if (!drawer) return;
+      
+      const isOpen = drawer.classList.toggle('open');
+      document.body.classList.toggle('inp-drawer-open', isOpen);
+    },
+    
+    open() {
+      const drawer = document.getElementById('inp-drawer');
+      drawer.classList.add('open');
+      document.body.classList.add('inp-drawer-open');
+    },
+    
+    close() {
+      const drawer = document.getElementById('inp-drawer');
+      drawer.classList.remove('open');
+      document.body.classList.remove('inp-drawer-open');
+    },
+    
+    // ==== 主题 ====
+    
+    toggleThemeMenu() {
+      document.getElementById('inp-theme-menu').classList.toggle('show');
+    },
+    
+    setTheme(themeName) {
+      const drawer = document.getElementById('inp-drawer');
+      drawer.classList.remove('theme-noir', 'theme-ornate', 'theme-raw');
+      drawer.classList.add(themeName);
+      document.querySelectorAll('#inp-theme-menu .theme-option').forEach(o => {
+        o.classList.toggle('current', o.dataset.theme === themeName);
+      });
+      setTimeout(() => document.getElementById('inp-theme-menu').classList.remove('show'), 150);
+    },
+    
+    // ==== 标签切换 ====
+    
+    switchTab(btn, panelName) {
+      document.querySelectorAll('#inp-drawer .tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      
+      document.querySelectorAll('#inp-drawer .panel').forEach(p => p.classList.remove('active'));
+      const panel = document.getElementById('inp-panel-' + panelName);
+      if (panel) panel.classList.add('active');
+    },
+    
+    // ==== 动作触发 ====
+    
+    doAction(actionId) {
+      if (!window.InPalmEngine?.action) {
+        alert('引擎未就绪');
+        return;
+      }
+      const packet = window.InPalmEngine.action(actionId);
+      this._handlePacket(packet);
+    },
+    
+    submitCustomAction() {
+      const text = document.getElementById('inp-custom-text').value.trim();
+      if (!text) {
+        alert('请描述动作');
+        return;
+      }
+      if (!this._currentCategory || this._currentCategory === 'status') {
+        alert('请先选择动作类别');
+        return;
+      }
+      const packet = window.InPalmEngine.customAction(this._currentCategory, text);
+      this._handlePacket(packet);
+      document.getElementById('inp-custom-text').value = '';
+    },
+    
+    enterDialogue(entryId) {
+      if (!window.InPalmEngine?.enterDialogue) return;
+      const packet = window.InPalmEngine.enterDialogue(entryId);
+      this._handlePacket(packet);
+    },
+    
+    exitDialogue() {
+      if (!window.InPalmEngine?.exitDialogue) return;
+      const packet = window.InPalmEngine.exitDialogue();
+      this._handlePacket(packet);
+      this.refreshAll();
+    },
+    
+    visitScene(sceneId) {
+      if (!window.InPalmEngine?.visitScene) return;
+      const packet = window.InPalmEngine.visitScene(sceneId);
+      this._handlePacket(packet);
+    },
+    
+    equipToy(toyId) {
+      if (!window.InPalmEngine?.equipToy) return;
+      window.InPalmEngine.equipToy(toyId);
+      this._renderToys();
+      this.refreshAll();
+    },
+    
+    unequipToy(toyId) {
+      if (!window.InPalmEngine?.unequipToy) return;
+      window.InPalmEngine.unequipToy(toyId);
+      this._renderToys();
+      this.refreshAll();
+    },
+    
+    buyToy(toyId) {
+      if (!window.InPalmEngine?.buyToy) return;
+      window.InPalmEngine.buyToy(toyId);
+      this._renderToys();
+    },
+    
+    endSession() {
+      if (!confirm('确定结束本局？当前状态将被清空。')) return;
+      if (!window.InPalmEngine?.endSession) return;
+      const packet = window.InPalmEngine.endSession();
+      this._handlePacket(packet);
+    },
+    
+    _handlePacket(packet) {
+      if (!packet) return;
+      
+      // 显示调试内容
+      const debug = document.getElementById('inp-debug');
+      if (debug) {
+        debug.textContent = JSON.stringify(packet, null, 2);
+      }
+      
+      // 通知 index.js 发送 prompt
+      if (packet.blocked) {
+        alert('动作被阻止: ' + (packet.reason || '未知原因'));
+      } else if (this._onActionPrompt && this._autoSend) {
+        this._onActionPrompt(packet);
+      }
+      
+      this.refreshAll();
+    },
+    
+    // ==== 调试区折叠 ====
+    
+    toggleDebug() {
+      const el = document.getElementById('inp-debug');
+      const toggle = document.querySelector('.debug-toggle');
+      const isShow = el.classList.toggle('show');
+      if (toggle) toggle.textContent = (isShow ? '▼' : '▶') + ' 调试响应区 · 看 AI 会收到什么';
+    },
+    
+    // ==== 状态刷新 ====
+    
+    refreshAll() {
+      if (!window.InPalmEngine?.getState) return;
+      const state = window.InPalmEngine.getState();
+      if (!state) return;
+      
+      // 时间
+      document.getElementById('inp-day').textContent = 'Day ' + state.time.day;
+      document.getElementById('inp-time').textContent = String(state.time.hour).padStart(2, '0') + ':00';
+      
+      // 阶段
+      const stageLabels = { shock: '震惊期', resist: '对抗期', adapt: '适应期', transform: '转化期' };
+      document.getElementById('inp-stage').textContent = stageLabels[state.time.stage] || state.time.stage;
+      
+      // 位置
+      document.getElementById('inp-location').textContent = state.location?.current || '密室';
+      
+      // 关系扭曲
+      document.getElementById('inp-distortion').textContent = state.relationship?.distortion || 0;
+      
+      // 数值条
+      this._updateStatBar('sanity', state.char.sanity);
+      this._updateStatBar('mood', state.char.mood);
+      this._updateStatBar('stamina', state.char.stamina);
+      this._updateStatBar('shame', state.char.shame);
+      
+      // 对话模式
+      const dialogueBar = document.getElementById('inp-dialogue-bar');
+      if (state.dialogue?.active) {
+        dialogueBar.classList.add('active');
+        document.getElementById('inp-dialogue-name').textContent = state.dialogue.entryName || '—';
+        document.getElementById('inp-dialogue-turns').textContent = state.dialogue.turns || 0;
+      } else {
+        dialogueBar.classList.remove('active');
+      }
+      
+      // 装备中的玩具数
+      const equipped = state.toys?.equipped?.length || 0;
+      const eqEl = document.getElementById('inp-equipped-count');
+      if (eqEl) eqEl.textContent = equipped;
+    },
+    
+    _updateStatBar(stat, value) {
+      const bar = document.getElementById('bar-' + stat);
+      const val = document.getElementById('val-' + stat);
+      if (bar) bar.style.width = value + '%';
+      if (val) val.textContent = value;
+    },
+    
+    _showMilestone(event) {
+      const area = document.getElementById('inp-milestones');
+      if (!area) return;
+      
+      const div = document.createElement('div');
+      div.className = 'milestone-alert';
+      div.textContent = '⚠ ' + (event.message || '状态异常');
+      area.appendChild(div);
+      
+      setTimeout(() => div.remove(), 8000);
+    },
+    
+    // ==== 动态渲染：对话切入点 ====
+    
+    _renderDialogueEntries() {
+      const container = document.getElementById('inp-dialogue-entries');
+      if (!container || !window.InPalmEngine?.getDialogueEntries) return;
+      
+      const entries = window.InPalmEngine.getDialogueEntries() || [];
+      container.innerHTML = entries.map(e => `
+        <div class="dialogue-entry" onclick="InPalmDrawer.enterDialogue('${e.id}')">
+          <div class="dialogue-entry-title">${e.name}</div>
+          <div class="dialogue-entry-desc">${e.description || ''}</div>
+        </div>
+      `).join('');
+    },
+    
+    // ==== 动态渲染：调教动作 ====
+    
+    _renderTrainActions() {
+      const container = document.getElementById('inp-train-actions');
+      if (!container || !window.InPalmEngine?.getAvailableTrainingActions) return;
+      
+      const actions = window.InPalmEngine.getAvailableTrainingActions() || [];
+      if (actions.length === 0) {
+        container.innerHTML = '<div class="panel-title">当前深度档位下无可用调教</div>';
+        return;
+      }
+      container.innerHTML = actions.map(a => `
+        <button class="action-btn" onclick="InPalmDrawer.doAction('${a.id}')">
+          ${a.name}
+        </button>
+      `).join('');
+    },
+    
+    // ==== 动态渲染：玩具列表 ====
+    
+    _renderToys() {
+      const container = document.getElementById('inp-toys-list');
+      if (!container || !window.InPalmEngine?.getToyState) return;
+      
+      const state = window.InPalmEngine.getToyState() || {};
+      const equipped = state.equipped || [];
+      const owned = state.owned || [];
+      const shop = state.shop || [];
+      
+      let html = '';
+      
+      if (equipped.length > 0) {
+        html += '<div class="panel-title" style="margin-top: 10px;">装备中</div>';
+        html += equipped.map(t => `
+          <div class="scene-item">
+            <span class="scene-name">${t.name}</span>
+            <button class="icon-btn" onclick="InPalmDrawer.unequipToy('${t.id}')">卸下</button>
           </div>
+        `).join('');
+      }
+      
+      if (owned.length > 0) {
+        html += '<div class="panel-title" style="margin-top: 10px;">已拥有</div>';
+        html += owned.map(t => `
+          <div class="scene-item">
+            <span class="scene-name">${t.name}</span>
+            <button class="icon-btn" onclick="InPalmDrawer.equipToy('${t.id}')">装备</button>
+          </div>
+        `).join('');
+      }
+      
+      if (shop.length > 0) {
+        html += '<div class="panel-title" style="margin-top: 10px;">可购买</div>';
+        html += shop.map(t => `
+          <div class="scene-item">
+            <span class="scene-name">${t.name} · ¥${t.price || '?'}</span>
+            <button class="icon-btn" onclick="InPalmDrawer.buyToy('${t.id}')">购入</button>
+          </div>
+        `).join('');
+      }
+      
+      container.innerHTML = html || '<div class="panel-title">暂无玩具</div>';
+    },
+    
+    // ==== 动态渲染：场景列表 ====
+    
+    _renderScenes() {
+      const container = document.getElementById('inp-scenes-list');
+      if (!container || !window.InPalmEngine?.getAvailableScenes) return;
+      
+      const scenes = window.InPalmEngine.getAvailableScenes() || [];
+      container.innerHTML = scenes.map(s => `
+        <div class="scene-item" onclick="InPalmDrawer.visitScene('${s.id}')">
+          <span class="scene-name">${s.name}</span>
+          <span class="scene-duration">${s.duration || '?'}h</span>
         </div>
-      </div>
-      <div class="tab-section">
-        <div class="section-label">我的预设（点击执行）</div>
-        <div id="preset-list">
-          <div class="empty-state">还没有预设。</div>
+      `).join('');
+    },
+    
+    // ==== 动态渲染：自定义动作类别 ====
+    
+    _renderCustomCats() {
+      const container = document.getElementById('inp-custom-cats');
+      if (!container || !window.InPalmEngine?.getCustomActionCategories) return;
+      
+      const cats = window.InPalmEngine.getCustomActionCategories() || [];
+      container.innerHTML = cats.map(c => `
+        <div class="custom-category" data-cat="${c.id}" onclick="InPalmDrawer._selectCustomCat('${c.id}', this)">
+          ${c.name}
         </div>
-      </div>
-    </div>
+      `).join('');
+    },
+    
+    _selectCustomCat(catId, el) {
+      this._currentCategory = catId;
+      document.querySelectorAll('#inp-custom-cats .custom-category').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+  };
+  
+  window.InPalmDrawer = Drawer;
+})();
+</script>
 
-  </div>
-
-  <!-- =============== 调试响应区（默认折叠） =============== -->
-  <div class="debug-panel collapsed" id="debug-panel">
-    <div class="debug-panel-header">
-      <span class="debug-panel-title" onclick="toggleDebugPanel()">
-        <span class="debug-caret">▶</span>
-        <span>⚙ 调试响应区 · 看 AI 会收到什么</span>
-        <span class="debug-has-new" title="有新内容"></span>
-      </span>
-      <div class="debug-tabs" id="debug-tabs-area" style="display:none;">
-        <button class="debug-tab active" onclick="switchDebugView(this, 'prompt'); event.stopPropagation();">给 AI 的提示</button>
-        <button class="debug-tab" onclick="switchDebugView(this, 'packet'); event.stopPropagation();">完整上下文包</button>
-      </div>
-    </div>
-    <div class="debug-panel-body">
-      <div class="debug-output" id="debug-output">
-        <div class="debug-empty">点击任何动作按钮，这里会显示发送给 AI 的 prompt 和完整的状态上下文包。</div>
-      </div>
-      <div class="debug-send-hint" id="debug-send-hint" style="display:none;">
-        <strong>↑ 这段文字</strong> 会被自动发送到酒馆输入框。AI 读取它 + Lorebook 规则后，生成 {{char}} 的反应描写，显示在聊天气泡中。
-      </div>
-    </div>
-  </div>
-
-  <!-- =============== 底栏 =============== -->
-  <div class="bottom-actions">
-    <span class="engine-info">in your palm · engine v<span id="engine-version">0.3.1</span></span>
-    <button class="end-session-btn" onclick="confirmEndSession()">我要结束了</button>
-  </div>
-
-  <!-- =============== 抽屉 =============== -->
-  <div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
-  <div class="drawer" id="drawer">
-    <div class="drawer-header">
-      <span class="drawer-title" id="drawer-title">状态面板</span>
-      <button class="drawer-close" onclick="closeDrawer()">关闭 ×</button>
-    </div>
-    <div id="drawer-content"></div>
-  </div>
-
-</div>
-</div>
-</div>
-
+<!-- ============ 开场菜单的原 scripts ============ -->
 <script>
 
 
@@ -2479,876 +2534,87 @@ renderSteps();
 
 </script>
 
-<script>
-
-/* ============================================================
-   掌心的它 · 主控制台 前端逻辑
-   
-   实际部署时会连接真正的 InPalmEngine API。
-   本独立预览版本使用模拟数据，让你在不启动引擎的情况下
-   也能看到 UI 长什么样、交互如何运作。
-   
-   接入实际引擎时只需：
-   - 删除本文件底部的 MOCK_ENGINE
-   - 确保 <script src="engine.js"> 已加载
-   - state 访问改为 InPalmEngine.getState() 等真实 API
-   ============================================================ */
-
-/* ---------- 检测真实引擎 vs 模拟引擎 ---------- */
-
-const hasRealEngine = typeof InPalmEngine !== 'undefined';
-
-/* ---------- 模拟引擎（仅当没有真实引擎时启用） ---------- */
-
-const MOCK_STATE = {
-  time: { day: 1, hour: 20, minute: 0, stage: 'shock' },
-  location: { current: 'home_main' },
-  char: {
-    sanity: 75, mood: 50, sincerity: 20, compliance: 15,
-    stamina: 80, hunger: 20, sleep: 60, health: 95,
-    arousal: 0, shame: 50, trained: 0
-  },
-  charStatus: {
-    consciousness: 'awake', position: 'free', clothed: 'normal',
-    gagged: false, blindfolded: false, collared: false,
-    toysEquipped: []
-  },
-  state: { distortion: 0, riskLevel: 0, inDialogue: false, dialogueContext: null },
-  inventory: {},
-  customActionPresets: [],
-  log: [
-    { timestamp: 'D1 20:00', type: 'system', text: '系统初始化完成。{{char}} 已被囚禁。' }
-  ]
-};
-
-const MOCK_SCENES = {
-  home_main: { name: '家 · 主房间' },
-  cell_room: { name: '密室' },
-  surveillance: { name: '监控室' },
-  supermarket: { name: '超市' },
-  pharmacy: { name: '药店' },
-  street: { name: '街道' },
-  cafe: { name: '咖啡厅' }
-};
-
-const MOCK_STAGES = {
-  shock: '震惊期', resist: '对抗期', adapt: '适应期', transform: '转化期'
-};
-
-const MOCK_DIALOGUES = [
-  { id: 'small_talk', name: '闲聊', tone: '刻意放松的日常话题', mood: 'casual' },
-  { id: 'interrogation', name: '审讯', tone: '质问、威压、信息探取', mood: 'pressure' },
-  { id: 'threat', name: '威胁', tone: '明示或暗示的恐吓', mood: 'intimidation' },
-  { id: 'seduction', name: '温柔诱导', tone: '异常柔软、诱导式', mood: 'tender' },
-  { id: 'humiliation_talk', name: '羞辱', tone: '贬低、嘲弄、侮辱', mood: 'degrading' },
-  { id: 'probe_past', name: '探问过去', tone: '挖掘 {{char}} 的过去', mood: 'invasive' },
-  { id: 'confession', name: '表白/坦白', tone: '玩家向 {{char}} 展示自己', mood: 'vulnerable' },
-  { id: 'silence_sit', name: '沉默陪伴', tone: '不说话，只是在场', mood: 'still' },
-  { id: 'check_in', name: '关心询问', tone: '关怀式问候', mood: 'concerned' },
-  { id: 'praise', name: '夸奖', tone: '赞美、肯定', mood: 'rewarding' },
-  { id: 'command', name: '下达命令', tone: '命令式', mood: 'authority' }
-];
-
-const MOCK_TOYS = [
-  { id: 'toy_handcuff_soft', name: '软手铐', category: 'restraint' },
-  { id: 'toy_handcuff_metal', name: '金属手铐', category: 'restraint' },
-  { id: 'toy_rope_soft', name: '柔软绳索', category: 'restraint' },
-  { id: 'toy_collar_leather', name: '皮革项圈', category: 'restraint' },
-  { id: 'toy_collar_leash', name: '项圈+牵绳', category: 'restraint' },
-  { id: 'toy_gag_ball', name: '口球', category: 'restraint' },
-  { id: 'toy_blindfold', name: '眼罩', category: 'restraint' },
-  { id: 'toy_vibrator_small', name: '小震动器 [r18]', category: 'stimulation' },
-  { id: 'toy_feather', name: '羽毛', category: 'stimulation' },
-  { id: 'toy_ice', name: '冰块', category: 'stimulation' },
-  { id: 'toy_mirror', name: '全身镜', category: 'humiliation' },
-  { id: 'toy_camera', name: '相机', category: 'humiliation' },
-  { id: 'toy_brush', name: '梳子', category: 'care' },
-  { id: 'toy_bath_kit', name: '浴具', category: 'care' },
-  { id: 'toy_counter', name: '计数器', category: 'training' },
-  { id: 'toy_bell', name: '铃铛', category: 'training' },
-  { id: 'toy_feeding_bowl', name: '专用食盆', category: 'training' }
-];
-
-/* ---------- 统一引擎接口（自适应真实/模拟） ---------- */
-
-function getState() {
-  return hasRealEngine ? InPalmEngine.getState() : JSON.parse(JSON.stringify(MOCK_STATE));
-}
-
-function getDialogues() {
-  return hasRealEngine ? InPalmEngine.getAvailableDialogues() : MOCK_DIALOGUES;
-}
-
-function getAllToys() {
-  return hasRealEngine ? Object.values(InPalmEngine.data.toys) : MOCK_TOYS;
-}
-
-function getToyById(id) {
-  if (hasRealEngine) return InPalmEngine.data.toys[id];
-  return MOCK_TOYS.find(t => t.id === id);
-}
-
-/* ---------- 主题切换 ---------- */
-
-function toggleThemeMenu() {
-  document.getElementById('theme-menu').classList.toggle('open');
-}
-
-function setTheme(themeClass) {
-  const root = document.getElementById('console-root');
-  root.classList.remove('theme-noir', 'theme-ornate', 'theme-raw');
-  root.classList.add(themeClass);
-  
-  document.querySelectorAll('.theme-option').forEach(opt => {
-    opt.classList.toggle('current', opt.dataset.theme === themeClass);
-  });
-  document.getElementById('theme-menu').classList.remove('open');
-}
-
-document.addEventListener('click', (e) => {
-  if (!e.target.closest('#btn-theme') && !e.target.closest('#theme-menu')) {
-    document.getElementById('theme-menu').classList.remove('open');
-  }
-});
-
-/* ---------- 标签页切换 ---------- */
-
-function switchTab(btn, tabId) {
-  document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('tab-' + tabId).classList.add('active');
-}
-
-/* ---------- 监控摄像头切换 ---------- */
-
-function switchCam(el, camId) {
-  document.querySelectorAll('.monitor-tab').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
-  
-  const statusEl = document.getElementById('monitor-status');
-  if (camId === 'ir') {
-    statusEl.textContent = 'ir mode · thermal signature visible';
-  } else if (camId === 'audio') {
-    statusEl.textContent = 'audio only · no visual';
-  } else {
-    statusEl.textContent = `cam ${camId} · subject: stationary · 22°c`;
-  }
-}
-
-/* ---------- 抽屉 ---------- */
-
-let currentDrawer = null;
-
-function openDrawer(type) {
-  currentDrawer = type;
-  document.getElementById('drawer').classList.add('open');
-  document.getElementById('drawer-overlay').classList.add('open');
-  renderDrawer();
-}
-
-function closeDrawer() {
-  document.getElementById('drawer').classList.remove('open');
-  document.getElementById('drawer-overlay').classList.remove('open');
-  currentDrawer = null;
-}
-
-function renderDrawer() {
-  if (!currentDrawer) return;
-  const content = document.getElementById('drawer-content');
-  const title = document.getElementById('drawer-title');
-  
-  if (currentDrawer === 'status') {
-    title.textContent = '状态面板';
-    content.innerHTML = renderStatusDrawer();
-  } else if (currentDrawer === 'inventory') {
-    title.textContent = '库存道具';
-    content.innerHTML = renderInventoryDrawer();
-  } else if (currentDrawer === 'log') {
-    title.textContent = '日志';
-    content.innerHTML = renderLogDrawer();
-  }
-}
-
-function statBar(label, value, colorFn) {
-  const cls = colorFn ? colorFn(value) : '';
-  return `<div class="stat-bar">
-    <span class="stat-label">${label}</span>
-    <div class="stat-track"><div class="stat-fill ${cls}" style="width:${value}%"></div></div>
-    <span class="stat-value">${value}</span>
-  </div>`;
-}
-
-function lowColor(v) { return v <= 30 ? 'low' : v <= 60 ? 'mid' : ''; }
-function highWarnColor(v) { return v >= 70 ? 'high-warning' : v >= 40 ? 'mid' : ''; }
-function arousalColor(v) { return v >= 60 ? 'shame' : v >= 30 ? 'mid' : ''; }
-
-function renderStatusDrawer() {
-  const s = getState();
-  const cs = s.charStatus;
-  
-  return `
-    <div class="drawer-section">
-      <div class="drawer-section-title">心理状态</div>
-      ${statBar('理智', s.char.sanity, lowColor)}
-      ${statBar('心情', s.char.mood, lowColor)}
-      ${statBar('真心', s.char.sincerity)}
-      ${statBar('友好', s.char.compliance)}
-    </div>
-    <div class="drawer-section">
-      <div class="drawer-section-title">生理状态</div>
-      ${statBar('体力', s.char.stamina, lowColor)}
-      ${statBar('饥饿', s.char.hunger)}
-      ${statBar('睡眠', s.char.sleep, lowColor)}
-      ${statBar('健康', s.char.health, lowColor)}
-    </div>
-    <div class="drawer-section">
-      <div class="drawer-section-title">关系 / 调教</div>
-      ${statBar('兴奋', s.char.arousal, arousalColor)}
-      ${statBar('羞耻', s.char.shame)}
-      ${statBar('训练度', s.char.trained, highWarnColor)}
-      ${statBar('扭曲度', s.state.distortion, highWarnColor)}
-      ${statBar('风险值', s.state.riskLevel, highWarnColor)}
-    </div>
-    <div class="drawer-section">
-      <div class="drawer-section-title">物理状态</div>
-      <div class="badge-row">
-        <span class="status-badge ${cs.consciousness !== 'awake' ? 'active' : ''}">意识: ${cs.consciousness}</span>
-        <span class="status-badge ${cs.position !== 'free' ? 'active' : ''}">姿态: ${cs.position}</span>
-        <span class="status-badge ${cs.clothed !== 'normal' ? 'active' : ''}">衣着: ${cs.clothed}</span>
-        ${cs.gagged ? '<span class="status-badge active">口塞</span>' : ''}
-        ${cs.blindfolded ? '<span class="status-badge active">眼罩</span>' : ''}
-        ${cs.collared ? '<span class="status-badge active">项圈</span>' : ''}
-      </div>
-    </div>
-  `;
-}
-
-function renderInventoryDrawer() {
-  const s = getState();
-  const toyIds = s.charStatus.toysEquipped || [];
-  const inventoryToys = Object.keys(s.inventory).filter(id => getToyById(id));
-  const consumables = Object.entries(s.inventory).filter(([id]) => !getToyById(id));
-  
-  return `
-    <div class="drawer-section">
-      <div class="drawer-section-title">已装备（${toyIds.length}）</div>
-      <div class="toy-list">
-        ${toyIds.length === 0 ? '<span class="empty-state">无</span>' :
-          toyIds.map(id => {
-            const t = getToyById(id);
-            return `<span class="toy-chip equipped" onclick="unequipToyUI('${id}')">${t ? t.name : id}</span>`;
-          }).join('')}
-      </div>
-    </div>
-    <div class="drawer-section">
-      <div class="drawer-section-title">已购未装备（${inventoryToys.filter(id => !toyIds.includes(id)).length}）</div>
-      <div class="toy-list">
-        ${inventoryToys.filter(id => !toyIds.includes(id)).length === 0 ? '<span class="empty-state">无</span>' :
-          inventoryToys.filter(id => !toyIds.includes(id)).map(id => {
-            const t = getToyById(id);
-            return `<span class="toy-chip inventory" onclick="equipToyUI('${id}')">${t ? t.name : id}</span>`;
-          }).join('')}
-      </div>
-    </div>
-    <div class="drawer-section">
-      <div class="drawer-section-title">消耗品</div>
-      ${consumables.length === 0 ? '<div class="empty-state">无消耗品</div>' :
-        consumables.map(([id, q]) => `<div class="stat-bar">
-          <span class="stat-label">${id}</span>
-          <span class="stat-value">×${q}</span>
-        </div>`).join('')}
-    </div>
-  `;
-}
-
-function renderLogDrawer() {
-  const s = getState();
-  const logs = s.log.slice().reverse();
-  return `<div class="drawer-section"><div class="log-area">
-    ${logs.length === 0 ? '<div class="empty-state">暂无日志</div>' :
-      logs.map(l => `<div class="log-entry ${l.type || ''}">
-        <span class="log-ts">${l.timestamp}</span>
-        <span class="log-text">${l.text}</span>
-      </div>`).join('')}
-  </div></div>`;
-}
-
-/* ---------- 顶栏刷新 ---------- */
-
-function refreshTopBar() {
-  const s = getState();
-  const time = `day ${s.time.day} · ${String(s.time.hour).padStart(2,'0')}:${String(s.time.minute).padStart(2,'0')}`;
-  document.getElementById('top-time').textContent = time;
-  document.getElementById('top-stage').textContent = MOCK_STAGES[s.time.stage] || s.time.stage;
-  
-  const locName = hasRealEngine 
-    ? (InPalmEngine.data.scenes[s.location.current]?.name || s.location.current)
-    : (MOCK_SCENES[s.location.current]?.name || s.location.current);
-  document.getElementById('top-location').textContent = locName;
-  
-  document.getElementById('monitor-time').textContent = 
-    `${String(s.time.hour).padStart(2,'0')}:${String(s.time.minute).padStart(2,'0')}:14`;
-}
-
-/* ---------- 对话栏 ---------- */
-
-function refreshDialogueBar() {
-  const s = getState();
-  const bar = document.getElementById('dialogue-bar');
-  if (s.state.inDialogue && s.state.dialogueContext) {
-    bar.classList.add('active');
-    document.getElementById('dialogue-name').textContent = s.state.dialogueContext.entry?.name || '—';
-    document.getElementById('dialogue-turns').textContent = s.state.dialogueContext.turns || 0;
-  } else {
-    bar.classList.remove('active');
-  }
-}
-
-function exitDialogue() {
-  if (hasRealEngine) InPalmEngine.exitDialogue();
-  else { MOCK_STATE.state.inDialogue = false; MOCK_STATE.state.dialogueContext = null; }
-  refreshAll();
-}
-
-/* ---------- 动态渲染对话按钮 ---------- */
-
-function refreshDialogueButtons() {
-  const s = getState();
-  const entries = getDialogues();
-  const inDialogue = s.state.inDialogue;
-  
-  const html = entries.map(entry => {
-    const cls = entry.mood === 'pressure' || entry.mood === 'intimidation' ? 'danger' :
-                entry.mood === 'tender' || entry.mood === 'vulnerable' ? 'shame' :
-                entry.mood === 'degrading' ? 'danger' :
-                entry.mood === 'concerned' || entry.mood === 'rewarding' ? 'success' :
-                'info';
-    return `<button class="action-btn ${cls}" onclick="enterDialogue('${entry.id}')" ${inDialogue ? 'disabled' : ''} title="${entry.tone}">${entry.name}</button>`;
-  }).join('');
-  
-  document.getElementById('dialogue-buttons').innerHTML = html;
-}
-
-function enterDialogue(entryId) {
-  if (hasRealEngine) {
-    const packet = InPalmEngine.enterDialogue(entryId);
-    if (packet && !packet.blocked) updateDebug(packet);
-  } else {
-    const entry = MOCK_DIALOGUES.find(d => d.id === entryId);
-    MOCK_STATE.state.inDialogue = true;
-    MOCK_STATE.state.dialogueContext = { entry: entry, turns: 0 };
-    MOCK_STATE.log.unshift({ timestamp: `D${MOCK_STATE.time.day} ${String(MOCK_STATE.time.hour).padStart(2,'0')}:${String(MOCK_STATE.time.minute).padStart(2,'0')}`, type: 'dialogue', text: `进入对话模式: ${entry.name}` });
-    const mockPacket = buildMockPacket('dialogue_start', entryId, { prompt: `进入对话切入点 "${entry.name}" (${entry.tone})` });
-    mockPacket.meta.mode = 'dialogue';
-    updateDebug(mockPacket);
-  }
-  refreshAll();
-}
-
-/* ---------- 道具 ---------- */
-
-function refreshToysPanel() {
-  const s = getState();
-  const toys = getAllToys();
-  const equipped = s.charStatus.toysEquipped || [];
-  const owned = Object.keys(s.inventory).filter(id => getToyById(id) && !equipped.includes(id));
-  
-  // 已购道具
-  document.getElementById('owned-toys').innerHTML = owned.length === 0
-    ? '<div class="empty-state">未购入任何道具。</div>'
-    : owned.map(id => {
-        const t = getToyById(id);
-        return `<span class="toy-chip inventory" onclick="equipToyUI('${id}')" title="点击装备">${t.name}</span>`;
-      }).join('');
-  
-  // 已装备
-  document.getElementById('equipped-toys').innerHTML = equipped.length === 0
-    ? '<div class="empty-state">未装备道具。</div>'
-    : equipped.map(id => {
-        const t = getToyById(id);
-        return `<span class="toy-chip equipped" onclick="unequipToyUI('${id}')" title="点击卸下">${t ? t.name : id}</span>`;
-      }).join('');
-  
-  // 商店（测试用）
-  const grouped = {};
-  toys.forEach(t => {
-    if (!grouped[t.category]) grouped[t.category] = [];
-    grouped[t.category].push(t);
-  });
-  
-  const catLabels = { 
-    restraint: '约束', stimulation: '刺激', humiliation: '羞辱', 
-    training: '训练', care: '护理' 
-  };
-  
-  let shopHtml = '';
-  ['restraint', 'stimulation', 'humiliation', 'training', 'care'].forEach(cat => {
-    if (!grouped[cat]) return;
-    shopHtml += `<div style="margin-bottom:8px;">
-      <div class="section-label" style="margin-bottom:4px;">${catLabels[cat] || cat}</div>
-      <div class="btn-grid">
-        ${grouped[cat].map(t => 
-          `<button class="action-btn" onclick="purchaseToyUI('${t.id}')">${t.name}</button>`
-        ).join('')}
-      </div>
-    </div>`;
-  });
-  
-  document.getElementById('toy-shop').innerHTML = shopHtml;
-}
-
-function purchaseToyUI(toyId) {
-  if (hasRealEngine) {
-    InPalmEngine.purchaseToy(toyId);
-  } else {
-    MOCK_STATE.inventory[toyId] = (MOCK_STATE.inventory[toyId] || 0) + 1;
-    MOCK_STATE.log.unshift({ timestamp: `D${MOCK_STATE.time.day} ${String(MOCK_STATE.time.hour).padStart(2,'0')}:${String(MOCK_STATE.time.minute).padStart(2,'0')}`, type: 'toy', text: `购入: ${getToyById(toyId)?.name || toyId}` });
-  }
-  refreshAll();
-}
-
-function equipToyUI(toyId) {
-  if (hasRealEngine) {
-    InPalmEngine.equipToy(toyId);
-  } else {
-    if (!MOCK_STATE.charStatus.toysEquipped.includes(toyId)) {
-      MOCK_STATE.charStatus.toysEquipped.push(toyId);
-      const t = getToyById(toyId);
-      if (t && t.category === 'restraint') {
-        if (toyId.includes('collar')) MOCK_STATE.charStatus.collared = true;
-        if (toyId.includes('gag')) MOCK_STATE.charStatus.gagged = true;
-        if (toyId.includes('blindfold')) MOCK_STATE.charStatus.blindfolded = true;
-      }
-      MOCK_STATE.log.unshift({ timestamp: `D${MOCK_STATE.time.day} ${String(MOCK_STATE.time.hour).padStart(2,'0')}:${String(MOCK_STATE.time.minute).padStart(2,'0')}`, type: 'toy', text: `装备: ${t?.name || toyId}` });
-    }
-  }
-  refreshAll();
-}
-
-function unequipToyUI(toyId) {
-  if (hasRealEngine) {
-    InPalmEngine.unequipToy(toyId);
-  } else {
-    const idx = MOCK_STATE.charStatus.toysEquipped.indexOf(toyId);
-    if (idx > -1) {
-      MOCK_STATE.charStatus.toysEquipped.splice(idx, 1);
-      if (toyId.includes('collar')) MOCK_STATE.charStatus.collared = false;
-      if (toyId.includes('gag')) MOCK_STATE.charStatus.gagged = false;
-      if (toyId.includes('blindfold')) MOCK_STATE.charStatus.blindfolded = false;
-    }
-  }
-  refreshAll();
-}
-
-/* ---------- 动作执行 ---------- */
-
-/* 调试响应区：显示 AI 会收到什么 */
-let currentDebugView = 'prompt';
-let lastPacket = null;
-
-function switchDebugView(btn, view) {
-  document.querySelectorAll('.debug-tab').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  currentDebugView = view;
-  renderDebugOutput();
-}
-
-function renderDebugOutput() {
-  const out = document.getElementById('debug-output');
-  const hint = document.getElementById('debug-send-hint');
-  
-  if (!lastPacket) {
-    out.innerHTML = '<div class="debug-empty">点击任何动作按钮，这里会显示发送给 AI 的 prompt 和完整的状态上下文包。</div>';
-    hint.style.display = 'none';
-    return;
-  }
-  
-  if (currentDebugView === 'prompt') {
-    // 构造 AI 会实际收到的文字
-    const prompt = buildAIPromptPreview(lastPacket);
-    out.innerHTML = `<div class="prompt-text">${escapeHtml(prompt)}</div>`;
-    hint.style.display = 'block';
-  } else {
-    // 显示完整 packet（JSON 高亮）
-    out.innerHTML = syntaxHighlight(JSON.stringify(lastPacket, null, 2));
-    hint.style.display = 'none';
-  }
-}
-
-// 构造 AI 会实际收到的文字（模拟酒馆里会发送的内容）
-function buildAIPromptPreview(packet) {
-  if (!packet) return '';
-  
-  const lines = [];
-  lines.push('[系统状态更新]');
-  lines.push(`模式: ${packet.meta.mode}`);
-  lines.push(`阶段: ${packet.time.stageName || packet.time.stage} (Day ${packet.time.day} ${String(packet.time.hour).padStart(2,'0')}:00)`);
-  lines.push(`档位: ${packet.meta.depth}`);
-  lines.push('');
-  lines.push('[{{char}} 当前状态]');
-  lines.push(`理智: ${packet.char.sanity} | 心情: ${packet.char.mood} | 真心: ${packet.char.sincerity} | 友好: ${packet.char.compliance}`);
-  lines.push(`体力: ${packet.char.stamina} | 饥饿: ${packet.char.hunger} | 睡眠: ${packet.char.sleep} | 健康: ${packet.char.health}`);
-  lines.push(`兴奋: ${packet.char.arousal} | 羞耻: ${packet.char.shame} | 训练度: ${packet.char.trained}`);
-  lines.push(`关系扭曲: ${packet.relationship.distortion}`);
-  lines.push('');
-  lines.push('[物理状态]');
-  lines.push(`意识: ${packet.charStatus.consciousness} | 姿态: ${packet.charStatus.position} | 衣着: ${packet.charStatus.clothed}`);
-  const flags = [];
-  if (packet.charStatus.gagged) flags.push('口塞');
-  if (packet.charStatus.blindfolded) flags.push('眼罩');
-  if (packet.charStatus.collared) flags.push('项圈');
-  if (flags.length) lines.push('标志: ' + flags.join(', '));
-  if (packet.equippedToys && packet.equippedToys.length) {
-    lines.push('已装备: ' + packet.equippedToys.map(t => t.name).join(', '));
-  }
-  lines.push('');
-  
-  if (packet.trigger) {
-    lines.push('[本次触发]');
-    if (packet.trigger.triggerType === 'action') {
-      lines.push(`玩家执行了动作: ${packet.trigger.triggerId}`);
-    } else if (packet.trigger.triggerType === 'custom_action') {
-      lines.push(`玩家执行了自定义动作: ${packet.trigger.customCategory}`);
-      lines.push(`玩家的具体描述: 「${packet.trigger.customDescription}」`);
-    } else if (packet.trigger.triggerType === 'scene') {
-      lines.push(`玩家前往场景: ${packet.trigger.triggerId}`);
-      if (packet.trigger.riskEvent) {
-        lines.push(`⚠ 触发风险事件: ${packet.trigger.riskEvent.id}`);
-      }
-    } else if (packet.trigger.triggerType === 'dialogue_start') {
-      lines.push(`玩家开启对话模式: ${packet.trigger.triggerId}`);
-    } else if (packet.trigger.triggerType === 'end') {
-      lines.push('玩家结束本局');
-    }
-    lines.push('');
-    lines.push('[叙事指导]');
-    lines.push(packet.trigger.triggerPrompt || '(无额外指导)');
-  }
-  
-  return lines.join('\n');
-}
-
-function syntaxHighlight(json) {
-  return escapeHtml(json).replace(
-    /("([^"\\]|\\.)*")\s*:/g, '<span class="key">$1</span>:'
-  ).replace(
-    /:\s*("([^"\\]|\\.)*")/g, ': <span class="str">$1</span>'
-  ).replace(
-    /:\s*(-?\d+\.?\d*)/g, ': <span class="num">$1</span>'
-  );
-}
-
-function escapeHtml(s) {
-  return String(s)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
-}
-
-function updateDebug(packet) {
-  if (packet) {
-    lastPacket = packet;
-    renderDebugOutput();
-    
-    // 如果调试区处于折叠状态，显示小红点提示
-    const panel = document.getElementById('debug-panel');
-    if (panel.classList.contains('collapsed')) {
-      panel.classList.add('has-new');
-    }
-  }
-}
-
-// 折叠/展开调试区
-function toggleDebugPanel() {
-  const panel = document.getElementById('debug-panel');
-  const tabs = document.getElementById('debug-tabs-area');
-  const isCollapsed = panel.classList.toggle('collapsed');
-  tabs.style.display = isCollapsed ? 'none' : 'flex';
-  
-  // 展开时清除新内容提示
-  if (!isCollapsed) {
-    panel.classList.remove('has-new');
-  }
-}
-
-function engineAction(actionId) {
-  if (hasRealEngine) {
-    const packet = InPalmEngine.action(actionId);
-    updateDebug(packet);
-    if (packet) flashMonitorActivity();
-  } else {
-    // Mock: 生成一个模拟 packet
-    const mockPacket = buildMockPacket('action', actionId);
-    updateDebug(mockPacket);
-    MOCK_STATE.time.hour += 1;
-    if (MOCK_STATE.time.hour >= 24) { MOCK_STATE.time.hour -= 24; MOCK_STATE.time.day += 1; }
-    MOCK_STATE.log.unshift({ timestamp: `D${MOCK_STATE.time.day} ${String(MOCK_STATE.time.hour).padStart(2,'0')}:${String(MOCK_STATE.time.minute).padStart(2,'0')}`, type: 'action', text: `动作: ${actionId}` });
-    flashMonitorActivity();
-  }
-  refreshAll();
-}
-
-function engineVisit(sceneId) {
-  if (hasRealEngine) {
-    const packet = InPalmEngine.visitScene(sceneId);
-    updateDebug(packet);
-  } else {
-    const mockPacket = buildMockPacket('scene', sceneId);
-    updateDebug(mockPacket);
-    MOCK_STATE.location.current = sceneId;
-    MOCK_STATE.time.hour += 1;
-    if (MOCK_STATE.time.hour >= 24) { MOCK_STATE.time.hour -= 24; MOCK_STATE.time.day += 1; }
-    MOCK_STATE.log.unshift({ timestamp: `D${MOCK_STATE.time.day} ${String(MOCK_STATE.time.hour).padStart(2,'0')}:${String(MOCK_STATE.time.minute).padStart(2,'0')}`, type: 'action', text: `前往: ${MOCK_SCENES[sceneId]?.name || sceneId}` });
-  }
-  refreshAll();
-}
-
-// Mock 模式下构造一个模拟 packet（用于调试区显示）
-function buildMockPacket(triggerType, triggerId, extra) {
-  const s = getState();
-  return {
-    meta: { version: '0.3.1-mock', mode: 'observation', depth: 'r18' },
-    time: { day: s.time.day, hour: s.time.hour, stage: s.time.stage, stageName: MOCK_STAGES[s.time.stage] },
-    location: s.location.current,
-    char: { ...s.char },
-    charStatus: { ...s.charStatus },
-    relationship: { ...s.state },
-    equippedToys: (s.charStatus.toysEquipped || []).map(id => ({ id: id, name: getToyById(id)?.name || id })),
-    trigger: {
-      triggerType: triggerType,
-      triggerId: triggerId,
-      triggerPrompt: extra?.prompt || '[Mock 模式] 实际引擎会提供具体的叙事指导。这里仅用于预览 UI 流程。',
-      ...(extra || {})
-    }
-  };
-}
-
-function flashMonitorActivity() {
-  const fig = document.getElementById('subject-figure');
-  if (!fig) return;
-  fig.style.transition = 'transform 0.3s';
-  fig.style.transform = `translate(${(Math.random()-0.5)*20}px, ${(Math.random()-0.5)*10}px)`;
-  setTimeout(() => { fig.style.transform = ''; }, 800);
-}
-
-/* ---------- 自定义动作 ---------- */
-
-function executeCustomAction() {
-  const desc = document.getElementById('custom-desc').value.trim();
-  const category = document.getElementById('custom-category').value;
-  const durStr = document.getElementById('custom-duration').value.trim();
-  
-  if (!desc) { alert('请先输入动作描述'); return; }
-  
-  if (hasRealEngine) {
-    const packet = InPalmEngine.customAction({
-      description: desc,
-      category: category,
-      customDuration: durStr ? parseInt(durStr) : undefined
-    });
-    updateDebug(packet);
-  } else {
-    MOCK_STATE.log.unshift({
-      timestamp: `D${MOCK_STATE.time.day} ${String(MOCK_STATE.time.hour).padStart(2,'0')}:${String(MOCK_STATE.time.minute).padStart(2,'0')}`,
-      type: 'action',
-      text: `[自定义 · ${category}] ${desc.substring(0, 40)}...`
-    });
-    MOCK_STATE.time.hour += 1;
-    if (MOCK_STATE.time.hour >= 24) { MOCK_STATE.time.hour -= 24; MOCK_STATE.time.day += 1; }
-    const mockPacket = buildMockPacket('custom_action', 'custom_' + category, {
-      customDescription: desc,
-      customCategory: category,
-      prompt: `玩家执行了一个自定义动作。类别: ${category}。玩家的具体描述: 「${desc}」。根据玩家的创意和当前状态生成叙事。`
-    });
-    updateDebug(mockPacket);
-  }
-  refreshAll();
-}
-
-function saveCustomPresetUI() {
-  const desc = document.getElementById('custom-desc').value.trim();
-  const category = document.getElementById('custom-category').value;
-  const durStr = document.getElementById('custom-duration').value.trim();
-  
-  if (!desc) { alert('请先输入动作描述'); return; }
-  const name = prompt('为这个预设起个名字：');
-  if (!name) return;
-  
-  const preset = {
-    name: name, description: desc, category: category,
-    durationMinutes: durStr ? parseInt(durStr) : undefined
-  };
-  
-  if (hasRealEngine) {
-    InPalmEngine.saveCustomPreset(preset);
-  } else {
-    MOCK_STATE.customActionPresets.push(preset);
-  }
-  refreshPresets();
-}
-
-function clearCustomInput() {
-  document.getElementById('custom-desc').value = '';
-  document.getElementById('custom-duration').value = '';
-}
-
-function refreshPresets() {
-  const s = getState();
-  const presets = s.customActionPresets || [];
-  const area = document.getElementById('preset-list');
-  
-  if (presets.length === 0) {
-    area.innerHTML = '<div class="empty-state">还没有预设。</div>';
-    return;
-  }
-  
-  area.innerHTML = presets.map((p, i) => `<div class="preset-item">
-    <div class="preset-item-header">
-      <span class="preset-name">${p.name}</span>
-      <span class="preset-category">[${p.category}]</span>
-    </div>
-    <div class="preset-desc">${p.description.substring(0, 120)}${p.description.length > 120 ? '...' : ''}</div>
-    <div class="preset-actions">
-      <button class="action-btn info" onclick="executePreset(${i})">执行</button>
-      <button class="action-btn danger" onclick="deletePreset(${i})">删除</button>
-    </div>
-  </div>`).join('');
-}
-
-function executePreset(i) {
-  if (hasRealEngine) {
-    const packet = InPalmEngine.executePreset(i);
-    updateDebug(packet);
-  } else {
-    const p = MOCK_STATE.customActionPresets[i];
-    if (p) {
-      MOCK_STATE.log.unshift({
-        timestamp: `D${MOCK_STATE.time.day} ${String(MOCK_STATE.time.hour).padStart(2,'0')}:${String(MOCK_STATE.time.minute).padStart(2,'0')}`,
-        type: 'action', text: `[预设: ${p.name}]`
-      });
-      const mockPacket = buildMockPacket('custom_action', 'custom_' + p.category, {
-        customDescription: p.description,
-        customCategory: p.category,
-        prompt: `玩家执行预设 "${p.name}"。描述: 「${p.description}」`
-      });
-      updateDebug(mockPacket);
-    }
-  }
-  refreshAll();
-}
-
-function deletePreset(i) {
-  if (!confirm('删除这个预设？')) return;
-  if (hasRealEngine) {
-    InPalmEngine.deleteCustomPreset(i);
-  } else {
-    MOCK_STATE.customActionPresets.splice(i, 1);
-  }
-  refreshPresets();
-}
-
-/* ---------- 结束本局 ---------- */
-
-function confirmEndSession() {
-  if (!confirm('确定要结束本局吗？AI 将根据当前所有状态生成一段最终场景。')) return;
-  if (hasRealEngine) {
-    const packet = InPalmEngine.endSession();
-    updateDebug(packet);
-    alert('已触发结束场景。调试区显示了 AI 会收到的 prompt。');
-  } else {
-    const mockPacket = buildMockPacket('end', 'endSession', {
-      prompt: '玩家主动结束了这段囚禁。基于 {{char}} 当前的所有状态值，自然地生成一个结束场景。不要套用任何预设模板，完全根据此刻的数值与累积的剧情，生成独一无二的结局。'
-    });
-    updateDebug(mockPacket);
-    alert('[预览模式] 调试区显示了结束场景的 prompt。真实环境会生成最终叙事。');
-  }
-}
-
-/* ---------- 里程碑 ---------- */
-
-function showMilestone(msg) {
-  const area = document.getElementById('milestones-area');
-  const div = document.createElement('div');
-  div.className = 'milestone-banner';
-  div.textContent = '⚠ ' + msg;
-  area.appendChild(div);
-  setTimeout(() => {
-    div.style.transition = 'opacity 1s';
-    div.style.opacity = '0';
-    setTimeout(() => div.remove(), 1000);
-  }, 8000);
-}
-
-/* ---------- 总刷新 ---------- */
-
-function refreshAll() {
-  refreshTopBar();
-  refreshDialogueBar();
-  refreshDialogueButtons();
-  refreshToysPanel();
-  refreshPresets();
-  if (currentDrawer) renderDrawer();
-}
-
-/* ---------- 初始化 ---------- */
-
-function init() {
-  if (hasRealEngine) {
-    document.getElementById('engine-version').textContent = InPalmEngine.VERSION;
-    InPalmEngine.on('milestonesTriggered', (triggered) => {
-      triggered.forEach(m => showMilestone(m.msg));
-    });
-  } else {
-    console.log('[预览模式] 未检测到 InPalmEngine，使用模拟数据');
-    document.getElementById('engine-version').textContent = '0.3.1 (mock)';
-  }
-  refreshAll();
-}
-
-init();
-
-</script>
-
+<!-- ============ 扩展集成层 ============ -->
 <script>
 (function() {
+  'use strict';
+  
+  // 供 index.js 调用的全局 API
   window.InPalmConsole = {
+    _onActionPrompt: null,
+    _autoSend: true,
+    
+    // index.js 调用这个来初始化
     init: function(options) {
       options = options || {};
-      window.InPalmConsole._onActionPrompt = options.onActionPrompt || null;
-      window.InPalmConsole._autoSend = options.autoSend !== false;
-      window.InPalmConsole._defaultTheme = options.theme || 'theme-noir';
-      console.log('[掌心的它] 控制台初始化完成');
+      this._onActionPrompt = options.onActionPrompt || null;
+      this._autoSend = options.autoSend !== false;
+      
+      // 检查是否有已存在的 game state
+      const hasState = window.InPalmEngine?.getState?.();
+      
+      if (hasState) {
+        // 已有游戏，直接打开抽屉
+        if (window.InPalmDrawer) {
+          window.InPalmDrawer.init({
+            onActionPrompt: this._onActionPrompt,
+            autoSend: this._autoSend,
+            theme: options.theme
+          });
+          window.InPalmDrawer.open();
+        }
+      } else {
+        // 没有游戏，显示开场菜单模态
+        this._showOpeningModal();
+      }
+      
+      console.log('[InPalmConsole] 已初始化');
     },
+    
+    _showOpeningModal: function() {
+      document.getElementById('inp-opening-modal-overlay').classList.add('show');
+      document.getElementById('inp-opening-modal').classList.add('show');
+      
+      const closeBtn = document.getElementById('inp-opening-modal-close');
+      const overlay = document.getElementById('inp-opening-modal-overlay');
+      closeBtn.onclick = () => this._hideOpeningModal();
+      overlay.onclick = () => this._hideOpeningModal();
+    },
+    
+    _hideOpeningModal: function() {
+      document.getElementById('inp-opening-modal-overlay').classList.remove('show');
+      document.getElementById('inp-opening-modal').classList.remove('show');
+    },
+    
     notifyPacket: function(packet) {
-      if (typeof window.InPalmConsole._onActionPrompt === 'function') {
-        window.InPalmConsole._onActionPrompt(packet);
+      if (typeof this._onActionPrompt === 'function') {
+        this._onActionPrompt(packet);
       }
     }
   };
   
+  // 覆盖 opening_menu 原本的 startGame：
+  // 配置完 → init 引擎 → 关闭模态 → 打开抽屉
   window.startGame = function() {
     if (typeof InPalmEngine !== 'undefined') {
-      InPalmEngine.init(config);
+      InPalmEngine.init(window.config || {});
     }
-    const openingStage = document.getElementById('inp-stage-opening');
-    if (openingStage) openingStage.style.display = 'none';
-    const consoleStage = document.getElementById('inp-stage-console');
-    if (consoleStage) {
-      consoleStage.style.display = 'block';
-      const consoleRoot = document.getElementById('console-root');
-      const theme = config.theme || window.InPalmConsole._defaultTheme;
-      if (consoleRoot && theme) {
-        consoleRoot.classList.remove('theme-noir', 'theme-ornate', 'theme-raw');
-        consoleRoot.classList.add(theme);
-        document.querySelectorAll('.theme-option').forEach(opt => {
-          opt.classList.toggle('current', opt.dataset.theme === theme);
-        });
-      }
-      if (typeof refreshAll === 'function') refreshAll();
+    
+    // 关闭开场菜单
+    window.InPalmConsole._hideOpeningModal();
+    
+    // 打开主控制台抽屉
+    if (window.InPalmDrawer) {
+      window.InPalmDrawer.init({
+        onActionPrompt: window.InPalmConsole._onActionPrompt,
+        autoSend: window.InPalmConsole._autoSend,
+        theme: (window.config && window.config.theme) || 'theme-noir'
+      });
+      window.InPalmDrawer.open();
     }
   };
   
+  // 包装引擎方法，让动作执行后自动通知到 index.js
   if (window.InPalmEngine) {
     const engine = window.InPalmEngine;
     ['action', 'customAction', 'enterDialogue', 'visitScene', 'executePreset', 'endSession'].forEach(methodName => {

@@ -15,7 +15,7 @@ import { saveSettingsDebounced } from '../../../../script.js';
 
 const EXTENSION_NAME = 'in_your_palm';
 const EXTENSION_FOLDER_NAME = 'third-party/in_your_palm';
-const VERSION = '0.4.3';
+const VERSION = '0.5.0';
 
 // 默认设置
 const defaultSettings = {
@@ -227,21 +227,32 @@ function injectOpenConsoleButton() {
 // 打开控制台（弹窗）
 // ============================================================
 
-let consoleOpen = false;
+let consoleInjected = false;
 
 async function openConsole() {
-  if (consoleOpen) {
-    closeConsole();
-    return;
-  }
-  
-  if (!window.InPalmEngine) {
-    alert('引擎未加载。请刷新酒馆后重试。');
-    return;
-  }
-  
   try {
-    // 直接 fetch 原始 HTML（绕过 DOMPurify 对 <script> 标签的清洗）
+    // 如果已经注入过（抽屉 + 开场菜单已在 DOM 里），只是切换显示
+    if (consoleInjected) {
+      // 让 InPalmConsole 决定显示什么
+      if (window.InPalmConsole?.init) {
+        const settings = extension_settings[EXTENSION_NAME];
+        window.InPalmConsole.init({
+          theme: settings.theme,
+          autoSend: settings.autoSendPrompts,
+          onActionPrompt: sendActionPromptToChat,
+        });
+      } else if (window.InPalmDrawer) {
+        window.InPalmDrawer.toggle();
+      }
+      return;
+    }
+    
+    if (!window.InPalmEngine) {
+      alert('引擎未加载。请刷新酒馆后重试。');
+      return;
+    }
+    
+    // 首次：fetch 模板并注入到 body
     const templateUrl = `/scripts/extensions/${EXTENSION_FOLDER_NAME}/templates/console.html`;
     const response = await fetch(templateUrl);
     
@@ -251,55 +262,40 @@ async function openConsole() {
     
     const rawHtml = await response.text();
     
-    // 创建模态窗骨架
-    $('body').append(`
-      <div id="inp_modal_overlay" class="inp-modal-overlay"></div>
-      <div id="inp_modal" class="inp-modal">
-        <button id="inp_modal_close" class="inp-modal-close" title="关闭 (ESC)">×</button>
-        <div id="inp_modal_content" class="inp-modal-content"></div>
-      </div>
-    `);
-    
-    consoleOpen = true;
-    
-    // 解析 HTML，分离 style/script/body
+    // 解析 HTML
     const parser = new DOMParser();
     const doc = parser.parseFromString(rawHtml, 'text/html');
     
-    const contentEl = document.getElementById('inp_modal_content');
-    
-    // 1. 注入 <style> 标签（直接 append，浏览器会自动应用）
+    // 1. 把 <style> 添加到 <head>（全局作用）
     doc.querySelectorAll('style').forEach(styleEl => {
       const newStyle = document.createElement('style');
+      newStyle.setAttribute('data-inp', '1');
       newStyle.textContent = styleEl.textContent;
-      contentEl.appendChild(newStyle);
+      document.head.appendChild(newStyle);
     });
     
-    // 2. 注入 HTML 元素（非 style 非 script）
+    // 2. 把非 script 非 style 的元素添加到 body
     doc.body.childNodes.forEach(node => {
       if (node.nodeType === 1 && node.tagName !== 'SCRIPT' && node.tagName !== 'STYLE') {
-        contentEl.appendChild(document.importNode(node, true));
+        document.body.appendChild(document.importNode(node, true));
       }
     });
     
-    // 3. 手动执行 <script> 标签（innerHTML 方式插入的 script 不会自动执行）
+    // 3. 执行所有 <script>
     doc.querySelectorAll('script').forEach(scriptEl => {
       try {
         const newScript = document.createElement('script');
+        newScript.setAttribute('data-inp', '1');
         newScript.textContent = scriptEl.textContent;
-        contentEl.appendChild(newScript);
+        document.head.appendChild(newScript);
       } catch (err) {
         console.error('[掌心的它] 模板中的脚本执行失败:', err);
       }
     });
     
-    // 绑定关闭
-    $('#inp_modal_close, #inp_modal_overlay').on('click', closeConsole);
-    $(document).on('keydown.inp', (e) => {
-      if (e.key === 'Escape') closeConsole();
-    });
+    consoleInjected = true;
     
-    // 初始化控制台（此时脚本已执行，InPalmConsole 应该可用）
+    // 初始化 InPalmConsole（它会决定显示开场菜单还是直接打开抽屉）
     if (typeof window.InPalmConsole?.init === 'function') {
       const settings = extension_settings[EXTENSION_NAME];
       window.InPalmConsole.init({
@@ -307,21 +303,21 @@ async function openConsole() {
         autoSend: settings.autoSendPrompts,
         onActionPrompt: sendActionPromptToChat,
       });
-      console.log('[掌心的它] 控制台已打开');
+      console.log('[掌心的它] 控制台已注入并初始化');
     } else {
-      console.warn('[掌心的它] InPalmConsole 仍然未就绪，模板中的脚本可能有语法错误');
+      console.warn('[掌心的它] InPalmConsole 未就绪');
     }
   } catch (err) {
     console.error('[掌心的它] 打开控制台失败:', err);
     alert(`打开控制台失败: ${err.message}\n\n详情请查看浏览器控制台。`);
-    closeConsole();
   }
 }
 
 function closeConsole() {
-  $('#inp_modal, #inp_modal_overlay').remove();
-  $(document).off('keydown.inp');
-  consoleOpen = false;
+  // 新架构下不需要 close（抽屉自己管理）
+  if (window.InPalmDrawer) {
+    window.InPalmDrawer.close();
+  }
 }
 
 // ============================================================
