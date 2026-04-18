@@ -10,12 +10,12 @@
 // 5. 连接引擎与酒馆：把按钮动作转成 AI prompt
 // ============================================================
 
-import { extension_settings, getContext, renderExtensionTemplateAsync } from '../../../extensions.js';
+import { extension_settings, getContext } from '../../../extensions.js';
 import { saveSettingsDebounced } from '../../../../script.js';
 
 const EXTENSION_NAME = 'in_your_palm';
 const EXTENSION_FOLDER_NAME = 'third-party/in_your_palm';
-const VERSION = '0.4.0';
+const VERSION = '0.4.1';
 
 // 默认设置
 const defaultSettings = {
@@ -240,21 +240,58 @@ async function openConsole() {
     return;
   }
   
-  // 加载控制台 UI 模板
   try {
-    const consoleHtml = await renderExtensionTemplateAsync(EXTENSION_FOLDER_NAME, 'console');
+    // 直接 fetch 原始 HTML（绕过 DOMPurify 对 <script> 标签的清洗）
+    const templateUrl = `/scripts/extensions/${EXTENSION_FOLDER_NAME}/templates/console.html`;
+    const response = await fetch(templateUrl);
     
+    if (!response.ok) {
+      throw new Error(`模板加载失败: HTTP ${response.status}`);
+    }
+    
+    const rawHtml = await response.text();
+    
+    // 创建模态窗骨架
     $('body').append(`
       <div id="inp_modal_overlay" class="inp-modal-overlay"></div>
       <div id="inp_modal" class="inp-modal">
         <button id="inp_modal_close" class="inp-modal-close" title="关闭 (ESC)">×</button>
-        <div id="inp_modal_content" class="inp-modal-content">
-          ${consoleHtml}
-        </div>
+        <div id="inp_modal_content" class="inp-modal-content"></div>
       </div>
     `);
     
     consoleOpen = true;
+    
+    // 解析 HTML，分离 style/script/body
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(rawHtml, 'text/html');
+    
+    const contentEl = document.getElementById('inp_modal_content');
+    
+    // 1. 注入 <style> 标签（直接 append，浏览器会自动应用）
+    doc.querySelectorAll('style').forEach(styleEl => {
+      const newStyle = document.createElement('style');
+      newStyle.textContent = styleEl.textContent;
+      contentEl.appendChild(newStyle);
+    });
+    
+    // 2. 注入 HTML 元素（非 style 非 script）
+    doc.body.childNodes.forEach(node => {
+      if (node.nodeType === 1 && node.tagName !== 'SCRIPT' && node.tagName !== 'STYLE') {
+        contentEl.appendChild(document.importNode(node, true));
+      }
+    });
+    
+    // 3. 手动执行 <script> 标签（innerHTML 方式插入的 script 不会自动执行）
+    doc.querySelectorAll('script').forEach(scriptEl => {
+      try {
+        const newScript = document.createElement('script');
+        newScript.textContent = scriptEl.textContent;
+        contentEl.appendChild(newScript);
+      } catch (err) {
+        console.error('[掌心的它] 模板中的脚本执行失败:', err);
+      }
+    });
     
     // 绑定关闭
     $('#inp_modal_close, #inp_modal_overlay').on('click', closeConsole);
@@ -262,20 +299,22 @@ async function openConsole() {
       if (e.key === 'Escape') closeConsole();
     });
     
-    // 初始化控制台（在模板加载后调用控制台脚本的初始化函数）
+    // 初始化控制台（此时脚本已执行，InPalmConsole 应该可用）
     if (typeof window.InPalmConsole?.init === 'function') {
       const settings = extension_settings[EXTENSION_NAME];
       window.InPalmConsole.init({
         theme: settings.theme,
         autoSend: settings.autoSendPrompts,
-        onActionPrompt: sendActionPromptToChat,  // 回调：控制台按钮 → 发 prompt
+        onActionPrompt: sendActionPromptToChat,
       });
+      console.log('[掌心的它] 控制台已打开');
     } else {
-      console.warn('[掌心的它] InPalmConsole 未就绪，可能模板中的脚本还未执行');
+      console.warn('[掌心的它] InPalmConsole 仍然未就绪，模板中的脚本可能有语法错误');
     }
   } catch (err) {
     console.error('[掌心的它] 打开控制台失败:', err);
-    alert('打开控制台失败。请查看浏览器控制台获取详细错误。');
+    alert(`打开控制台失败: ${err.message}\n\n详情请查看浏览器控制台。`);
+    closeConsole();
   }
 }
 
