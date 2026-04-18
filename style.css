@@ -1,0 +1,193 @@
+/* ============================================================
+   掌心的它 · 扩展 CSS
+   
+   只包含：
+   - 顶栏/悬浮按钮样式
+   - 模态弹窗框架样式
+   - 设置面板样式
+   
+   控制台内部的完整样式在 templates/console.html 里
+   ============================================================ */
+
+/* ---------- 顶栏按钮 ---------- */
+
+#inp_topbar_button {
+  cursor: pointer;
+  padding: 0 8px;
+  font-size: 18px;
+  opacity: 0.7;
+  transition: opacity 0.2s, color 0.2s;
+}
+
+#inp_topbar_button:hover {
+  opacity: 1;
+  color: #e24b4a;
+}
+
+/* ---------- 悬浮按钮（顶栏注入失败时的后备） ---------- */
+
+.inp-floating {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 48px;
+  height: 48px;
+  background: #1a1a1f;
+  border: 1px solid #3a3a45;
+  border-radius: 50%;
+  color: #e24b4a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 9998;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: all 0.2s;
+}
+
+.inp-floating:hover {
+  transform: scale(1.08);
+  border-color: #e24b4a;
+}
+
+/* ---------- 模态弹窗 ---------- */
+
+.inp-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  z-index: 9999;
+  animation: inpFadeIn 0.2s;
+}
+
+.inp-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(960px, 96vw);
+  height: min(800px, 92vh);
+  background: #0a0a0c;
+  border: 1px solid #3a3a45;
+  border-radius: 6px;
+  z-index: 10000;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: inpZoomIn 0.25s;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+}
+
+.inp-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: 1px solid #3a3a45;
+  color: #8a8a95;
+  font-size: 20px;
+  cursor: pointer;
+  border-radius: 4px;
+  z-index: 2;
+  transition: all 0.15s;
+}
+
+.inp-modal-close:hover {
+  color: #d4d4dc;
+  border-color: #e24b4a;
+  background: rgba(226, 75, 74, 0.1);
+}
+
+.inp-modal-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+@keyframes inpFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes inpZoomIn {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.96); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+/* ---------- 设置面板（在酒馆的 Extensions 菜单里） ---------- */
+
+.inp-settings {
+  padding: 0;
+}
+
+.inp-settings-body {
+  padding: 8px 2px;
+}
+
+.inp-settings-body small {
+  color: var(--SmartThemeBodyColor);
+  opacity: 0.85;
+  line-height: 1.6;
+  display: block;
+  margin: 6px 0;
+}
+
+.inp-settings-body hr {
+  border: none;
+  border-top: 1px solid var(--SmartThemeBorderColor);
+  margin: 10px 0;
+  opacity: 0.35;
+}
+
+.inp-settings-body .checkbox_label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 6px 0;
+  cursor: pointer;
+}
+
+.inp-settings-body .flex-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.inp-settings-body .menu_button {
+  cursor: pointer;
+}
+
+.inp-settings-body .menu_button i {
+  margin-right: 6px;
+}
+
+.inp-hint {
+  font-size: 11px;
+  font-style: italic;
+  opacity: 0.7;
+}
+
+/* ---------- 响应式：小屏幕 ---------- */
+
+@media (max-width: 600px) {
+  .inp-modal {
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0;
+    border: none;
+    top: 0;
+    left: 0;
+    transform: none;
+  }
+  
+  .inp-floating {
+    bottom: 16px;
+    right: 16px;
+    width: 44px;
+    height: 44px;
+  }
+}
