@@ -1,10 +1,5 @@
 <style>
-/* ======================================================
-   Opening Menu Styles (Modal) - scoped to #inp-opening-root
-   ====================================================== */
 
-
-/* 模态窗的 opening root */
 #inp-opening-root {
   max-width: 900px;
   margin: 0 auto;
@@ -13,7 +8,6 @@
   background: var(--bg-main);
   min-height: 100vh;
 }
-
 #inp-opening-root .wrapper {
   max-width: 720px;
   margin: 0 auto;
@@ -493,14 +487,8 @@
   display: block;
 }
 
-/* ======================================================
-   Drawer Console Styles - scoped to #inp-drawer
-   ====================================================== */
 
-
-/* ==== 抽屉框架 ==== */
-
-/* 收起时的小标签（屏幕右边缘） */
+/* ==== 抽屉标签（收起时） ==== */
 #inp-drawer-tab {
   position: fixed;
   top: 50%;
@@ -543,13 +531,17 @@
   text-transform: uppercase;
 }
 
-/* 抽屉本体 */
+body.inp-drawer-open #inp-drawer-tab {
+  display: none;
+}
+
+/* ==== 抽屉本体 ==== */
 #inp-drawer {
   position: fixed;
   top: 0;
   right: 0;
   bottom: 0;
-  width: min(420px, 95vw);
+  width: min(440px, 95vw);
   background: #0a0a0c;
   border-left: 1px solid #3a3a45;
   z-index: 9999;
@@ -568,16 +560,9 @@
   transform: translateX(0);
 }
 
-/* 抽屉打开时，小标签就隐藏 */
-#inp-drawer.open ~ #inp-drawer-tab,
-body.inp-drawer-open #inp-drawer-tab {
-  display: none;
-}
+/* ==== 主题变量 ==== */
 
-/* ==== 抽屉内部：CSS 变量与主题 ==== */
-
-#inp-drawer,
-#inp-drawer.theme-noir {
+#inp-drawer, #inp-drawer.theme-noir {
   --bg-main: #0a0a0c;
   --bg-panel: #131317;
   --bg-card: #1a1a1f;
@@ -645,11 +630,8 @@ body.inp-drawer-open #inp-drawer-tab {
   color: var(--text-primary);
 }
 
-/* ==== 防御性样式（对抗酒馆全局样式） ==== */
-
-#inp-drawer * {
-  box-sizing: border-box;
-}
+/* ==== 防御性样式 ==== */
+#inp-drawer * { box-sizing: border-box; }
 
 #inp-drawer input,
 #inp-drawer textarea,
@@ -662,11 +644,32 @@ body.inp-drawer-open #inp-drawer-tab {
 }
 
 #inp-drawer input[type="text"],
+#inp-drawer input[type="number"],
 #inp-drawer textarea {
   display: block;
   cursor: text;
   white-space: pre-wrap;
   word-wrap: break-word;
+  padding: 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 3px;
+  color: var(--text-primary);
+  width: 100%;
+  font-size: 12px;
+}
+
+#inp-drawer select {
+  display: inline-block;
+  padding: 4px 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 3px;
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: 11px;
+  -webkit-appearance: menulist;
+  appearance: menulist;
 }
 
 #inp-drawer button {
@@ -674,32 +677,32 @@ body.inp-drawer-open #inp-drawer-tab {
   user-select: none;
 }
 
-/* ==== 抽屉头部：标题 + 关闭 ==== */
-
+/* ==== 头部 ==== */
 #inp-drawer .drawer-header {
-  padding: 12px 14px 10px;
+  padding: 10px 14px;
   border-bottom: 1px solid var(--border-subtle);
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-shrink: 0;
+  position: relative;
 }
 
 #inp-drawer .drawer-title {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 14px;
+  font-size: 13px;
   color: var(--text-primary);
   letter-spacing: 2px;
 }
 
 #inp-drawer .rec-dot {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   background: var(--accent-primary);
-  box-shadow: 0 0 8px var(--accent-primary);
+  box-shadow: 0 0 6px var(--accent-primary);
   animation: recBlink 1.5s infinite;
 }
 
@@ -710,11 +713,11 @@ body.inp-drawer-open #inp-drawer-tab {
 
 #inp-drawer .drawer-actions {
   display: flex;
-  gap: 6px;
+  gap: 4px;
 }
 
 #inp-drawer .icon-btn {
-  font-size: 11px;
+  font-size: 10px;
   color: var(--text-secondary);
   padding: 4px 8px;
   border: 1px solid var(--border-subtle);
@@ -730,11 +733,11 @@ body.inp-drawer-open #inp-drawer-tab {
 
 #inp-drawer .close-btn {
   font-size: 18px;
-  color: var(--text-secondary);
-  padding: 2px 8px;
-  border: 1px solid var(--border-subtle);
-  border-radius: 3px;
+  padding: 0 8px;
   line-height: 1;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  border-radius: 3px;
 }
 
 #inp-drawer .close-btn:hover {
@@ -742,378 +745,10 @@ body.inp-drawer-open #inp-drawer-tab {
   border-color: var(--accent-primary);
 }
 
-/* ==== 状态条：Day / 时间 / 阶段 / 关键数值 ==== */
-
-#inp-drawer .status-bar {
-  padding: 10px 14px;
-  border-bottom: 1px solid var(--border-subtle);
-  background: var(--bg-panel);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  flex-shrink: 0;
-}
-
-#inp-drawer .status-row {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  margin-bottom: 6px;
-  color: var(--text-secondary);
-}
-
-#inp-drawer .status-row:last-child {
-  margin-bottom: 0;
-}
-
-#inp-drawer .status-row strong {
-  color: var(--text-primary);
-  font-weight: normal;
-}
-
-#inp-drawer .status-stage {
-  color: var(--accent-warning);
-  padding: 2px 6px;
-  border: 1px solid var(--accent-warning);
-  border-radius: 2px;
-  font-size: 10px;
-  letter-spacing: 1px;
-}
-
-/* 数值条：紧凑的水平长条 */
-#inp-drawer .stats-compact {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 4px 14px;
-  margin-top: 6px;
-}
-
-#inp-drawer .stat-mini {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 10px;
-}
-
-#inp-drawer .stat-mini-label {
-  color: var(--text-secondary);
-  width: 28px;
-  flex-shrink: 0;
-}
-
-#inp-drawer .stat-mini-bar {
-  flex: 1;
-  height: 5px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: 2px;
-  overflow: hidden;
-  position: relative;
-}
-
-#inp-drawer .stat-mini-fill {
-  height: 100%;
-  background: var(--accent-info);
-  transition: width 0.3s;
-}
-
-#inp-drawer .stat-mini-value {
-  width: 24px;
-  text-align: right;
-  color: var(--text-muted);
-  font-family: var(--font-mono);
-}
-
-/* ==== 对话模式提示条 ==== */
-
-#inp-drawer .dialogue-bar {
-  display: none;
-  padding: 8px 14px;
-  background: rgba(127, 119, 221, 0.1);
-  border-bottom: 1px solid var(--accent-info);
-  color: var(--accent-info);
-  font-size: 11px;
-  align-items: center;
-  justify-content: space-between;
-}
-
-#inp-drawer .dialogue-bar.active {
-  display: flex;
-}
-
-#inp-drawer .dialogue-exit {
-  font-size: 10px;
-  color: var(--text-secondary);
-  padding: 3px 8px;
-  border: 1px solid var(--border-subtle);
-  border-radius: 3px;
-}
-
-/* ==== 里程碑提示区 ==== */
-
-#inp-drawer .milestones-area {
-  padding: 0;
-}
-
-#inp-drawer .milestone-alert {
-  padding: 8px 14px;
-  background: rgba(226, 75, 74, 0.1);
-  border-bottom: 1px solid var(--accent-primary);
-  color: var(--accent-warning);
-  font-size: 11px;
-  animation: alertFlash 0.6s;
-}
-
-@keyframes alertFlash {
-  0% { background: rgba(226, 75, 74, 0.3); }
-  100% { background: rgba(226, 75, 74, 0.1); }
-}
-
-/* ==== 标签条：8 个分类 ==== */
-
-#inp-drawer .tabs-bar {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1px;
-  background: var(--border-subtle);
-  border-bottom: 1px solid var(--border-subtle);
-  flex-shrink: 0;
-}
-
-#inp-drawer .tab-btn {
-  background: var(--bg-panel);
-  color: var(--text-secondary);
-  padding: 10px 4px;
-  font-size: 12px;
-  text-align: center;
-  border-radius: 0;
-  transition: all 0.15s;
-  letter-spacing: 1px;
-}
-
-#inp-drawer .tab-btn:hover {
-  background: var(--bg-hover);
-  color: var(--text-primary);
-}
-
-#inp-drawer .tab-btn.active {
-  background: var(--bg-active);
-  color: var(--accent-info);
-  border-bottom: 2px solid var(--accent-info);
-}
-
-/* ==== 内容区（按钮面板） ==== */
-
-#inp-drawer .content-area {
-  flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 12px;
-}
-
-#inp-drawer .content-area::-webkit-scrollbar {
-  width: 6px;
-}
-
-#inp-drawer .content-area::-webkit-scrollbar-track {
-  background: var(--bg-panel);
-}
-
-#inp-drawer .content-area::-webkit-scrollbar-thumb {
-  background: var(--border-medium);
-  border-radius: 3px;
-}
-
-#inp-drawer .panel {
-  display: none;
-  animation: panelFadeIn 0.2s;
-}
-
-#inp-drawer .panel.active {
-  display: block;
-}
-
-@keyframes panelFadeIn {
-  from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-#inp-drawer .panel-title {
-  font-size: 11px;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  margin-bottom: 8px;
-  font-family: var(--font-mono);
-}
-
-#inp-drawer .action-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 6px;
-  margin-bottom: 12px;
-}
-
-#inp-drawer .action-btn {
-  padding: 10px 8px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  color: var(--text-primary);
-  font-size: 12px;
-  text-align: center;
-  transition: all 0.15s;
-  border-radius: 3px;
-  line-height: 1.4;
-}
-
-#inp-drawer .action-btn:hover {
-  background: var(--bg-hover);
-  border-color: var(--accent-info);
-  color: var(--accent-info);
-}
-
-#inp-drawer .action-btn:active {
-  transform: scale(0.98);
-}
-
-#inp-drawer .action-btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-#inp-drawer .action-btn.danger { border-color: var(--accent-primary); color: var(--accent-danger); }
-#inp-drawer .action-btn.info { border-color: var(--accent-info); color: var(--accent-info); }
-#inp-drawer .action-btn.success { border-color: var(--accent-success); color: var(--accent-success); }
-
-#inp-drawer .action-btn-full {
-  grid-column: 1 / -1;
-}
-
-#inp-drawer .action-btn-desc {
-  font-size: 10px;
-  color: var(--text-muted);
-  margin-top: 2px;
-}
-
-/* 对话切入点样式 */
-
-#inp-drawer .dialogue-entry {
-  padding: 10px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  border-left: 3px solid var(--accent-info);
-  margin-bottom: 6px;
-  border-radius: 3px;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-
-#inp-drawer .dialogue-entry:hover {
-  background: var(--bg-hover);
-  border-left-color: var(--accent-warning);
-}
-
-#inp-drawer .dialogue-entry-title {
-  font-size: 12px;
-  color: var(--text-primary);
-  margin-bottom: 3px;
-}
-
-#inp-drawer .dialogue-entry-desc {
-  font-size: 10px;
-  color: var(--text-secondary);
-  line-height: 1.5;
-}
-
-/* 自定义动作 */
-
-#inp-drawer .custom-form {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-#inp-drawer .custom-category {
-  padding: 6px 10px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: 3px;
-  font-size: 11px;
-  color: var(--text-primary);
-}
-
-#inp-drawer .custom-category.selected {
-  border-color: var(--accent-info);
-  color: var(--accent-info);
-}
-
-#inp-drawer .custom-textarea {
-  min-height: 80px;
-  padding: 10px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: 3px;
-  color: var(--text-primary);
-  font-size: 12px;
-  line-height: 1.5;
-  resize: vertical;
-}
-
-#inp-drawer .custom-textarea:focus {
-  border-color: var(--accent-info);
-  outline: none;
-}
-
-#inp-drawer .submit-btn {
-  padding: 10px;
-  background: var(--accent-info);
-  color: white;
-  border-radius: 3px;
-  font-size: 12px;
-  text-align: center;
-  letter-spacing: 1px;
-}
-
-#inp-drawer .submit-btn:hover {
-  background: var(--accent-warning);
-}
-
-/* 场景列表（外出） */
-
-#inp-drawer .scene-item {
-  padding: 10px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  margin-bottom: 6px;
-  border-radius: 3px;
-  cursor: pointer;
-  transition: all 0.15s;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-#inp-drawer .scene-item:hover {
-  border-color: var(--accent-info);
-  background: var(--bg-hover);
-}
-
-#inp-drawer .scene-name {
-  font-size: 12px;
-  color: var(--text-primary);
-}
-
-#inp-drawer .scene-duration {
-  font-size: 10px;
-  color: var(--text-muted);
-  font-family: var(--font-mono);
-}
-
-/* 主题菜单 */
-
 #inp-drawer .theme-menu {
   display: none;
   position: absolute;
-  top: 52px;
+  top: 44px;
   right: 14px;
   background: var(--bg-card);
   border: 1px solid var(--border-medium);
@@ -1123,9 +758,7 @@ body.inp-drawer-open #inp-drawer-tab {
   min-width: 160px;
 }
 
-#inp-drawer .theme-menu.show {
-  display: block;
-}
+#inp-drawer .theme-menu.show { display: block; }
 
 #inp-drawer .theme-option {
   padding: 6px 10px;
@@ -1145,10 +778,376 @@ body.inp-drawer-open #inp-drawer-tab {
   color: var(--accent-info);
 }
 
-/* 底栏：结束局 / 版本 */
-
-#inp-drawer .drawer-footer {
+/* ==== 顶部信息条 ==== */
+#inp-drawer .info-bar {
   padding: 8px 14px;
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  flex-shrink: 0;
+}
+
+#inp-drawer .info-bar strong { color: var(--text-primary); }
+#inp-drawer .info-bar .stage-tag {
+  color: var(--accent-warning);
+  padding: 2px 6px;
+  border: 1px solid var(--accent-warning);
+  border-radius: 2px;
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+/* ==== 数值区 ==== */
+#inp-drawer .stats-area {
+  flex-shrink: 0;
+  max-height: 280px;
+  overflow-y: auto;
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--bg-main);
+}
+
+#inp-drawer .stats-section {
+  padding: 6px 14px;
+  border-bottom: 1px dashed var(--border-subtle);
+}
+
+#inp-drawer .stats-section:last-child { border-bottom: none; }
+
+#inp-drawer .stats-header {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  user-select: none;
+}
+
+#inp-drawer .stats-header:hover { color: var(--text-secondary); }
+
+#inp-drawer .stats-body {
+  display: block;
+}
+
+#inp-drawer .stats-body.collapsed { display: none; }
+
+#inp-drawer .stat-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  margin-bottom: 3px;
+}
+
+#inp-drawer .stat-label {
+  color: var(--text-secondary);
+  width: 44px;
+  flex-shrink: 0;
+  font-size: 10px;
+}
+
+#inp-drawer .stat-track {
+  flex: 1;
+  height: 6px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+#inp-drawer .stat-fill {
+  height: 100%;
+  background: var(--accent-info);
+  transition: width 0.3s;
+}
+
+#inp-drawer .stat-fill.low { background: var(--accent-primary); }
+#inp-drawer .stat-fill.mid { background: var(--accent-warning); }
+#inp-drawer .stat-fill.high-warning { background: var(--accent-danger); }
+#inp-drawer .stat-fill.shame { background: var(--accent-shame); }
+
+#inp-drawer .stat-value {
+  width: 26px;
+  text-align: right;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+
+#inp-drawer .badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+#inp-drawer .status-badge {
+  padding: 2px 6px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 2px;
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+#inp-drawer .status-badge.active {
+  border-color: var(--accent-warning);
+  color: var(--accent-warning);
+}
+
+/* ==== 对话模式条 ==== */
+#inp-drawer .dialogue-bar {
+  display: none;
+  padding: 6px 14px;
+  background: rgba(127, 119, 221, 0.1);
+  border-bottom: 1px solid var(--accent-info);
+  color: var(--accent-info);
+  font-size: 11px;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+#inp-drawer .dialogue-bar.active { display: flex; }
+
+#inp-drawer .dialogue-exit {
+  font-size: 10px;
+  color: var(--text-secondary);
+  padding: 3px 8px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 3px;
+}
+
+/* ==== 标签条 ==== */
+#inp-drawer .tabs-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+}
+
+#inp-drawer .tab-btn {
+  background: var(--bg-panel);
+  color: var(--text-secondary);
+  padding: 9px 4px;
+  font-size: 12px;
+  text-align: center;
+  transition: all 0.15s;
+  letter-spacing: 1px;
+}
+
+#inp-drawer .tab-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+#inp-drawer .tab-btn.active {
+  background: var(--bg-active);
+  color: var(--accent-info);
+  border-bottom: 2px solid var(--accent-info);
+}
+
+/* ==== 内容区 ==== */
+#inp-drawer .content-area {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 10px;
+}
+
+#inp-drawer .content-area::-webkit-scrollbar { width: 6px; }
+#inp-drawer .content-area::-webkit-scrollbar-track { background: var(--bg-panel); }
+#inp-drawer .content-area::-webkit-scrollbar-thumb {
+  background: var(--border-medium);
+  border-radius: 3px;
+}
+
+#inp-drawer .tab-panel {
+  display: none;
+  animation: panelFade 0.2s;
+}
+
+#inp-drawer .tab-panel.active { display: block; }
+
+@keyframes panelFade {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+#inp-drawer .section-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 8px 0 4px;
+  font-family: var(--font-mono);
+}
+
+#inp-drawer .btn-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 5px;
+  margin-bottom: 8px;
+}
+
+#inp-drawer .action-btn {
+  padding: 8px 6px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  font-size: 11px;
+  text-align: center;
+  transition: all 0.15s;
+  border-radius: 3px;
+  line-height: 1.3;
+}
+
+#inp-drawer .action-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--accent-info);
+  color: var(--accent-info);
+}
+
+#inp-drawer .action-btn:active { transform: scale(0.98); }
+#inp-drawer .action-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+#inp-drawer .action-btn.danger { border-color: var(--accent-primary); color: var(--accent-danger); }
+#inp-drawer .action-btn.info { border-color: var(--accent-info); color: var(--accent-info); }
+#inp-drawer .action-btn.warning { border-color: var(--accent-warning); color: var(--accent-warning); }
+#inp-drawer .action-btn.shame { border-color: var(--accent-shame); color: var(--accent-shame); }
+
+#inp-drawer .dialogue-entry {
+  padding: 8px 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-left: 3px solid var(--accent-info);
+  margin-bottom: 4px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+#inp-drawer .dialogue-entry:hover {
+  background: var(--bg-hover);
+  border-left-color: var(--accent-warning);
+}
+
+#inp-drawer .dialogue-entry-title {
+  font-size: 12px;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+#inp-drawer .dialogue-entry-desc {
+  font-size: 10px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+#inp-drawer .toy-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+#inp-drawer .toy-chip {
+  padding: 4px 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 3px;
+  font-size: 11px;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+#inp-drawer .toy-chip:hover {
+  border-color: var(--accent-info);
+  color: var(--accent-info);
+}
+
+#inp-drawer .toy-chip.equipped {
+  border-color: var(--accent-warning);
+  color: var(--accent-warning);
+}
+
+#inp-drawer .empty-state {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-style: italic;
+  padding: 4px 0;
+}
+
+#inp-drawer .custom-input-area {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+#inp-drawer .custom-textarea {
+  min-height: 70px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+#inp-drawer .custom-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  font-size: 10px;
+  color: var(--text-secondary);
+}
+
+#inp-drawer .custom-controls label { font-size: 10px; color: var(--text-secondary); }
+
+#inp-drawer .custom-number {
+  width: 60px;
+  padding: 3px 6px;
+  font-size: 11px;
+}
+
+/* ==== 调试响应区 ==== */
+#inp-drawer .debug-area {
+  margin-top: 10px;
+  border-top: 1px dashed var(--border-subtle);
+  padding-top: 8px;
+}
+
+#inp-drawer .debug-toggle {
+  font-size: 10px;
+  color: var(--text-muted);
+  cursor: pointer;
+  user-select: none;
+}
+
+#inp-drawer .debug-content {
+  display: none;
+  margin-top: 4px;
+  padding: 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-secondary);
+  max-height: 160px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  line-height: 1.5;
+}
+
+#inp-drawer .debug-content.show { display: block; }
+
+/* ==== 底栏 ==== */
+#inp-drawer .drawer-footer {
+  padding: 6px 14px;
   border-top: 1px solid var(--border-subtle);
   display: flex;
   justify-content: space-between;
@@ -1157,90 +1156,48 @@ body.inp-drawer-open #inp-drawer-tab {
   color: var(--text-muted);
   font-family: var(--font-mono);
   flex-shrink: 0;
+  gap: 6px;
 }
 
-#inp-drawer .end-session-btn {
-  padding: 4px 10px;
-  border: 1px solid var(--accent-danger);
-  color: var(--accent-danger);
-  border-radius: 3px;
+#inp-drawer .footer-btn {
+  padding: 3px 8px;
   font-size: 10px;
-}
-
-#inp-drawer .end-session-btn:hover {
-  background: rgba(240, 149, 149, 0.1);
-}
-
-/* 调试响应区 */
-
-#inp-drawer .debug-area {
-  margin-top: 12px;
-  border-top: 1px dashed var(--border-subtle);
-  padding-top: 10px;
-}
-
-#inp-drawer .debug-toggle {
-  font-size: 10px;
-  color: var(--text-muted);
-  padding: 4px 8px;
-  cursor: pointer;
-}
-
-#inp-drawer .debug-content {
-  display: none;
-  margin-top: 6px;
-  padding: 8px;
-  background: var(--bg-card);
   border: 1px solid var(--border-subtle);
-  border-radius: 3px;
-  font-family: var(--font-mono);
-  font-size: 10px;
   color: var(--text-secondary);
-  max-height: 200px;
-  overflow-y: auto;
-  white-space: pre-wrap;
+  border-radius: 3px;
 }
 
-#inp-drawer .debug-content.show {
-  display: block;
+#inp-drawer .footer-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--accent-info);
+}
+
+#inp-drawer .footer-btn.danger {
+  border-color: var(--accent-danger);
+  color: var(--accent-danger);
+}
+
+#inp-drawer .footer-btn.danger:hover {
+  background: rgba(240, 149, 149, 0.1);
 }
 
 /* 响应式 */
 @media (max-width: 600px) {
-  #inp-drawer {
-    width: 100vw;
-  }
-  
-  #inp-drawer .tabs-bar {
-    grid-template-columns: repeat(4, 1fr);
-  }
-  
-  #inp-drawer .action-grid {
-    grid-template-columns: 1fr;
-  }
+  #inp-drawer { width: 100vw; }
 }
 
 
-/* ======================================================
-   Modal overlay (for opening menu) & shared
-   ====================================================== */
-
 #inp-opening-modal-overlay {
-  position: fixed;
-  inset: 0;
+  position: fixed; inset: 0;
   background: rgba(0, 0, 0, 0.85);
   z-index: 9997;
   display: none;
 }
-
-#inp-opening-modal-overlay.show {
-  display: block;
-}
+#inp-opening-modal-overlay.show { display: block; }
 
 #inp-opening-modal {
   position: fixed;
-  top: 50%;
-  left: 50%;
+  top: 50%; left: 50%;
   transform: translate(-50%, -50%);
   width: min(920px, 96vw);
   height: min(800px, 92vh);
@@ -1253,23 +1210,16 @@ body.inp-drawer-open #inp-drawer-tab {
   flex-direction: column;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
 }
-
-#inp-opening-modal.show {
-  display: flex;
-}
+#inp-opening-modal.show { display: flex; }
 
 #inp-opening-modal-content {
-  flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
+  flex: 1; overflow-y: auto; overflow-x: hidden;
 }
 
 #inp-opening-modal-close {
   position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 32px;
-  height: 32px;
+  top: 12px; right: 12px;
+  width: 32px; height: 32px;
   background: transparent;
   border: 1px solid #3a3a45;
   color: #8a8a95;
@@ -1278,16 +1228,14 @@ body.inp-drawer-open #inp-drawer-tab {
   border-radius: 4px;
   z-index: 2;
 }
-
 #inp-opening-modal-close:hover {
   color: #d4d4dc;
   border-color: #e24b4a;
 }
 </style>
 
-<!-- ============ 开场菜单（模态窗，一次性使用）============ -->
+<!-- 开场菜单模态 -->
 <div id="inp-opening-modal-overlay"></div>
-
 <div id="inp-opening-modal">
   <button id="inp-opening-modal-close" title="关闭">×</button>
   <div id="inp-opening-modal-content">
@@ -1315,8 +1263,8 @@ body.inp-drawer-open #inp-drawer-tab {
   </div>
 </div>
 
-<!-- ============ 主控制台抽屉 + 小标签 ============ -->
-<!-- ==== 抽屉小标签（收起时） ==== -->
+<!-- 抽屉 -->
+<!-- ==== 抽屉标签 ==== -->
 <div id="inp-drawer-tab" onclick="InPalmDrawer.toggle()" title="展开掌心控制台">
   <span class="drawer-tab-icon">🖐</span>
   <span class="drawer-tab-label">掌心控制台</span>
@@ -1335,7 +1283,6 @@ body.inp-drawer-open #inp-drawer-tab {
       <button class="icon-btn" onclick="InPalmDrawer.toggleThemeMenu()">主题</button>
       <button class="close-btn" onclick="InPalmDrawer.toggle()" title="收起">−</button>
     </div>
-    
     <div class="theme-menu" id="inp-theme-menu">
       <div class="theme-option current" data-theme="theme-noir" onclick="InPalmDrawer.setTheme('theme-noir')">暗黑监控 noir</div>
       <div class="theme-option" data-theme="theme-ornate" onclick="InPalmDrawer.setTheme('theme-ornate')">暗金奢华 ornate</div>
@@ -1343,48 +1290,45 @@ body.inp-drawer-open #inp-drawer-tab {
     </div>
   </div>
 
-  <!-- 状态条 -->
-  <div class="status-bar">
-    <div class="status-row">
-      <span><strong id="inp-day">Day 1</strong> · <span id="inp-time">20:00</span></span>
-      <span class="status-stage" id="inp-stage">震惊期</span>
+  <!-- 顶部信息条 -->
+  <div class="info-bar">
+    <span><strong id="inp-day">Day 1</strong> · <span id="inp-time">20:00</span> · <span id="inp-location">密室</span></span>
+    <span class="stage-tag" id="inp-stage">震惊期</span>
+  </div>
+
+  <!-- 数值区（可折叠分段） -->
+  <div class="stats-area">
+    <div class="stats-section">
+      <div class="stats-header" onclick="InPalmDrawer.toggleStatsSection('psych')">心理状态 ▾</div>
+      <div class="stats-body" id="inp-stats-psych">
+        <!-- JS 动态渲染 -->
+      </div>
     </div>
-    <div class="status-row">
-      <span id="inp-location">家 · 主房间</span>
-      <span id="inp-relation">关系 <strong id="inp-distortion">0</strong></span>
+    <div class="stats-section">
+      <div class="stats-header" onclick="InPalmDrawer.toggleStatsSection('body')">生理状态 ▾</div>
+      <div class="stats-body" id="inp-stats-body">
+        <!-- JS 动态渲染 -->
+      </div>
     </div>
-    <div class="stats-compact">
-      <div class="stat-mini">
-        <span class="stat-mini-label">理智</span>
-        <div class="stat-mini-bar"><div class="stat-mini-fill" id="bar-sanity" style="width: 80%"></div></div>
-        <span class="stat-mini-value" id="val-sanity">80</span>
+    <div class="stats-section">
+      <div class="stats-header" onclick="InPalmDrawer.toggleStatsSection('relation')">关系 · 调教 ▾</div>
+      <div class="stats-body" id="inp-stats-relation">
+        <!-- JS 动态渲染 -->
       </div>
-      <div class="stat-mini">
-        <span class="stat-mini-label">心情</span>
-        <div class="stat-mini-bar"><div class="stat-mini-fill" id="bar-mood" style="width: 50%"></div></div>
-        <span class="stat-mini-value" id="val-mood">50</span>
-      </div>
-      <div class="stat-mini">
-        <span class="stat-mini-label">体力</span>
-        <div class="stat-mini-bar"><div class="stat-mini-fill" id="bar-stamina" style="width: 80%"></div></div>
-        <span class="stat-mini-value" id="val-stamina">80</span>
-      </div>
-      <div class="stat-mini">
-        <span class="stat-mini-label">羞耻</span>
-        <div class="stat-mini-bar"><div class="stat-mini-fill" id="bar-shame" style="width: 20%"></div></div>
-        <span class="stat-mini-value" id="val-shame">20</span>
+    </div>
+    <div class="stats-section">
+      <div class="stats-header" onclick="InPalmDrawer.toggleStatsSection('physical')">物理状态 ▾</div>
+      <div class="stats-body" id="inp-stats-physical">
+        <!-- JS 动态渲染 -->
       </div>
     </div>
   </div>
-  
-  <!-- 对话模式条（仅对话中显示） -->
+
+  <!-- 对话模式条 -->
   <div class="dialogue-bar" id="inp-dialogue-bar">
     <div>对话模式 · <strong id="inp-dialogue-name">—</strong> · <span id="inp-dialogue-turns">0</span> 轮</div>
     <button class="dialogue-exit" onclick="InPalmDrawer.exitDialogue()">退出</button>
   </div>
-  
-  <!-- 里程碑提示 -->
-  <div class="milestones-area" id="inp-milestones"></div>
 
   <!-- 标签条 -->
   <div class="tabs-bar">
@@ -1400,93 +1344,150 @@ body.inp-drawer-open #inp-drawer-tab {
 
   <!-- 内容区 -->
   <div class="content-area">
-    
+
     <!-- 环境 -->
-    <div class="panel active" id="inp-panel-env">
-      <div class="panel-title">环境控制</div>
-      <div class="action-grid">
-        <button class="action-btn" onclick="InPalmDrawer.doAction('env_lights_on')">开灯</button>
-        <button class="action-btn" onclick="InPalmDrawer.doAction('env_lights_off')">关灯</button>
-        <button class="action-btn" onclick="InPalmDrawer.doAction('env_lights_dim')">调暗</button>
-        <button class="action-btn" onclick="InPalmDrawer.doAction('env_temperature_up')">升温</button>
-        <button class="action-btn" onclick="InPalmDrawer.doAction('env_temperature_down')">降温</button>
-        <button class="action-btn" onclick="InPalmDrawer.doAction('env_music_soft')">放柔和音乐</button>
-        <button class="action-btn" onclick="InPalmDrawer.doAction('env_music_unsettling')">放诡异音乐</button>
-        <button class="action-btn" onclick="InPalmDrawer.doAction('env_silence')">制造寂静</button>
+    <div class="tab-panel active" id="inp-panel-env">
+      <div class="section-label">光线与温度</div>
+      <div class="btn-grid">
+        <button class="action-btn" onclick="InPalmDrawer.doAction('cut_lights')">切断照明</button>
+        <button class="action-btn" onclick="InPalmDrawer.doAction('restore_lights')">恢复照明</button>
+        <button class="action-btn" onclick="InPalmDrawer.doAction('lower_temp')">降低室温</button>
+      </div>
+      <div class="section-label">声音与水</div>
+      <div class="btn-grid">
+        <button class="action-btn" onclick="InPalmDrawer.doAction('play_audio')">播放音频</button>
+        <button class="action-btn" onclick="InPalmDrawer.doAction('cut_water')">切断供水</button>
       </div>
     </div>
 
     <!-- 递送 -->
-    <div class="panel" id="inp-panel-deliver">
-      <div class="panel-title">递送物品（直接递进去，不进入空间）</div>
-      <div class="action-grid">
-        <button class="action-btn" onclick="InPalmDrawer.doAction('deliver_meal_basic')">普通食物</button>
-        <button class="action-btn" onclick="InPalmDrawer.doAction('deliver_meal_nice')">精致食物</button>
-        <button class="action-btn" onclick="InPalmDrawer.doAction('deliver_water')">水</button>
-        <button class="action-btn" onclick="InPalmDrawer.doAction('deliver_hygiene')">洗漱用品</button>
-        <button class="action-btn" onclick="InPalmDrawer.doAction('deliver_clothing')">衣物</button>
-        <button class="action-btn" onclick="InPalmDrawer.doAction('deliver_book')">书籍</button>
-        <button class="action-btn" onclick="InPalmDrawer.doAction('deliver_empty_plate')">收走餐具</button>
+    <div class="tab-panel" id="inp-panel-deliver">
+      <div class="section-label">递送食物（需库存）</div>
+      <div class="btn-grid">
+        <button class="action-btn warning" onclick="InPalmDrawer.doAction('deliver_food_basic')">送入简单食物</button>
+        <button class="action-btn warning" onclick="InPalmDrawer.doAction('deliver_food_premium')">送入精致食物</button>
+        <button class="action-btn" onclick="InPalmDrawer.doAction('take_away_food')">收走食物</button>
       </div>
     </div>
 
     <!-- 接触 -->
-    <div class="panel" id="inp-panel-contact">
-      <div class="panel-title">近距离接触</div>
-      <div class="action-grid">
-        <button class="action-btn" onclick="InPalmDrawer.doAction('contact_enter')">进入房间</button>
-        <button class="action-btn" onclick="InPalmDrawer.doAction('contact_silent_observe')">沉默注视</button>
-        <button class="action-btn" onclick="InPalmDrawer.doAction('contact_gentle_touch')">温柔触碰</button>
-        <button class="action-btn" onclick="InPalmDrawer.doAction('contact_restrain')">控制 / 压制</button>
-        <button class="action-btn danger" onclick="InPalmDrawer.doAction('contact_strike')">打击 / 惩罚</button>
-        <button class="action-btn" onclick="InPalmDrawer.doAction('contact_undress')">剥除衣物</button>
-        <button class="action-btn" onclick="InPalmDrawer.doAction('contact_leave')">离开房间</button>
+    <div class="tab-panel" id="inp-panel-contact">
+      <div class="section-label">远距接触</div>
+      <div class="btn-grid">
+        <button class="action-btn" onclick="InPalmDrawer.doAction('broadcast_message')">广播讯息</button>
+        <button class="action-btn" onclick="InPalmDrawer.doAction('letter_slot')">递纸条</button>
+      </div>
+      <div class="section-label">近距接触</div>
+      <div class="btn-grid">
+        <button class="action-btn info" onclick="InPalmDrawer.doAction('enter_room')">进入密室</button>
+        <button class="action-btn" onclick="InPalmDrawer.doAction('silence_day')">沉默一整天</button>
+      </div>
+      <div class="section-label">特殊触发</div>
+      <div class="btn-grid">
+        <button class="action-btn danger" onclick="InPalmDrawer.doAction('fake_rescue_signal')">伪造救援信号</button>
+        <button class="action-btn danger" onclick="InPalmDrawer.doAction('reveal_truth')">揭示真相</button>
+        <button class="action-btn danger" onclick="InPalmDrawer.doAction('wait_24h')">不干预 24 小时</button>
+        <button class="action-btn shame" onclick="InPalmDrawer.doAction('show_memento')">展示旧物</button>
       </div>
     </div>
 
     <!-- 对话 -->
-    <div class="panel" id="inp-panel-dialogue">
-      <div class="panel-title">对话切入点（进入后 AI 按这个基调对话）</div>
-      <div id="inp-dialogue-entries">
-        <!-- JS 动态渲染 -->
+    <div class="tab-panel" id="inp-panel-dialogue">
+      <div class="section-label">选择对话切入点（进入后专注对话）</div>
+      <div id="inp-dialogue-list">
+        <div class="empty-state">正在加载对话切入点...</div>
       </div>
     </div>
 
     <!-- 调教 -->
-    <div class="panel" id="inp-panel-train">
-      <div class="panel-title">身体调教（取决于深度档位）</div>
-      <div class="action-grid" id="inp-train-actions">
-        <!-- JS 动态渲染 -->
+    <div class="tab-panel" id="inp-panel-train">
+      <div class="section-label">触碰</div>
+      <div class="btn-grid">
+        <button class="action-btn" onclick="InPalmDrawer.doAction('touch_hair')">抚摸头发</button>
+        <button class="action-btn" onclick="InPalmDrawer.doAction('touch_face')">触摸脸庞</button>
+        <button class="action-btn" onclick="InPalmDrawer.doAction('hold_hand')">握手</button>
+        <button class="action-btn" onclick="InPalmDrawer.doAction('embrace')">拥抱</button>
+        <button class="action-btn info" onclick="InPalmDrawer.doAction('brush_hair')">梳头 [需梳子]</button>
+      </div>
+      <div class="section-label">束缚（需已装备道具）</div>
+      <div class="btn-grid">
+        <button class="action-btn info" onclick="InPalmDrawer.doAction('bind_wrists')">束缚手腕</button>
+        <button class="action-btn info" onclick="InPalmDrawer.doAction('bind_full')">全身束缚</button>
+      </div>
+      <div class="section-label">训练</div>
+      <div class="btn-grid">
+        <button class="action-btn" onclick="InPalmDrawer.doAction('train_sit')">训练姿势</button>
+        <button class="action-btn" onclick="InPalmDrawer.doAction('train_response')">训练回应</button>
+        <button class="action-btn" onclick="InPalmDrawer.doAction('train_feeding')">训练进食</button>
+      </div>
+      <div class="section-label">刺激（需 body/r18 档位）</div>
+      <div class="btn-grid">
+        <button class="action-btn shame" onclick="InPalmDrawer.doAction('tease_light')">轻度挑逗</button>
+        <button class="action-btn shame" onclick="InPalmDrawer.doAction('stimulate_direct')">直接刺激</button>
+        <button class="action-btn shame" onclick="InPalmDrawer.doAction('use_toy_stimulation')">使用刺激道具</button>
+        <button class="action-btn shame" onclick="InPalmDrawer.doAction('edge')">边缘控制</button>
+      </div>
+      <div class="section-label">药物与意识</div>
+      <div class="btn-grid">
+        <button class="action-btn warning" onclick="InPalmDrawer.doAction('drug_sedative')">给予镇静剂</button>
+        <button class="action-btn" onclick="InPalmDrawer.doAction('wake_up')">唤醒</button>
+        <button class="action-btn" onclick="InPalmDrawer.doAction('put_to_sleep')">让其睡眠</button>
       </div>
     </div>
 
     <!-- 道具 -->
-    <div class="panel" id="inp-panel-toys">
-      <div class="panel-title">玩具库存 · 装备中: <span id="inp-equipped-count">0</span></div>
-      <div id="inp-toys-list">
-        <!-- JS 动态渲染 -->
+    <div class="tab-panel" id="inp-panel-toys">
+      <div class="section-label">已装备（点击卸下）</div>
+      <div class="toy-list" id="inp-equipped-toys">
+        <div class="empty-state">未装备道具。</div>
+      </div>
+      <div class="section-label">已购道具（点击装备）</div>
+      <div class="toy-list" id="inp-owned-toys">
+        <div class="empty-state">未购入任何道具。</div>
+      </div>
+      <div class="section-label">快速购买（测试用）</div>
+      <div class="toy-list" id="inp-shop-toys">
+        <div class="empty-state">加载中...</div>
       </div>
     </div>
 
     <!-- 外出 -->
-    <div class="panel" id="inp-panel-scenes">
-      <div class="panel-title">外出场景（{{user}} 离开 {{char}} 去别处）</div>
-      <div id="inp-scenes-list">
-        <!-- JS 动态渲染 -->
+    <div class="tab-panel" id="inp-panel-scenes">
+      <div class="section-label">通用外部场景</div>
+      <div class="btn-grid">
+        <button class="action-btn" onclick="InPalmDrawer.doVisit('supermarket')">去超市</button>
+        <button class="action-btn" onclick="InPalmDrawer.doVisit('pharmacy')">去药店</button>
+        <button class="action-btn" onclick="InPalmDrawer.doVisit('street')">走上街道</button>
+        <button class="action-btn" onclick="InPalmDrawer.doVisit('cafe')">去咖啡厅</button>
       </div>
     </div>
 
     <!-- 自定义 -->
-    <div class="panel" id="inp-panel-custom">
-      <div class="panel-title">自由动作（描述 {{user}} 要做什么，AI 生成 {{char}} 反应）</div>
-      <div class="custom-form">
-        <div class="panel-title" style="margin-bottom: 2px;">类别</div>
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px;" id="inp-custom-cats">
-          <!-- JS 动态渲染 -->
+    <div class="tab-panel" id="inp-panel-custom">
+      <div class="section-label">自由描述你的行动</div>
+      <div class="custom-input-area">
+        <textarea class="custom-textarea" id="inp-custom-desc" placeholder="例：我走到他身后，一只手轻轻覆上他的眼睛，另一只手缓慢地从他的颈侧滑下，用气音说：'今天不许动。'"></textarea>
+        <div class="custom-controls">
+          <label>类别：</label>
+          <select id="inp-custom-cat">
+            <option value="touch_gentle">温柔触碰</option>
+            <option value="touch_rough">粗暴接触</option>
+            <option value="stimulation_mild">轻度刺激 [body+]</option>
+            <option value="stimulation_heavy">强烈刺激 [r18]</option>
+            <option value="training_soft">温和训练</option>
+            <option value="training_harsh">严苛训练</option>
+            <option value="verbal_sweet">温柔言语</option>
+            <option value="verbal_harsh">恶意言语</option>
+            <option value="punishment">惩罚</option>
+            <option value="reward">奖励</option>
+            <option value="observe">观察（无接触）</option>
+            <option value="neutral">中性动作</option>
+          </select>
+          <label>时长(分)：</label>
+          <input class="custom-number" type="number" min="1" max="480" placeholder="默认" id="inp-custom-dur">
+          <button class="action-btn info" onclick="InPalmDrawer.submitCustomAction()">执行</button>
+          <button class="action-btn" onclick="InPalmDrawer.clearCustom()">清空</button>
         </div>
-        <div class="panel-title" style="margin-bottom: 2px; margin-top: 6px;">描述你的动作</div>
-        <textarea class="custom-textarea" id="inp-custom-text" placeholder="例如：我在她的餐盘里放了一张她女儿的照片，然后离开房间..."></textarea>
-        <button class="submit-btn" onclick="InPalmDrawer.submitCustomAction()">执行动作</button>
       </div>
     </div>
 
@@ -1499,80 +1500,74 @@ body.inp-drawer-open #inp-drawer-tab {
 
   <!-- 底栏 -->
   <div class="drawer-footer">
-    <span>in your palm · v0.5.0</span>
-    <button class="end-session-btn" onclick="InPalmDrawer.endSession()">我要结束了</button>
+    <span>in your palm · v0.5.1</span>
+    <div style="display: flex; gap: 4px;">
+      <button class="footer-btn" onclick="InPalmDrawer.reconfigure()" title="重新配置本局">重新配置</button>
+      <button class="footer-btn danger" onclick="InPalmDrawer.endSession()">结束本局</button>
+    </div>
   </div>
 </div>
 
 <script>
 // ============================================================
-// 抽屉控制器 + 引擎连接
+// 抽屉控制器 v0.5.1
 // ============================================================
 
 (function() {
   'use strict';
   
   if (window.InPalmDrawer) {
-    console.log('[InPalmDrawer] 已存在，跳过初始化');
+    console.log('[InPalmDrawer] 已存在');
     return;
   }
   
   const Drawer = {
     _onActionPrompt: null,
     _autoSend: true,
-    _currentCategory: 'status',  // custom 面板的当前选中类别
+    _initialized: false,
     
     init(options) {
       options = options || {};
       this._onActionPrompt = options.onActionPrompt || null;
       this._autoSend = options.autoSend !== false;
       
-      // 应用默认主题
       if (options.theme) this.setTheme(options.theme);
       
-      // 渲染动态内容
-      this._renderDialogueEntries();
-      this._renderTrainActions();
+      this._renderDialogueList();
       this._renderToys();
-      this._renderScenes();
-      this._renderCustomCats();
-      
-      // 刷新状态
       this.refreshAll();
       
       // 监听引擎事件
       if (window.InPalmEngine?.on) {
-        window.InPalmEngine.on('state_updated', () => this.refreshAll());
-        window.InPalmEngine.on('milestone', (e) => this._showMilestone(e));
+        window.InPalmEngine.on('actionPerformed', () => this.refreshAll());
+        window.InPalmEngine.on('customActionPerformed', () => this.refreshAll());
+        window.InPalmEngine.on('inventoryChanged', () => this._renderToys());
+        window.InPalmEngine.on('stateChanged', () => this.refreshAll());
       }
       
+      this._initialized = true;
       console.log('[InPalmDrawer] 初始化完成');
     },
     
-    // ==== 抽屉开关 ====
-    
+    // 抽屉开关
     toggle() {
       const drawer = document.getElementById('inp-drawer');
       if (!drawer) return;
-      
       const isOpen = drawer.classList.toggle('open');
       document.body.classList.toggle('inp-drawer-open', isOpen);
     },
     
     open() {
-      const drawer = document.getElementById('inp-drawer');
-      drawer.classList.add('open');
+      document.getElementById('inp-drawer').classList.add('open');
       document.body.classList.add('inp-drawer-open');
     },
     
     close() {
-      const drawer = document.getElementById('inp-drawer');
-      drawer.classList.remove('open');
+      document.getElementById('inp-drawer').classList.remove('open');
       document.body.classList.remove('inp-drawer-open');
     },
     
-    // ==== 主题 ====
-    
+    // 主题
     toggleThemeMenu() {
       document.getElementById('inp-theme-menu').classList.toggle('show');
     },
@@ -1587,41 +1582,41 @@ body.inp-drawer-open #inp-drawer-tab {
       setTimeout(() => document.getElementById('inp-theme-menu').classList.remove('show'), 150);
     },
     
-    // ==== 标签切换 ====
-    
+    // 标签切换
     switchTab(btn, panelName) {
       document.querySelectorAll('#inp-drawer .tab-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       
-      document.querySelectorAll('#inp-drawer .panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('#inp-drawer .tab-panel').forEach(p => p.classList.remove('active'));
       const panel = document.getElementById('inp-panel-' + panelName);
       if (panel) panel.classList.add('active');
     },
     
-    // ==== 动作触发 ====
+    // 数值区折叠
+    toggleStatsSection(sectionId) {
+      const body = document.getElementById('inp-stats-' + sectionId);
+      if (body) body.classList.toggle('collapsed');
+    },
     
+    // 调试区折叠
+    toggleDebug() {
+      const el = document.getElementById('inp-debug');
+      const toggle = document.querySelector('#inp-drawer .debug-toggle');
+      const show = el.classList.toggle('show');
+      if (toggle) toggle.textContent = (show ? '▼' : '▶') + ' 调试响应区 · 看 AI 会收到什么';
+    },
+    
+    // 动作
     doAction(actionId) {
-      if (!window.InPalmEngine?.action) {
-        alert('引擎未就绪');
-        return;
-      }
+      if (!window.InPalmEngine?.action) return;
       const packet = window.InPalmEngine.action(actionId);
       this._handlePacket(packet);
     },
     
-    submitCustomAction() {
-      const text = document.getElementById('inp-custom-text').value.trim();
-      if (!text) {
-        alert('请描述动作');
-        return;
-      }
-      if (!this._currentCategory || this._currentCategory === 'status') {
-        alert('请先选择动作类别');
-        return;
-      }
-      const packet = window.InPalmEngine.customAction(this._currentCategory, text);
+    doVisit(sceneId) {
+      if (!window.InPalmEngine?.visitScene) return;
+      const packet = window.InPalmEngine.visitScene(sceneId);
       this._handlePacket(packet);
-      document.getElementById('inp-custom-text').value = '';
     },
     
     enterDialogue(entryId) {
@@ -1634,13 +1629,31 @@ body.inp-drawer-open #inp-drawer-tab {
       if (!window.InPalmEngine?.exitDialogue) return;
       const packet = window.InPalmEngine.exitDialogue();
       this._handlePacket(packet);
-      this.refreshAll();
     },
     
-    visitScene(sceneId) {
-      if (!window.InPalmEngine?.visitScene) return;
-      const packet = window.InPalmEngine.visitScene(sceneId);
+    submitCustomAction() {
+      const desc = document.getElementById('inp-custom-desc').value.trim();
+      const cat = document.getElementById('inp-custom-cat').value;
+      const durRaw = document.getElementById('inp-custom-dur').value;
+      const dur = durRaw ? parseInt(durRaw, 10) : null;
+      
+      if (!desc) {
+        alert('请描述动作');
+        return;
+      }
+      
+      const packet = window.InPalmEngine.customAction({
+        description: desc,
+        category: cat,
+        customDuration: dur
+      });
       this._handlePacket(packet);
+      document.getElementById('inp-custom-desc').value = '';
+    },
+    
+    clearCustom() {
+      document.getElementById('inp-custom-desc').value = '';
+      document.getElementById('inp-custom-dur').value = '';
     },
     
     equipToy(toyId) {
@@ -1658,9 +1671,25 @@ body.inp-drawer-open #inp-drawer-tab {
     },
     
     buyToy(toyId) {
-      if (!window.InPalmEngine?.buyToy) return;
-      window.InPalmEngine.buyToy(toyId);
+      if (!window.InPalmEngine?.purchaseToy) return;
+      window.InPalmEngine.purchaseToy(toyId);
       this._renderToys();
+    },
+    
+    // 重新配置：清空游戏状态，重开开场菜单
+    reconfigure() {
+      if (!confirm('重新配置会重置所有状态。确定？')) return;
+      if (window.InPalmEngine) {
+        // 清空 initialized 标志
+        try {
+          const state = window.InPalmEngine.getState?.();
+          if (state) state.initialized = false;
+        } catch (e) {}
+      }
+      this.close();
+      if (window.InPalmConsole?._showOpeningModal) {
+        window.InPalmConsole._showOpeningModal();
+      }
     },
     
     endSession() {
@@ -1670,208 +1699,192 @@ body.inp-drawer-open #inp-drawer-tab {
       this._handlePacket(packet);
     },
     
+    // 处理动作 packet
     _handlePacket(packet) {
-      if (!packet) return;
-      
-      // 显示调试内容
-      const debug = document.getElementById('inp-debug');
-      if (debug) {
-        debug.textContent = JSON.stringify(packet, null, 2);
+      if (!packet) {
+        alert('动作被阻止（不满足条件或深度档位）');
+        return;
       }
       
-      // 通知 index.js 发送 prompt
-      if (packet.blocked) {
-        alert('动作被阻止: ' + (packet.reason || '未知原因'));
-      } else if (this._onActionPrompt && this._autoSend) {
+      const debug = document.getElementById('inp-debug');
+      if (debug) {
+        try {
+          debug.textContent = JSON.stringify(packet, null, 2);
+        } catch (e) {
+          debug.textContent = '[无法序列化 packet]';
+        }
+      }
+      
+      if (this._onActionPrompt && this._autoSend) {
         this._onActionPrompt(packet);
       }
       
       this.refreshAll();
     },
     
-    // ==== 调试区折叠 ====
-    
-    toggleDebug() {
-      const el = document.getElementById('inp-debug');
-      const toggle = document.querySelector('.debug-toggle');
-      const isShow = el.classList.toggle('show');
-      if (toggle) toggle.textContent = (isShow ? '▼' : '▶') + ' 调试响应区 · 看 AI 会收到什么';
-    },
-    
-    // ==== 状态刷新 ====
-    
+    // 刷新所有状态
     refreshAll() {
       if (!window.InPalmEngine?.getState) return;
       const state = window.InPalmEngine.getState();
       if (!state) return;
       
-      // 时间
+      // 顶部信息
       document.getElementById('inp-day').textContent = 'Day ' + state.time.day;
       document.getElementById('inp-time').textContent = String(state.time.hour).padStart(2, '0') + ':00';
       
-      // 阶段
       const stageLabels = { shock: '震惊期', resist: '对抗期', adapt: '适应期', transform: '转化期' };
       document.getElementById('inp-stage').textContent = stageLabels[state.time.stage] || state.time.stage;
       
-      // 位置
-      document.getElementById('inp-location').textContent = state.location?.current || '密室';
+      const locName = state.location?.inCell ? '密室' : (state.location?.current || '外部');
+      document.getElementById('inp-location').textContent = locName;
       
-      // 关系扭曲
-      document.getElementById('inp-distortion').textContent = state.relationship?.distortion || 0;
-      
-      // 数值条
-      this._updateStatBar('sanity', state.char.sanity);
-      this._updateStatBar('mood', state.char.mood);
-      this._updateStatBar('stamina', state.char.stamina);
-      this._updateStatBar('shame', state.char.shame);
+      // 渲染所有数值
+      this._renderStats(state);
       
       // 对话模式
       const dialogueBar = document.getElementById('inp-dialogue-bar');
       if (state.dialogue?.active) {
         dialogueBar.classList.add('active');
-        document.getElementById('inp-dialogue-name').textContent = state.dialogue.entryName || '—';
+        document.getElementById('inp-dialogue-name').textContent = state.dialogue.entryName || state.dialogue.entryId || '—';
         document.getElementById('inp-dialogue-turns').textContent = state.dialogue.turns || 0;
       } else {
         dialogueBar.classList.remove('active');
       }
-      
-      // 装备中的玩具数
-      const equipped = state.toys?.equipped?.length || 0;
-      const eqEl = document.getElementById('inp-equipped-count');
-      if (eqEl) eqEl.textContent = equipped;
     },
     
-    _updateStatBar(stat, value) {
-      const bar = document.getElementById('bar-' + stat);
-      const val = document.getElementById('val-' + stat);
-      if (bar) bar.style.width = value + '%';
-      if (val) val.textContent = value;
+    _statBar(label, value, cls) {
+      cls = cls || '';
+      return `<div class="stat-bar">
+        <span class="stat-label">${label}</span>
+        <div class="stat-track"><div class="stat-fill ${cls}" style="width:${value}%"></div></div>
+        <span class="stat-value">${value}</span>
+      </div>`;
     },
     
-    _showMilestone(event) {
-      const area = document.getElementById('inp-milestones');
-      if (!area) return;
+    _lowColor(v) { return v <= 30 ? 'low' : v <= 60 ? 'mid' : ''; },
+    _highWarnColor(v) { return v >= 70 ? 'high-warning' : v >= 40 ? 'mid' : ''; },
+    _arousalColor(v) { return v >= 60 ? 'shame' : v >= 30 ? 'mid' : ''; },
+    
+    _renderStats(s) {
+      const ch = s.char || {};
+      const cs = s.charStatus || {};
+      const st = s.state || {};
       
-      const div = document.createElement('div');
-      div.className = 'milestone-alert';
-      div.textContent = '⚠ ' + (event.message || '状态异常');
-      area.appendChild(div);
+      // 心理
+      const psychHtml = [
+        this._statBar('理智', ch.sanity || 0, this._lowColor(ch.sanity || 0)),
+        this._statBar('心情', ch.mood || 0, this._lowColor(ch.mood || 0)),
+        this._statBar('真心', ch.sincerity || 0),
+        this._statBar('友好', ch.compliance || 0),
+      ].join('');
+      document.getElementById('inp-stats-psych').innerHTML = psychHtml;
       
-      setTimeout(() => div.remove(), 8000);
+      // 生理
+      const bodyHtml = [
+        this._statBar('体力', ch.stamina || 0, this._lowColor(ch.stamina || 0)),
+        this._statBar('饥饿', ch.hunger || 0),
+        this._statBar('睡眠', ch.sleep || 0, this._lowColor(ch.sleep || 0)),
+        this._statBar('健康', ch.health || 0, this._lowColor(ch.health || 0)),
+      ].join('');
+      document.getElementById('inp-stats-body').innerHTML = bodyHtml;
+      
+      // 关系 / 调教
+      const relHtml = [
+        this._statBar('兴奋', ch.arousal || 0, this._arousalColor(ch.arousal || 0)),
+        this._statBar('羞耻', ch.shame || 0),
+        this._statBar('训练度', ch.trained || 0, this._highWarnColor(ch.trained || 0)),
+        this._statBar('扭曲度', st.distortion || 0, this._highWarnColor(st.distortion || 0)),
+        this._statBar('风险值', st.riskLevel || 0, this._highWarnColor(st.riskLevel || 0)),
+      ].join('');
+      document.getElementById('inp-stats-relation').innerHTML = relHtml;
+      
+      // 物理状态
+      const physHtml = `<div class="badge-row">
+        <span class="status-badge ${cs.consciousness && cs.consciousness !== 'awake' ? 'active' : ''}">意识: ${cs.consciousness || 'awake'}</span>
+        <span class="status-badge ${cs.position && cs.position !== 'free' ? 'active' : ''}">姿态: ${cs.position || 'free'}</span>
+        <span class="status-badge ${cs.clothed && cs.clothed !== 'normal' ? 'active' : ''}">衣着: ${cs.clothed || 'normal'}</span>
+        ${cs.gagged ? '<span class="status-badge active">口塞</span>' : ''}
+        ${cs.blindfolded ? '<span class="status-badge active">眼罩</span>' : ''}
+        ${cs.collared ? '<span class="status-badge active">项圈</span>' : ''}
+      </div>`;
+      document.getElementById('inp-stats-physical').innerHTML = physHtml;
     },
     
-    // ==== 动态渲染：对话切入点 ====
-    
-    _renderDialogueEntries() {
-      const container = document.getElementById('inp-dialogue-entries');
-      if (!container || !window.InPalmEngine?.getDialogueEntries) return;
+    // 渲染对话切入点
+    _renderDialogueList() {
+      const container = document.getElementById('inp-dialogue-list');
+      if (!container) return;
       
-      const entries = window.InPalmEngine.getDialogueEntries() || [];
+      let entries = [];
+      if (window.InPalmEngine?.getAvailableDialogues) {
+        entries = window.InPalmEngine.getAvailableDialogues() || [];
+      }
+      
+      if (entries.length === 0) {
+        container.innerHTML = '<div class="empty-state">暂无可用对话切入点（可能还需先满足条件）</div>';
+        return;
+      }
+      
       container.innerHTML = entries.map(e => `
         <div class="dialogue-entry" onclick="InPalmDrawer.enterDialogue('${e.id}')">
-          <div class="dialogue-entry-title">${e.name}</div>
+          <div class="dialogue-entry-title">${e.name || e.id}</div>
           <div class="dialogue-entry-desc">${e.description || ''}</div>
         </div>
       `).join('');
     },
     
-    // ==== 动态渲染：调教动作 ====
-    
-    _renderTrainActions() {
-      const container = document.getElementById('inp-train-actions');
-      if (!container || !window.InPalmEngine?.getAvailableTrainingActions) return;
-      
-      const actions = window.InPalmEngine.getAvailableTrainingActions() || [];
-      if (actions.length === 0) {
-        container.innerHTML = '<div class="panel-title">当前深度档位下无可用调教</div>';
-        return;
-      }
-      container.innerHTML = actions.map(a => `
-        <button class="action-btn" onclick="InPalmDrawer.doAction('${a.id}')">
-          ${a.name}
-        </button>
-      `).join('');
-    },
-    
-    // ==== 动态渲染：玩具列表 ====
-    
+    // 渲染道具列表
     _renderToys() {
-      const container = document.getElementById('inp-toys-list');
-      if (!container || !window.InPalmEngine?.getToyState) return;
+      const state = window.InPalmEngine?.getState?.();
+      if (!state) return;
       
-      const state = window.InPalmEngine.getToyState() || {};
-      const equipped = state.equipped || [];
-      const owned = state.owned || [];
-      const shop = state.shop || [];
-      
-      let html = '';
-      
-      if (equipped.length > 0) {
-        html += '<div class="panel-title" style="margin-top: 10px;">装备中</div>';
-        html += equipped.map(t => `
-          <div class="scene-item">
-            <span class="scene-name">${t.name}</span>
-            <button class="icon-btn" onclick="InPalmDrawer.unequipToy('${t.id}')">卸下</button>
-          </div>
-        `).join('');
+      // 已装备
+      const equipped = state.charStatus?.toysEquipped || [];
+      const equippedEl = document.getElementById('inp-equipped-toys');
+      if (equippedEl) {
+        if (equipped.length === 0) {
+          equippedEl.innerHTML = '<div class="empty-state">未装备道具。</div>';
+        } else {
+          equippedEl.innerHTML = equipped.map(id => {
+            const toy = window.InPalmEngine?.data?.toys?.[id];
+            const name = toy ? toy.name : id;
+            return `<span class="toy-chip equipped" onclick="InPalmDrawer.unequipToy('${id}')">${name}</span>`;
+          }).join('');
+        }
       }
       
-      if (owned.length > 0) {
-        html += '<div class="panel-title" style="margin-top: 10px;">已拥有</div>';
-        html += owned.map(t => `
-          <div class="scene-item">
-            <span class="scene-name">${t.name}</span>
-            <button class="icon-btn" onclick="InPalmDrawer.equipToy('${t.id}')">装备</button>
-          </div>
-        `).join('');
+      // 已购入
+      const ownedEl = document.getElementById('inp-owned-toys');
+      if (ownedEl) {
+        const ownedIds = Object.keys(state.inventory || {}).filter(id => {
+          const toy = window.InPalmEngine?.data?.toys?.[id];
+          return toy && state.inventory[id] > 0;
+        });
+        if (ownedIds.length === 0) {
+          ownedEl.innerHTML = '<div class="empty-state">未购入任何道具。</div>';
+        } else {
+          ownedEl.innerHTML = ownedIds.map(id => {
+            const toy = window.InPalmEngine?.data?.toys?.[id];
+            const name = toy ? toy.name : id;
+            return `<span class="toy-chip" onclick="InPalmDrawer.equipToy('${id}')">${name}</span>`;
+          }).join('');
+        }
       }
       
-      if (shop.length > 0) {
-        html += '<div class="panel-title" style="margin-top: 10px;">可购买</div>';
-        html += shop.map(t => `
-          <div class="scene-item">
-            <span class="scene-name">${t.name} · ¥${t.price || '?'}</span>
-            <button class="icon-btn" onclick="InPalmDrawer.buyToy('${t.id}')">购入</button>
-          </div>
-        `).join('');
+      // 商店
+      const shopEl = document.getElementById('inp-shop-toys');
+      if (shopEl) {
+        const toys = window.InPalmEngine?.data?.toys || {};
+        const toyIds = Object.keys(toys);
+        if (toyIds.length === 0) {
+          shopEl.innerHTML = '<div class="empty-state">无道具数据。</div>';
+        } else {
+          shopEl.innerHTML = toyIds.map(id => {
+            const toy = toys[id];
+            return `<span class="toy-chip" onclick="InPalmDrawer.buyToy('${id}')" title="购入 ${toy.name || id}">+${toy.name || id}</span>`;
+          }).join('');
+        }
       }
-      
-      container.innerHTML = html || '<div class="panel-title">暂无玩具</div>';
-    },
-    
-    // ==== 动态渲染：场景列表 ====
-    
-    _renderScenes() {
-      const container = document.getElementById('inp-scenes-list');
-      if (!container || !window.InPalmEngine?.getAvailableScenes) return;
-      
-      const scenes = window.InPalmEngine.getAvailableScenes() || [];
-      container.innerHTML = scenes.map(s => `
-        <div class="scene-item" onclick="InPalmDrawer.visitScene('${s.id}')">
-          <span class="scene-name">${s.name}</span>
-          <span class="scene-duration">${s.duration || '?'}h</span>
-        </div>
-      `).join('');
-    },
-    
-    // ==== 动态渲染：自定义动作类别 ====
-    
-    _renderCustomCats() {
-      const container = document.getElementById('inp-custom-cats');
-      if (!container || !window.InPalmEngine?.getCustomActionCategories) return;
-      
-      const cats = window.InPalmEngine.getCustomActionCategories() || [];
-      container.innerHTML = cats.map(c => `
-        <div class="custom-category" data-cat="${c.id}" onclick="InPalmDrawer._selectCustomCat('${c.id}', this)">
-          ${c.name}
-        </div>
-      `).join('');
-    },
-    
-    _selectCustomCat(catId, el) {
-      this._currentCategory = catId;
-      document.querySelectorAll('#inp-custom-cats .custom-category').forEach(c => c.classList.remove('selected'));
-      el.classList.add('selected');
     }
   };
   
@@ -1879,7 +1892,7 @@ body.inp-drawer-open #inp-drawer-tab {
 })();
 </script>
 
-<!-- ============ 开场菜单的原 scripts ============ -->
+<!-- 开场菜单原 scripts -->
 <script>
 
 
@@ -2534,26 +2547,28 @@ renderSteps();
 
 </script>
 
-<!-- ============ 扩展集成层 ============ -->
+<!-- 集成层 -->
 <script>
 (function() {
   'use strict';
   
-  // 供 index.js 调用的全局 API
   window.InPalmConsole = {
     _onActionPrompt: null,
     _autoSend: true,
     
-    // index.js 调用这个来初始化
     init: function(options) {
       options = options || {};
       this._onActionPrompt = options.onActionPrompt || null;
       this._autoSend = options.autoSend !== false;
       
-      // 检查是否有已存在的 game state
-      const hasState = window.InPalmEngine?.getState?.();
+      // 检查引擎是否已初始化（有没有走过开场菜单）
+      let hasGame = false;
+      try {
+        const state = window.InPalmEngine?.getState?.();
+        hasGame = state && state.initialized === true;
+      } catch (e) { hasGame = false; }
       
-      if (hasState) {
+      if (hasGame) {
         // 已有游戏，直接打开抽屉
         if (window.InPalmDrawer) {
           window.InPalmDrawer.init({
@@ -2564,21 +2579,16 @@ renderSteps();
           window.InPalmDrawer.open();
         }
       } else {
-        // 没有游戏，显示开场菜单模态
+        // 显示开场菜单
         this._showOpeningModal();
       }
-      
-      console.log('[InPalmConsole] 已初始化');
     },
     
     _showOpeningModal: function() {
       document.getElementById('inp-opening-modal-overlay').classList.add('show');
       document.getElementById('inp-opening-modal').classList.add('show');
-      
-      const closeBtn = document.getElementById('inp-opening-modal-close');
-      const overlay = document.getElementById('inp-opening-modal-overlay');
-      closeBtn.onclick = () => this._hideOpeningModal();
-      overlay.onclick = () => this._hideOpeningModal();
+      document.getElementById('inp-opening-modal-close').onclick = () => this._hideOpeningModal();
+      document.getElementById('inp-opening-modal-overlay').onclick = () => this._hideOpeningModal();
     },
     
     _hideOpeningModal: function() {
@@ -2593,17 +2603,14 @@ renderSteps();
     }
   };
   
-  // 覆盖 opening_menu 原本的 startGame：
-  // 配置完 → init 引擎 → 关闭模态 → 打开抽屉
+  // 覆盖开场菜单的 startGame
   window.startGame = function() {
     if (typeof InPalmEngine !== 'undefined') {
       InPalmEngine.init(window.config || {});
     }
     
-    // 关闭开场菜单
     window.InPalmConsole._hideOpeningModal();
     
-    // 打开主控制台抽屉
     if (window.InPalmDrawer) {
       window.InPalmDrawer.init({
         onActionPrompt: window.InPalmConsole._onActionPrompt,
@@ -2614,15 +2621,15 @@ renderSteps();
     }
   };
   
-  // 包装引擎方法，让动作执行后自动通知到 index.js
+  // 拦截引擎方法，自动发 prompt
   if (window.InPalmEngine) {
     const engine = window.InPalmEngine;
-    ['action', 'customAction', 'enterDialogue', 'visitScene', 'executePreset', 'endSession'].forEach(methodName => {
-      const original = engine[methodName];
-      if (typeof original !== 'function') return;
-      engine[methodName] = function(...args) {
-        const packet = original.apply(engine, args);
-        if (packet && !packet.blocked && window.InPalmConsole._autoSend !== false) {
+    ['action', 'customAction', 'enterDialogue', 'exitDialogue', 'visitScene', 'executePreset', 'endSession'].forEach(m => {
+      const orig = engine[m];
+      if (typeof orig !== 'function') return;
+      engine[m] = function(...args) {
+        const packet = orig.apply(engine, args);
+        if (packet && !packet.blocked && window.InPalmConsole._autoSend) {
           window.InPalmConsole.notifyPacket(packet);
         }
         return packet;
