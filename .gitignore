@@ -1,0 +1,17 @@
+# Mac 系统文件
+.DS_Store
+
+# 编辑器临时文件
+*.swp
+*.swo
+*~
+
+# Node 依赖(如果以后用 npm)
+node_modules/
+
+# 日志
+*.log
+
+# 环境变量(防止意外推送密钥)
+.env
+.env.local
