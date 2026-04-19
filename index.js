@@ -1,6 +1,6 @@
 // ============================================================
 // 掌心的它 · In Your Palm SillyTavern Extension
-// 入口文件：index.js
+// 入口文件：index.js (v0.5.3)
 //
 // 职责：
 // 1. 加载引擎（engine/engine.js）
@@ -15,27 +15,23 @@ import { saveSettingsDebounced } from '../../../../script.js';
 
 const EXTENSION_NAME = 'in_your_palm';
 const EXTENSION_FOLDER_NAME = 'third-party/in_your_palm';
-const VERSION = '0.5.0';
+const VERSION = '0.5.3';
 
 // 默认设置
 const defaultSettings = {
   enabled: true,
   theme: 'theme-noir',
-  currentGame: null,       // 存储当前一局的完整 state
-  autoSendPrompts: true,   // 点按钮是否自动发送 prompt 到 AI
+  currentGame: null,
+  autoSendPrompts: true,
 };
 
 // ============================================================
 // 扩展生命周期
 // ============================================================
 
-/**
- * 扩展加载时的入口。酒馆启动时调用。
- */
 jQuery(async () => {
   console.log('[掌心的它] 扩展加载中...');
   
-  // 1. 初始化设置
   if (!extension_settings[EXTENSION_NAME]) {
     extension_settings[EXTENSION_NAME] = structuredClone(defaultSettings);
   }
@@ -45,16 +41,9 @@ jQuery(async () => {
     }
   });
   
-  // 2. 加载引擎脚本（通过 script 标签注入，让它挂到 window）
   await loadEngineScript();
-  
-  // 3. 初始化侧栏设置面板（在酒馆的 Extensions 面板里）
   await initSettingsPanel();
-  
-  // 4. 注入顶栏的"打开控制台"按钮
   injectOpenConsoleButton();
-  
-  // 5. 预加载 Lorebook 内容（备用——用户可以一键导入）
   await preloadLorebook();
   
   console.log(`[掌心的它] v${VERSION} 加载完成`);
@@ -103,7 +92,7 @@ async function preloadLorebook() {
 }
 
 // ============================================================
-// 设置面板（酒馆 Extensions 菜单里的配置区）
+// 设置面板
 // ============================================================
 
 async function initSettingsPanel() {
@@ -168,7 +157,7 @@ async function initSettingsPanel() {
             
             <small>
               版本: ${VERSION} · 
-              <a href="https://github.com/YOUR_USERNAME/SillyTavern-InYourPalm" target="_blank">GitHub</a>
+              <a href="https://github.com/CeciliaLeander/in_your_palm" target="_blank">GitHub</a>
             </small>
           </div>
         </div>
@@ -178,7 +167,6 @@ async function initSettingsPanel() {
   
   $('#extensions_settings2').append(settingsHtml);
   
-  // 绑定事件
   $('#inp_enabled').on('change', function () {
     extension_settings[EXTENSION_NAME].enabled = $(this).prop('checked');
     saveSettingsDebounced();
@@ -209,8 +197,6 @@ function injectOpenConsoleButton() {
          tabindex="0"></div>
   `;
   
-  // 插入到酒馆的顶栏（在扩展菜单旁边）
-  // 兼容多个版本的酒馆 UI
   const injected = 
     $('#send_but_sheld').before(buttonHtml).length ||
     $('#leftSendForm').prepend(buttonHtml).length ||
@@ -224,16 +210,14 @@ function injectOpenConsoleButton() {
 }
 
 // ============================================================
-// 打开控制台（弹窗）
+// 打开控制台
 // ============================================================
 
 let consoleInjected = false;
 
 async function openConsole() {
   try {
-    // 如果已经注入过（抽屉 + 开场菜单已在 DOM 里），只是切换显示
     if (consoleInjected) {
-      // 让 InPalmConsole 决定显示什么
       if (window.InPalmConsole?.init) {
         const settings = extension_settings[EXTENSION_NAME];
         window.InPalmConsole.init({
@@ -252,7 +236,6 @@ async function openConsole() {
       return;
     }
     
-    // 首次：fetch 模板并注入到 body
     const templateUrl = `/scripts/extensions/${EXTENSION_FOLDER_NAME}/templates/console.html`;
     const response = await fetch(templateUrl);
     
@@ -262,11 +245,9 @@ async function openConsole() {
     
     const rawHtml = await response.text();
     
-    // 解析 HTML
     const parser = new DOMParser();
     const doc = parser.parseFromString(rawHtml, 'text/html');
     
-    // 1. 把 <style> 添加到 <head>（全局作用）
     doc.querySelectorAll('style').forEach(styleEl => {
       const newStyle = document.createElement('style');
       newStyle.setAttribute('data-inp', '1');
@@ -274,14 +255,12 @@ async function openConsole() {
       document.head.appendChild(newStyle);
     });
     
-    // 2. 把非 script 非 style 的元素添加到 body
     doc.body.childNodes.forEach(node => {
       if (node.nodeType === 1 && node.tagName !== 'SCRIPT' && node.tagName !== 'STYLE') {
         document.body.appendChild(document.importNode(node, true));
       }
     });
     
-    // 3. 执行所有 <script>
     doc.querySelectorAll('script').forEach(scriptEl => {
       try {
         const newScript = document.createElement('script');
@@ -295,7 +274,6 @@ async function openConsole() {
     
     consoleInjected = true;
     
-    // 初始化 InPalmConsole（它会决定显示开场菜单还是直接打开抽屉）
     if (typeof window.InPalmConsole?.init === 'function') {
       const settings = extension_settings[EXTENSION_NAME];
       window.InPalmConsole.init({
@@ -314,7 +292,6 @@ async function openConsole() {
 }
 
 function closeConsole() {
-  // 新架构下不需要 close（抽屉自己管理）
   if (window.InPalmDrawer) {
     window.InPalmDrawer.close();
   }
@@ -325,9 +302,91 @@ function closeConsole() {
 // ============================================================
 
 /**
- * 把控制台按钮触发的引擎 packet 转为 prompt，
- * 然后通过 SillyTavern 的 API 发送到当前对话
+ * 查引擎里的库，返回中文显示名
+ * 双保险：先查 InPalmEngine.XXX，再查 window.XXX
  */
+function lookupName(triggerType, triggerId) {
+  const eng = window.InPalmEngine || {};
+  
+  const tryGet = (libName, id) => {
+    const lib = eng[libName] || window[libName];
+    if (lib && lib[id] && lib[id].name) return lib[id].name;
+    return null;
+  };
+  
+  if (triggerType === 'action') {
+    return tryGet('ACTION_LIBRARY', triggerId)
+      || tryGet('TRAINING_ACTIONS', triggerId)
+      || tryGet('CUSTOM_TEMPLATES', triggerId)
+      || triggerId;
+  }
+  if (triggerType === 'scene') {
+    return tryGet('SCENE_LIBRARY', triggerId) || triggerId;
+  }
+  if (triggerType === 'dialogue_start') {
+    return tryGet('DIALOGUE_CUES', triggerId)
+      || tryGet('DIALOGUES', triggerId)
+      || triggerId;
+  }
+  return triggerId;
+}
+
+/**
+ * 把引擎 packet 转为极简 prompt
+ * 
+ * 格式示例：
+ *   [Day 1 20:00·震惊期]
+ *   动作:训练坐姿
+ *   [叙事] 模式:线下近距接触...
+ * 
+ * 原则：
+ * - 只描述客观事实（时间 + 动作 + 事件）
+ * - 叙事提示只描述"镜头/视角/景别"，不预设 char 的反应与心情
+ * - 数值变化不进 prompt（玩家看抽屉）
+ * - 动作名用中文
+ */
+function buildPromptFromPacket(packet) {
+  if (!packet || !packet.trigger) return '';
+  
+  const lines = [];
+  
+  // 第一行：时间 + 阶段
+  const hour = String(packet.time.hour).padStart(2, '0');
+  const stageName = packet.time.stageName || packet.time.stage;
+  lines.push(`[Day ${packet.time.day} ${hour}:00·${stageName}]`);
+  
+  // 第二行：动作（中文名）
+  const t = packet.trigger;
+  
+  if (t.triggerType === 'action') {
+    const name = lookupName('action', t.triggerId);
+    lines.push(`动作:${name}`);
+  } else if (t.triggerType === 'custom_action') {
+    const desc = t.customDescription || '自定义动作';
+    lines.push(`动作:${desc}`);
+  } else if (t.triggerType === 'scene') {
+    const name = lookupName('scene', t.triggerId);
+    lines.push(`前往:${name}`);
+    if (t.riskEvent) {
+      const riskName = t.riskEvent.name || t.riskEvent.id || '';
+      if (riskName) lines.push(`事件:${riskName}`);
+    }
+  } else if (t.triggerType === 'dialogue_start') {
+    const name = lookupName('dialogue_start', t.triggerId);
+    lines.push(`开启对话:${name}`);
+  } else if (t.triggerType === 'end') {
+    lines.push('动作:结束本局');
+  }
+  
+  // 叙事镜头提示（仅在 hint 存在时加入）
+  const hint = packet.meta?.narrationHint;
+  if (hint) {
+    lines.push(`[叙事] ${hint}`);
+  }
+  
+  return lines.join('\n');
+}
+
 async function sendActionPromptToChat(packet) {
   if (!packet) return;
   
@@ -338,22 +397,17 @@ async function sendActionPromptToChat(packet) {
   }
   
   const prompt = buildPromptFromPacket(packet);
+  if (!prompt) return;
   
   try {
     const context = getContext();
     
-    // 方式 1: 把 prompt 作为系统消息注入到聊天
-    if (typeof context.sendSystemMessage === 'function') {
-      context.sendSystemMessage('generic', prompt);
-      console.log('[掌心的它] 已作为系统消息注入 prompt');
-    }
-    
-    // 方式 2: 触发 AI 生成（不发送用户消息，而是发"/sys"形式的指令）
-    // 使用酒馆的 /sendas 或 /sys 命令
     if (context.executeSlashCommandsWithOptions) {
+      // 用 /send 作为 user 消息发送，AI 会把它当作玩家发言自然回应
       await context.executeSlashCommandsWithOptions(
-        `/sys ${escapeCommandString(prompt)} | /trigger`
+        `/send ${escapeCommandString(prompt)}`
       );
+      console.log('[掌心的它] 已作为 user 消息发送 prompt:', prompt);
     } else {
       console.warn('[掌心的它] 酒馆 API 不支持 slash command，prompt 未发送');
     }
@@ -363,59 +417,8 @@ async function sendActionPromptToChat(packet) {
 }
 
 function escapeCommandString(s) {
-  // /sys 命令里需要转义管道符
+  // slash 命令里需要转义管道符和换行
   return s.replace(/\|/g, '\\|').replace(/\n/g, ' ');
-}
-
-function buildPromptFromPacket(packet) {
-  if (!packet || !packet.trigger) return '';
-  
-  const lines = [];
-  lines.push('[掌心控制台 · 状态更新]');
-  lines.push(`Day ${packet.time.day} ${String(packet.time.hour).padStart(2, '0')}:00 · ${packet.time.stageName || packet.time.stage}`);
-  lines.push('');
-  lines.push('[{{char}} 当前状态]');
-  lines.push(`理智 ${packet.char.sanity} · 心情 ${packet.char.mood} · 真心 ${packet.char.sincerity} · 友好 ${packet.char.compliance}`);
-  lines.push(`体力 ${packet.char.stamina} · 饥饿 ${packet.char.hunger} · 健康 ${packet.char.health}`);
-  lines.push(`兴奋 ${packet.char.arousal} · 羞耻 ${packet.char.shame} · 训练度 ${packet.char.trained}`);
-  lines.push(`关系扭曲 ${packet.relationship.distortion}`);
-  
-  const flags = [];
-  if (packet.charStatus.consciousness !== 'awake') flags.push(packet.charStatus.consciousness);
-  if (packet.charStatus.position !== 'free') flags.push(packet.charStatus.position);
-  if (packet.charStatus.gagged) flags.push('口塞');
-  if (packet.charStatus.blindfolded) flags.push('眼罩');
-  if (packet.charStatus.collared) flags.push('项圈');
-  if (flags.length) lines.push(`状态: ${flags.join(', ')}`);
-  
-  if (packet.equippedToys?.length) {
-    lines.push(`已装备: ${packet.equippedToys.map(t => t.name).join(', ')}`);
-  }
-  
-  lines.push('');
-  lines.push('[本次触发]');
-  const t = packet.trigger;
-  if (t.triggerType === 'action') {
-    lines.push(`玩家执行了动作: ${t.triggerId}`);
-  } else if (t.triggerType === 'custom_action') {
-    lines.push(`玩家执行了自定义动作 (类别: ${t.customCategory})`);
-    lines.push(`玩家的描述: 「${t.customDescription}」`);
-  } else if (t.triggerType === 'scene') {
-    lines.push(`玩家前往场景: ${t.triggerId}`);
-    if (t.riskEvent) lines.push(`⚠ 风险事件: ${t.riskEvent.id}`);
-  } else if (t.triggerType === 'dialogue_start') {
-    lines.push(`玩家开启对话模式: ${t.triggerId}`);
-  } else if (t.triggerType === 'end') {
-    lines.push('玩家结束本局');
-  }
-  
-  if (t.triggerPrompt) {
-    lines.push('');
-    lines.push('[叙事指导]');
-    lines.push(t.triggerPrompt);
-  }
-  
-  return lines.join('\n');
 }
 
 // ============================================================
@@ -437,11 +440,8 @@ async function importLorebookToCurrentChar() {
       return;
     }
     
-    // SillyTavern 的 World Info API
-    // 方式 1: 用 slash command（最稳）
     const lorebookName = `In Your Palm Core`;
     
-    // 提示用户手动操作（最可靠）
     const confirmed = confirm(
       `将把 22 条"掌心的它"叙事规则打包成一个 Lorebook，名为「${lorebookName}」。\n\n` +
       `导入后，请手动将此 Lorebook 绑定到当前角色（世界书面板 → 选择"${lorebookName}" → 绑定）。\n\n` +
@@ -450,7 +450,6 @@ async function importLorebookToCurrentChar() {
     
     if (!confirmed) return;
     
-    // 创建 Lorebook
     const payload = {
       entries: {}
     };
@@ -470,9 +469,7 @@ async function importLorebookToCurrentChar() {
       };
     });
     
-    // 用酒馆内置命令创建世界书
     if (context.executeSlashCommandsWithOptions) {
-      // 序列化 JSON，转义
       const jsonStr = JSON.stringify(payload).replace(/\|/g, '\\|').replace(/"/g, '\\"');
       await context.executeSlashCommandsWithOptions(
         `/world create ${lorebookName}`
