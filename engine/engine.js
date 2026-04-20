@@ -7,6 +7,9 @@
   源文件清单（按加载顺序）：
     - 00_constants.js
     - 01_state.js
+    - data/sources.js
+    - data/palam.js
+    - data/imprints.js
     - data/scenes.js
     - data/items.js
     - data/toys.js
@@ -27,7 +30,7 @@
     - 98_api.js
     - 99_export.js
   
-  构建时间: 2026-04-18T14:38:13.483Z
+  构建时间: 2026-04-20T16:32:59.324Z
 */
 
 (function(global) {
@@ -265,6 +268,736 @@ const EventBus = {
       try { h(data); } catch(e) { console.error('EventBus error:', e); }
     });
   }
+};
+
+
+// ============================================================
+// [data/sources.js]
+// ============================================================
+
+/*
+  src/data/sources.js —— Source 层定义
+  
+  Source 是动作的"原始输出"——动作产生什么刺激来源（字面意思）。
+  Source 本身是瞬时的：单次动作产生，用完即消。
+  Source 在引擎里会被转化成 Palam（会话累积），再结算为珠（永久）。
+  
+  本文件包含三部分：
+  1. SOURCE_DEFINITIONS     —— 14 种 Source 的定义（id、中文名、分组、描述）
+  2. SOURCE_TO_PALAM_MAP    —— Source → Palam 的转化系数表
+  3. SOURCE_GROUPS          —— 分组元信息（供 UI 分色/分组显示）
+  
+  设计规范来源：DESIGN_PART1_architecture_actions.md §1.2
+  
+  扩展方法：
+  - 新增 Source：在 SOURCE_DEFINITIONS 添加条目，同时在 SOURCE_TO_PALAM_MAP 添加转化规则
+  - 修改转化系数：只改 SOURCE_TO_PALAM_MAP，不要动引擎逻辑
+  
+  注意：fatigue 是特例 —— 它只消耗 stamina（通过动作的 physicalCost 字段），
+  不产生任何 palam。保留它的 Source 定义只是为了统一动作数据结构。
+*/
+
+// ============================================================
+// 1. Source 定义表（14 种）
+// ============================================================
+
+const SOURCE_DEFINITIONS = {
+  // ---- 性快感组（pleasure） ----
+  pleasure_c: {
+    id: 'pleasure_c', name: '快感·C', group: 'pleasure',
+    description: '阴蒂/敏感部位刺激'
+  },
+  pleasure_v: {
+    id: 'pleasure_v', name: '快感·V', group: 'pleasure',
+    description: '深层刺激'
+  },
+  pleasure_a: {
+    id: 'pleasure_a', name: '快感·A', group: 'pleasure',
+    description: '后部刺激'
+  },
+  pleasure_b: {
+    id: 'pleasure_b', name: '快感·B', group: 'pleasure',
+    description: '胸部刺激'
+  },
+  
+  // ---- 心理冲击组（psych_impact） ----
+  shame: {
+    id: 'shame', name: '羞耻', group: 'psych_impact',
+    description: '被暴露、被羞辱'
+  },
+  terror: {
+    id: 'terror', name: '恐怖', group: 'psych_impact',
+    description: '精神压迫、未知感'
+  },
+  humiliation: {
+    id: 'humiliation', name: '屈辱', group: 'psych_impact',
+    description: '尊严被践踏'
+  },
+  exposure: {
+    id: 'exposure', name: '暴露', group: 'psych_impact',
+    description: '裸露、被看、被展示'
+  },
+  
+  // ---- 关系侵蚀组（relation_erosion） ----
+  intimacy: {
+    id: 'intimacy', name: '亲密', group: 'relation_erosion',
+    description: '温柔接触产生 —— 早期反而让 {{char}} 反感，晚期才真正建立关系'
+  },
+  dependence: {
+    id: 'dependence', name: '依存', group: 'relation_erosion',
+    description: '照料、供给产生'
+  },
+  submission: {
+    id: 'submission', name: '屈従', group: 'relation_erosion',
+    description: '强制性的服从压力'
+  },
+  
+  // ---- 抵抗组（resistance） ----
+  disgust: {
+    id: 'disgust', name: '反感', group: 'resistance',
+    description: '不适与反感'
+  },
+  fatigue: {
+    id: 'fatigue', name: '疲劳', group: 'resistance',
+    description: '体力/精神消耗（仅消耗 stamina，不产生 palam）'
+  },
+  pain: {
+    id: 'pain', name: '痛感', group: 'resistance',
+    description: '肉体疼痛'
+  }
+};
+
+// ============================================================
+// 2. Source → Palam 转化表
+// ============================================================
+/*
+  核心机制：一个 Source 可以贡献多个 Palam（按比例）。
+  这让一个动作产生"心理涟漪"，而不是单点影响。
+  
+  数据结构：
+    SOURCE_TO_PALAM_MAP[source_id] = {
+      palam_id: coefficient | { type: 'staged', byStage: {...}, default: x }
+    }
+  
+  阶段化系数（staged）：
+    某些 Source 的转化系数会随故事阶段变化（shock/resist/adapt/transform）。
+    典型例子：intimacy → disgust —— 早期（shock）反感高，晚期降低。
+    引擎读取时按 STATE.time.stage 查表，找不到则取 default。
+  
+  设计规范来源：DESIGN_PART1 §1.2.3
+*/
+
+const SOURCE_TO_PALAM_MAP = {
+  // ---- 快感组 ----
+  pleasure_c: {
+    pleasure: 1.0,
+    desire: 0.7,
+    depression: 0.2
+  },
+  pleasure_v: {
+    pleasure: 1.0,
+    desire: 0.8,
+    distortion_palam: 0.3
+  },
+  pleasure_a: {
+    pleasure: 1.0,
+    desire: 0.8,
+    distortion_palam: 0.3
+  },
+  pleasure_b: {
+    pleasure: 0.8,
+    shame_palam: 0.5
+  },
+  
+  // ---- 心理冲击组 ----
+  shame: {
+    shame_palam: 1.0,
+    resistance: 0.3,
+    // 阶段化：早期震惊不生欲情，转化期羞耻才会反向转化为欲情
+    desire: {
+      type: 'staged',
+      byStage: { shock: 0, resist: 0.2, adapt: 0.3, transform: 0.4 },
+      default: 0.2
+    }
+  },
+  terror: {
+    resistance: 0.8,
+    depression: 0.6,
+    distortion_palam: 0.4
+  },
+  humiliation: {
+    shame_palam: 0.8,
+    submission_palam: 0.5,
+    resistance: 0.4
+  },
+  exposure: {
+    shame_palam: 0.7,
+    desire: 0.3
+  },
+  
+  // ---- 关系侵蚀组 ----
+  intimacy: {
+    distortion_palam: 0.6,
+    depression: 0.3,
+    // 阶段化：震惊期温柔反而被视为威胁（高反感），晚期关系建立后反感几乎消失
+    resistance: {
+      type: 'staged',
+      byStage: { shock: 1.0, resist: 0.6, adapt: 0.3, transform: 0.1 },
+      default: 0.4
+    }
+  },
+  dependence: {
+    distortion_palam: 0.8,
+    submission_palam: 0.4
+  },
+  submission: {
+    submission_palam: 1.0,
+    depression: 0.3,
+    // 阶段化：早期强制服从引起强烈反感，后期递减
+    resistance: {
+      type: 'staged',
+      byStage: { shock: 0.7, resist: 0.6, adapt: 0.4, transform: 0.2 },
+      default: 0.5
+    }
+  },
+  
+  // ---- 抵抗组 ----
+  disgust: {
+    resistance: 1.0
+  },
+  fatigue: {
+    // 不产生任何 palam —— fatigue 只通过动作的 physicalCost 消耗 stamina
+  },
+  pain: {
+    resistance: 0.7,
+    distortion_palam: 0.3
+  }
+};
+
+// ============================================================
+// 3. 分组元信息
+// ============================================================
+/*
+  SOURCE_DEFINITIONS 里每个 Source 都有 group 字段，这里给这些
+  group 字符串一个"解释表"。UI 阶段会用它给不同组的 Source 上色/分组显示。
+  
+  视觉属性（uiColor 等）待 DESIGN_PART3B 的 UI 阶段（阶段 6-7）补充。
+*/
+
+const SOURCE_GROUPS = {
+  pleasure:          { id: 'pleasure',          name: '性快感' },
+  psych_impact:      { id: 'psych_impact',      name: '心理冲击' },
+  relation_erosion:  { id: 'relation_erosion',  name: '关系侵蚀' },
+  resistance:        { id: 'resistance',        name: '抵抗' }
+};
+
+
+// ============================================================
+// [data/palam.js]
+// ============================================================
+
+/*
+  src/data/palam.js —— Palam 层定义
+  
+  Palam（参数）是"单次调教会话"内的参数水池。
+  每次动作产生的 Source 会转化为 Palam 累积到 session.palam，
+  会话结束时按阈值结算为"临时珠"，临时珠累加到永久总量（STATE.char.juels）。
+  
+  本文件包含三部分：
+  1. PALAM_DEFINITIONS       —— 8 种 Palam 的定义（id、中文名、可见性、产生哪种珠）
+  2. PALAM_TO_JUEL_MAP       —— Palam → 珠 的映射（包含多源合并的特例）
+  3. PALAM_SESSION_THRESHOLD —— 会话结算时每多少 palam 出 1 颗临时珠（默认 100）
+  
+  设计规范来源：
+  - DESIGN_PART1_architecture_actions.md §1.3（Palam 定义）
+  - DESIGN_PART2_juels_imprints.md §3.2（Palam → 珠对应）
+  
+  两种阈值的区分（重要）：
+  - 本文件的 PALAM_SESSION_THRESHOLD = 会话结算系数（每 100 palam → 1 临时珠）
+  - juels.js 的 juel 等级阈值 = 永久累积晋级门槛（50/200/500/1500 等）
+  两者机制完全不同：前者结算单次会话，后者判定永久等级。
+*/
+
+// ============================================================
+// 1. Palam 定义表（8 种）
+// ============================================================
+/*
+  可见性约定：
+  - displayed: true   → 会话面板直接显示数值
+  - displayed: false  → 会话面板隐藏（扭曲 palam 是唯一的隐藏项，设计核心）
+  
+  命名约定（从设计文档继承）：
+  - shame_palam / submission_palam / distortion_palam 用 _palam 后缀
+    原因：它们的名字和 Source 同名（shame/submission/...），后缀用于消歧
+  - pleasure / desire / lewdness / depression / resistance 无后缀
+    原因：它们与 Source 名不冲突
+  
+  这种"后缀不统一"不是 bug，是设计文档约定。改动会影响后续引擎代码。
+*/
+
+const PALAM_DEFINITIONS = {
+  // ---- 身体快感类（都产生欲望珠） ----
+  pleasure: {
+    id: 'pleasure', name: '快感参数', displayed: true,
+    description: '本次身体快感累积（欲望珠主力来源）'
+  },
+  desire: {
+    id: 'desire', name: '欲情', displayed: true,
+    description: '本次性唤起程度'
+  },
+  lewdness: {
+    id: 'lewdness', name: '淫欲', displayed: true,
+    description: '深度性依赖（高阈值）'
+  },
+  
+  // ---- 心理压力类 ----
+  shame_palam: {
+    id: 'shame_palam', name: '羞耻', displayed: true,
+    description: '本次羞耻感（羞耻珠来源）'
+  },
+  submission_palam: {
+    id: 'submission_palam', name: '屈従', displayed: true,
+    description: '本次服从压力（服从珠来源）'
+  },
+  depression: {
+    id: 'depression', name: '抑郁', displayed: true,
+    description: '本次精神侵蚀（空虚珠来源）'
+  },
+  
+  // ---- 隐藏类（设计核心） ----
+  distortion_palam: {
+    id: 'distortion_palam', name: '扭曲', displayed: false,
+    description: '关系异化程度（扭曲珠来源，对玩家完全隐藏）'
+  },
+  
+  // ---- 抵抗类 ----
+  resistance: {
+    id: 'resistance', name: '反感', displayed: true,
+    description: '本次抵抗意识（反抗珠来源）'
+  }
+};
+
+// ============================================================
+// 2. Palam → 珠 映射表
+// ============================================================
+/*
+  数据结构：
+    PALAM_TO_JUEL_MAP[palam_id] = juel_id
+  
+  特殊情况：欲望珠（desire juel）是多源合并 ——
+  pleasure / desire / lewdness 三种 Palam 都贡献到同一颗珠。
+  引擎结算时需要把三者相加：total = pleasure + desire + lewdness，
+  再按总量出临时珠。
+  
+  引擎可以通过反查这张表找出"贡献同一颗珠的所有 palam"。
+  参考：DESIGN_PART2 §3.2
+*/
+
+const PALAM_TO_JUEL_MAP = {
+  // 身体快感三合一 → 欲望珠
+  pleasure:         'desire',
+  desire:           'desire',
+  lewdness:         'desire',
+  
+  // 其他 palam 一对一
+  shame_palam:      'shame',
+  submission_palam: 'obedience',
+  depression:       'emptiness',
+  distortion_palam: 'distortion',
+  resistance:       'resistance'
+};
+
+// ============================================================
+// 3. 会话结算阈值
+// ============================================================
+/*
+  每次会话结束时，引擎把 session.palam 按这张表结算为"临时珠"：
+    临时珠数 = Math.floor(session.palam[x] / PALAM_SESSION_THRESHOLD[x])
+  
+  临时珠加到永久总量（STATE.char.juels[juelId]），
+  由 juels.js 判定是否晋级下一等级。
+  
+  默认都是 100，单独列表是为了以后调参方便
+  （比如如果发现"扭曲累积过快"，可以只把 distortion_palam 调到 150
+   而不影响其他 palam）。
+  
+  欲望珠特殊：按 (pleasure + desire + lewdness) 总和结算，
+  这张表里这三个都写 100 只是语义占位，引擎会把三者相加后除以 100。
+*/
+
+const PALAM_SESSION_THRESHOLD = {
+  pleasure:         100,
+  desire:           100,
+  lewdness:         100,
+  shame_palam:      100,
+  submission_palam: 100,
+  depression:       100,
+  distortion_palam: 100,
+  resistance:       100
+};
+
+
+// ============================================================
+// [data/imprints.js]
+// ============================================================
+
+/*
+  src/data/imprints.js —— 刻印系统定义
+  
+  刻印（Imprint）是 char 心理上的永久性深度创伤/固化标记。
+  - 触发：由单次会话或累积 Palam / 珠 的异常情况激活
+  - 不可逆：一旦烙上永久存在
+  - 双向影响：既修改数值转化，也直接注入 AI prompt
+  
+  本文件包含两部分：
+  1. IMPRINT_DEFINITIONS  —— 9 种刻印的完整定义
+  2. IMPRINT_CATEGORIES   —— 分类元信息（UI 分色用，待 UI 阶段补齐视觉属性）
+  
+  设计规范来源：DESIGN_PART3A_imprints.md §4.1 ~ §4.6
+  
+  ============================================================
+  数据结构约定（请在修改时严格遵守）
+  ============================================================
+  
+  每个刻印条目的字段：
+  
+  {
+    id:        字符串，与 key 一致
+    name:      中文名
+    category:  'resistance' | 'dissolution' | 'numbness' | 'dependence' | 'special'
+    
+    trigger: {
+      type:      'single_session' | 'post_session' | 'post_juel_levelup' | 'pre_action'
+      condition: (ctx) => boolean
+                 其中 ctx 含：{ session, action, char, recentSessions, triggerSource, juelId, newLevel, ...}
+                 引擎阶段 5 实现时会根据 type 准备对应字段。
+    }
+    
+    modifiers: {
+      sourceMultipliers?: { [sourceId]: number }
+        对应 Part 1 §1.2 的 14 种 Source。乘数作用于 Source → Palam 的转化。
+      palamMultipliers?: { [palamId]: number }
+        对应 Part 1 §1.3 的 8 种 Palam。乘数作用于 Palam 本身的累积。
+      statModifiers?: { [statId]: { cap?: number, flatDelta?: number } }
+        对 ABL/生理值的直接修改（如 sanity 上限 -20）。
+      specialEffects?: string[]
+        引擎需要做特殊逻辑的效果标签。引擎阶段 5 实现对应的处理分支。
+    }
+    
+    aiPrompt: string
+      注入到 AI prompt 的"[刻印·XXX] ..."文本。
+      含 {占位符} 的会在运行时由引擎替换（目前仅 phobic_rupture 有 {trigger_list}）。
+    
+    reversible: boolean   —— 目前全部为 false
+    
+    meta?: object         —— 任意额外数据（如 phobic_rupture 存 triggerSources）
+  }
+  
+  ============================================================
+  关于触发检查时机（trigger.type 的约定）
+  ============================================================
+  
+  引擎在以下时机遍历所有 IMPRINT_DEFINITIONS，按 type 过滤后调用 condition：
+  
+  - 'single_session'      每次动作结算后
+  - 'post_session'        会话结束时
+  - 'post_juel_levelup'   珠晋级时
+  - 'pre_action'          每个动作执行前
+  
+  参考 Part 3A §4.4.2。
+*/
+
+// ============================================================
+// IMPRINT_DEFINITIONS —— 9 种刻印的完整定义
+// ============================================================
+
+const IMPRINT_DEFINITIONS = {
+  
+  // ==========================================
+  // 抵抗类（resistance）
+  // ==========================================
+  
+  rebound: {
+    id: 'rebound',
+    name: '反発刻印',
+    category: 'resistance',
+    trigger: {
+      type: 'single_session',
+      condition: (ctx) => {
+        const sessionResistance = ctx.session?.palam?.resistance ?? 0;
+        const actionResistanceSource = ctx.action?.sources?.resistance ?? 0;
+        return sessionResistance >= 150 || actionResistanceSource >= 8;
+      }
+    },
+    modifiers: {
+      sourceMultipliers: {
+        intimacy: 0.3     // 温柔接触的效果打折
+      },
+      palamMultipliers: {
+        submission_palam: 0.5,
+        resistance: 1.3   // 抵抗反而加剧
+      }
+    },
+    aiPrompt: '[刻印·反発] char 曾在某次处境下遭受超出其承受上限的压迫，内在已形成针对 user 的硬化防御层。该 char 现在对任何"顺化"尝试的接受速度显著降低，抗拒反应在 user 面前会有意或无意地被放大表现。',
+    reversible: false
+  },
+  
+  defiance_stasis: {
+    id: 'defiance_stasis',
+    name: '抵抗固化刻印',
+    category: 'resistance',
+    trigger: {
+      type: 'post_session',
+      // 条件：反抗珠金级 + 最近 3 次会话都产生 resistance palam ≥ 50
+      condition: (ctx) => {
+        const resistJuelLevel = ctx.char?.juels?.resistance ?? 0;
+        const hasGoldResistJuel = resistJuelLevel >= 450;  // 金级阈值见 Part 2 §3.3.2
+        if (!hasGoldResistJuel) return false;
+        
+        const recent = ctx.recentSessions ?? [];
+        if (recent.length < 3) return false;
+        return recent.slice(-3).every(s => (s.palam?.resistance ?? 0) >= 50);
+      }
+    },
+    modifiers: {
+      palamMultipliers: {
+        submission_palam: 0.7,
+        distortion_palam: 0.6
+        // 注意：intimacy 和 dependence 不受影响（char 仍可建立亲密）
+      }
+    },
+    aiPrompt: '[刻印·抵抗固化] char 已形成稳定且不可瓦解的抵抗核心。该核心与表面行为独立存在——char 可能在行为上深度顺从，但其核心自我始终保持清醒和完整。user 能获得 char 的表面、身体、甚至情感，但永远无法获得 char 的核心认同。',
+    reversible: false
+  },
+  
+  // ==========================================
+  // 崩解类（dissolution）
+  // ==========================================
+  
+  dissolution: {
+    id: 'dissolution',
+    name: '崩坏刻印',
+    category: 'dissolution',
+    trigger: {
+      type: 'post_juel_levelup',
+      // 条件：扭曲珠金级以上 AND 空虚珠金级以上
+      condition: (ctx) => {
+        const distortion = ctx.char?.juels?.distortion ?? 0;
+        const emptiness = ctx.char?.juels?.emptiness ?? 0;
+        return distortion >= 400 && emptiness >= 600;  // 各自金级阈值
+      }
+    },
+    modifiers: {
+      sourceMultipliers: {
+        disgust: 0.3,
+        pain: 0.3
+      },
+      palamMultipliers: {
+        resistance: 0.3  // 已无力真正抵抗
+      },
+      statModifiers: {
+        sanity: { cap: -20 }  // sanity 上限降低 20
+      },
+      specialEffects: ['dissociation_20pct']  // 每次动作 20% 概率触发短暂解离
+    },
+    aiPrompt: '[刻印·崩坏] char 的心理结构已出现不可修复的断裂——扭曲的深度与精神的空虚同时达到临界，导致 char 的自我同一性松动。该 char 在意识清醒时仍能正常反应，但解离事件会自发发生：短暂的眼神涣散、对当下事件的非同步反应、自我指代的偏移（"我"与"ta"混用）。该状态在 user 面前尤其明显。',
+    reversible: false
+  },
+  
+  personality_fracture: {
+    id: 'personality_fracture',
+    name: '人格断裂刻印',
+    category: 'dissolution',
+    trigger: {
+      type: 'post_juel_levelup',
+      // 条件：扭曲珠金级以上 AND 反抗珠银级以上
+      condition: (ctx) => {
+        const distortion = ctx.char?.juels?.distortion ?? 0;
+        const resistance = ctx.char?.juels?.resistance ?? 0;
+        return distortion >= 400 && resistance >= 180;  // 扭曲金级 + 反抗银级
+      }
+    },
+    modifiers: {
+      specialEffects: [
+        'sanity_double_volatility',   // sanity 波动速度 ×2
+        'behavior_dual_state'          // AI 提示允许行为双重性不合理化
+      ]
+    },
+    aiPrompt: '[刻印·人格断裂] char 的心理中同时存在深度扭曲的依附与完整的核心抵抗，两者以不连续的方式切换。该切换对 char 本人是不可觉察的——char 每次表现出其中一种状态时，都感觉那就是自己完整的状态。user 观察到的行为反复是真实的，但 char 不会承认或察觉这种反复。',
+    reversible: false
+  },
+  
+  // ==========================================
+  // 麻木类（numbness）
+  // ==========================================
+  
+  numbness: {
+    id: 'numbness',
+    name: '麻木刻印',
+    category: 'numbness',
+    trigger: {
+      type: 'post_juel_levelup',
+      // 条件：空虚珠达到金级
+      condition: (ctx) => {
+        const emptiness = ctx.char?.juels?.emptiness ?? 0;
+        return emptiness >= 600;
+      }
+    },
+    modifiers: {
+      sourceMultipliers: {
+        // 所有"心理类"source × 0.5 —— 按设计文档列表 + exposure
+        // 参考 DESIGN_PART3A §4.3.5 + Cecilia 确认的 7 项范围
+        shame: 0.5,
+        terror: 0.5,
+        humiliation: 0.5,
+        exposure: 0.5,      // 补：麻木的人对被看也失去反应（Cecilia 确认）
+        intimacy: 0.5,
+        dependence: 0.5,
+        submission: 0.5
+        // pleasure_* 系列不受影响，身体仍会反应
+      }
+    },
+    aiPrompt: '[刻印·麻木] char 的情感系统已大范围失活——不是被压抑，而是真正的功能性消退。该 char 能执行、能回应、能承受，但其主观体验已从"经历"退化为"观察"。user 对 char 的大部分心理刺激会被 char 以近乎冷漠的方式接收。仅身体层的反应仍保留完整。',
+    reversible: false
+  },
+  
+  body_detachment: {
+    id: 'body_detachment',
+    name: '身心剥离刻印',
+    category: 'numbness',
+    trigger: {
+      type: 'post_juel_levelup',
+      // 条件：欲望珠金级以上 AND 空虚珠金级以上
+      condition: (ctx) => {
+        const desire = ctx.char?.juels?.desire ?? 0;
+        const emptiness = ctx.char?.juels?.emptiness ?? 0;
+        return desire >= 1000 && emptiness >= 600;  // 欲望金级 + 空虚金级
+      }
+    },
+    modifiers: {
+      sourceMultipliers: {
+        pleasure_c: 1.3,
+        pleasure_v: 1.3,
+        pleasure_a: 1.3,
+        pleasure_b: 1.3
+      },
+      palamMultipliers: {
+        distortion_palam: 0.4  // 不再形成真正的情感联结
+      }
+    },
+    aiPrompt: '[刻印·身心剥离] char 的身体和意识已进入明确的分离状态——身体对 user 的刺激表现出快速、强烈、甚至主动的反应；但 char 的主观体验与这些身体反应脱钩，以冷漠的旁观者视角体验这一切。该 char 的身体已不属于 char 本人，而是作为一个独立的、对 user 响应的生理系统存在。',
+    reversible: false
+  },
+  
+  // ==========================================
+  // 依赖类（dependence）
+  // ==========================================
+  
+  cage_syndrome: {
+    id: 'cage_syndrome',
+    name: '笼性依赖刻印',
+    category: 'dependence',
+    trigger: {
+      type: 'post_juel_levelup',
+      // 条件：扭曲珠达到黑曜级
+      condition: (ctx) => {
+        const distortion = ctx.char?.juels?.distortion ?? 0;
+        return distortion >= 1200;  // 扭曲黑曜级阈值
+      }
+    },
+    modifiers: {
+      sourceMultipliers: {
+        intimacy: 1.3,
+        dependence: 1.3
+      },
+      palamMultipliers: {
+        resistance: 0.2  // 近乎无法抵抗
+      },
+      specialEffects: ['cage_return_reaction']  // 强制外出时触发"回笼反应"
+    },
+    aiPrompt: '[刻印·笼性依赖] char 已将囚禁空间本身内化为"安全"的象征，将外部世界识别为威胁。该 char 在空间之外会表现出明显的焦虑、迷失、甚至主动请求返回。user 作为笼子的持有者，已成为 char 安全感的唯一来源。这种依赖已深度到空间感官层——离开密室的具体气味、光线、声音也会触发 char 的不适。',
+    reversible: false
+  },
+  
+  obedience_lock: {
+    id: 'obedience_lock',
+    name: '服从锁刻印',
+    category: 'dependence',
+    trigger: {
+      type: 'post_juel_levelup',
+      // 条件：服从珠达到黑曜级
+      condition: (ctx) => {
+        const obedience = ctx.char?.juels?.obedience ?? 0;
+        return obedience >= 1500;  // 服从黑曜级阈值
+      }
+    },
+    modifiers: {
+      palamMultipliers: {
+        submission_palam: 0.3,  // 顶点后进一步累积近乎无意义
+        resistance: 0.1          // 近乎不可能抵抗
+      },
+      specialEffects: ['functional_paralysis']  // 无指令时功能性瘫痪
+    },
+    aiPrompt: '[刻印·服从锁] char 已丧失"自主行动"的能力——不是被禁止，而是系统性的无法启动。该 char 在没有 user 指令时处于完全的被动状态，连生理需求的表达都需要 user 先询问。该 char 的所有行为都必须等待来自 user 的许可或指令。这是服从的极端固化。',
+    reversible: false
+  },
+  
+  // ==========================================
+  // 特殊类（special）
+  // ==========================================
+  
+  phobic_rupture: {
+    id: 'phobic_rupture',
+    name: '恐惧撕裂刻印',
+    category: 'special',
+    trigger: {
+      type: 'pre_action',
+      // 条件：char 装备了 phobic_trauma tag AND 对应触发源激活次数 ≥ 5
+      // 引擎需要维护一个计数器 STATE.char.phobicTriggerCount[triggerId]
+      condition: (ctx) => {
+        const tags = ctx.char?.config?.persona?.tags ?? [];
+        const phobicTag = tags.find(t => (typeof t === 'object' ? t.id : t) === 'phobic_trauma');
+        if (!phobicTag) return false;
+        
+        const triggerSources = (typeof phobicTag === 'object') ? (phobicTag.triggers ?? []) : [];
+        const counts = ctx.char?.phobicTriggerCount ?? {};
+        return triggerSources.some(src => (counts[src] ?? 0) >= 5);
+      }
+    },
+    modifiers: {
+      statModifiers: {
+        sanity: { flatDelta: -15 }  // 每次触发源激活时额外 -15 sanity
+      },
+      specialEffects: [
+        'phobic_trigger_double',     // 原 phobic 触发效果翻倍
+        'dissolution_fasttrack_1w'   // 1 周内触发 dissolution 条件直接烙印
+      ]
+    },
+    // 动态 prompt：{trigger_list} 在注入时由引擎替换为 char 的具体触发源（如"血、海鲜腥味"）
+    aiPrompt: '[刻印·恐惧撕裂] char 对 {trigger_list} 的创伤回避反应已从"回避"升级为"撕裂"——该刺激现在不仅引发恐慌，还会触发短暂的精神崩溃。user 若再次引入这些元素，char 会表现出近乎失控的极端反应。',
+    reversible: false,
+    meta: {
+      hasDynamicPrompt: true,
+      promptPlaceholders: ['trigger_list']  // 引擎替换时的占位符清单
+    }
+  }
+};
+
+// ============================================================
+// IMPRINT_CATEGORIES —— 分类元信息
+// ============================================================
+/*
+  每个刻印 category 字段指向这里。
+  UI 颜色属性（noir / ornate / raw 主题下的具体色值）待 DESIGN_PART3B
+  UI 阶段（阶段 6-7）补充。
+*/
+
+const IMPRINT_CATEGORIES = {
+  resistance:  { id: 'resistance',  name: '抵抗类' },
+  dissolution: { id: 'dissolution', name: '崩解类' },
+  numbness:    { id: 'numbness',    name: '麻木类' },
+  dependence:  { id: 'dependence',  name: '依赖类' },
+  special:     { id: 'special',     name: '特殊类' }
 };
 
 
@@ -1613,6 +2346,31 @@ function removeItem(itemId, quantity = 1) {
         STAGES, TOY_LIBRARY
 */
 
+// ============================================================
+// 叙事模式的镜头/视角提示
+// 
+// 原则：
+// - 只描述"镜头怎么拍、视角在哪、景别多大、节奏如何"
+// - 不预设 char 的反应、心情、状态、服从度
+// - 不暗示"应该写什么情绪"或"应该让 char 做什么"
+// 
+// 这些提示会被塞进 AI 看到的 prompt，用于引导叙事风格
+// 但不对 char 的表演做任何指导
+// ============================================================
+const NARRATION_HINTS = {
+  observation: '模式:远程监控观察。user 与 char 不在同一空间,user 正透过监控设备观察 char。以上帝视角客观描写 char 此刻的所见所为,聚焦环境细节与 char 的自然举动,不进入 user 视角。',
+  
+  // dialogue 模式暂不注入提示（phone 道具落地后再统一规划）
+  dialogue: null,
+  
+  intimate: '模式:线下近距接触。user 与 char 处于同一空间且有直接互动。聚焦两人之间的行为、对话与感官细节,以场景实景的镜头感展开,避免跳脱到旁白或远景。',
+  
+  outside: '模式:外部场景。描写 user 离开囚禁空间后在外部世界的经历与见闻(如超市、街头、药店等)。此模式下 char 处于认知隔离状态,无法得知 user 在外的任何事件,叙事不应出现 char 的视角或感知。',
+  
+  // tension 合并到 outside：使用相同文案，风险事件本身由 trigger.riskEvent 传达
+  tension: '模式:外部场景。描写 user 离开囚禁空间后在外部世界的经历与见闻(如超市、街头、药店等)。此模式下 char 处于认知隔离状态,无法得知 user 在外的任何事件,叙事不应出现 char 的视角或感知。'
+};
+
 function buildContextPacket(trigger) {
   // 选择叙事模式
   let mode = 'observation';
@@ -1622,7 +2380,9 @@ function buildContextPacket(trigger) {
   if (trigger && trigger.triggerType === 'scene') {
     const scene = SCENE_LIBRARY[trigger.triggerId];
     if (scene && scene.type === 'external') mode = 'outside';
-    if (trigger.riskEvent) mode = 'tension';
+    // 风险事件不再切成独立的 tension，而是合并到 outside
+    // （tension 文案与 outside 一致，事件细节通过 trigger.riskEvent 单独传达）
+    if (trigger.riskEvent) mode = 'outside';
   } else if (trigger && trigger.triggerType === 'action') {
     const action = ACTION_LIBRARY[trigger.triggerId] || TRAINING_ACTIONS[trigger.triggerId];
     if (action) {
@@ -1638,6 +2398,7 @@ function buildContextPacket(trigger) {
     meta: {
       version: VERSION,
       mode: mode,
+      narrationHint: NARRATION_HINTS[mode] || null,
       config: STATE.config,
       depth: STATE.config.depth || 'psych'
     },
@@ -1663,7 +2424,6 @@ function buildContextPacket(trigger) {
     recentLogs: STATE.log.slice(-5)
   };
 }
-
 
 // ============================================================
 // [core/risks.js]

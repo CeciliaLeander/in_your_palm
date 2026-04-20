@@ -27,6 +27,11 @@ const BUILD_ORDER = [
   '01_state.js',
   
   // 第二层：数据表（只是数据定义，无依赖）
+  'data/sources.js',
+  'data/palam.js', 
+  'data/juels.js', 
+  'data/imprints.js', 
+  'data/personas.js',
   'data/scenes.js',
   'data/items.js',
   'data/toys.js',
