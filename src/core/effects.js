@@ -131,3 +131,45 @@ function recordAction(actionId) {
   STATE.recentActions.push({ actionId: actionId, timestamp: Date.now() });
   if (STATE.recentActions.length > 10) STATE.recentActions.shift();
 }
+
+// ============================================================
+// v0.6.0 阶段 2.3 · Source → Palam 转化链路
+// ============================================================
+/*
+  本节实现动作产生的 Source 如何转化为会话内累积的 Palam。
+  整体流程:
+    Action.sources (如 { shame: 5, submission: 8 })
+      ↓ applyActionSources
+    convertSourceToPalam(每个 source)
+      ↓ 按 char 人格配置的 conversion 矩阵
+    多个 Palam 增量 (如 shame_palam +5.5, resistance_palam +1.5)
+      ↓ accumulatePalam (session.js)
+    累积进 STATE.session.palam
+  
+  依赖:
+    - STAGE_MULTIPLIERS (00_constants.js)
+    - SOURCE_TO_PALAM_MAP (data/sources.js) —— 提供基础转化系数
+    - PERSONA_TEMPLATES / TENDENCY_TAGS / PERSONA_MAIN_WEIGHT / PERSONA_TAG_WEIGHT (data/personas.js)
+    - startSession / accumulatePalam / isSessionAction (core/session.js)
+    - STATE.time.stage, STATE.char.config.persona, STATE.charStatus
+*/
+
+// 8 个 palam 到 STAGE_MULTIPLIERS 分类的映射
+// 决定每个 palam 在不同故事阶段受到多大强度的修正
+// 决策记录(STAGE2_MID_HANDOFF 问题 A):
+//   - pleasure / desire / lewdness / shame → physical
+//     (都按"身体反应"的阶段衰减曲线走。shame_palam 选 physical 而非 negative
+//      是因为在这个作品里羞耻感与身体反应深度绑定)
+//   - submission → training(训练累积)
+//   - depression / resistance → negative(负面情绪阶段衰减)
+//   - distortion → distortion(已有专属曲线,越到后期越强)
+const PALAM_STAGE_CATEGORY = {
+  pleasure_palam:    'physical',
+  desire_palam:      'physical',
+  lewdness_palam:    'physical',
+  shame_palam:       'physical',
+  submission_palam:  'training',
+  depression_palam:  'negative',
+  distortion_palam:  'distortion',
+  resistance_palam:  'negative'
+};
