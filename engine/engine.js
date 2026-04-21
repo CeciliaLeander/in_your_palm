@@ -33,7 +33,7 @@
     - 98_api.js
     - 99_export.js
   
-  构建时间: 2026-04-21T06:32:45.766Z
+  构建时间: 2026-04-21T06:57:44.010Z
 */
 
 (function(global) {
@@ -3466,6 +3466,120 @@ function resolveCoef(coef, stage) {
   return 0;
 }
 
+// 构建 char 身上的"最终 Source→Palam 转化矩阵"
+// 
+// 输入:
+//   personaConfig - char 的人格配置,形如 { main: 'resistant', tags: [{id:'masochistic'}, ...] }
+//                   若传 null/undefined,兜底走 { main: 'resistant', tags: [] }
+//   action        - 可选,当前动作对象。用于判断 conditionalWhen.actionFlag 类 tag
+//                   传 null 视为"调试模式",见下方 ⚠️ 注释
+//
+// 输出:
+//   { conversion: {...}, stageModifiers: {...} }
+//   conversion      - 14 个 source × 8 个 palam 的完整转化矩阵(合并后,负值已归零)
+//   stageModifiers  - 主模板的阶段化覆盖表(tag 目前不参与 stageModifiers)
+//
+// 合并公式(参考 personas.js §1):
+//   finalCoef = mainCoef + tagDelta * PERSONA_TAG_WEIGHT
+//   最后 Math.max(0, finalCoef) 兜底
+//
+// ⚠️ conditionalWhen 的"调试兜底"逻辑 ⚠️
+//   当 action 参数为 null/undefined 时,actionFlag 类 tag 会被"全部当作启用"。
+//   这是为了让 console 调试(如 _debug.buildEffectiveConversion(persona, null))
+//   能看到所有 tag 的完整效果。
+//   真实游戏路径下 action 永远存在,不会走这条兜底。
+//   如果你看到这里的矩阵数字和实际动作跑出来的不一样,99% 是因为这条兜底规则。
+function buildEffectiveConversion(personaConfig, action) {
+  // 1. 兜底:无人格配置 → resistant + 无 tag
+  const config = personaConfig || {};
+  const mainId = config.main || 'resistant';
+  const tagEntries = Array.isArray(config.tags) ? config.tags : [];
+  
+  const mainTemplate = PERSONA_TEMPLATES[mainId];
+  if (!mainTemplate) {
+    console.warn('[buildEffectiveConversion] unknown main persona:', mainId, '—— fallback to resistant');
+    return buildEffectiveConversion({ main: 'resistant', tags: tagEntries }, action);
+  }
+  
+  // 2. 深拷贝主模板的 conversion 作为起点
+  const conversion = {};
+  Object.keys(mainTemplate.conversion).forEach(sourceId => {
+    conversion[sourceId] = Object.assign({}, mainTemplate.conversion[sourceId]);
+  });
+  
+  // 3. 遍历 tag,叠加 delta
+  tagEntries.forEach(entry => {
+    const tagId = (typeof entry === 'string') ? entry : entry && entry.id;
+    if (!tagId) return;
+    
+    const tag = TENDENCY_TAGS[tagId];
+    if (!tag) {
+      console.warn('[buildEffectiveConversion] unknown tag:', tagId);
+      return;
+    }
+    
+    // 判断条件型 tag 是否启用
+    if (tag.conditionalWhen) {
+      const cond = tag.conditionalWhen;
+      
+      // charState 条件 —— 不管有没有 action 都要判
+      if (cond.charState) {
+        const charStatus = (STATE && STATE.charStatus) || {};
+        let matched = true;
+        Object.keys(cond.charState).forEach(key => {
+          const expected = cond.charState[key];
+          const actual = charStatus[key];
+          if (Array.isArray(expected)) {
+            if (!expected.includes(actual)) matched = false;
+          } else {
+            if (actual !== expected) matched = false;
+          }
+        });
+        if (!matched) return;
+      }
+      
+      // actionFlag / actionFlags 条件 —— 依赖 action 参数
+      if (cond.actionFlag || cond.actionFlags) {
+        if (action) {
+          const actionFlags = Array.isArray(action.flags) ? action.flags : [];
+          if (cond.actionFlag && !actionFlags.includes(cond.actionFlag)) return;
+          if (cond.actionFlags) {
+            const anyMatch = cond.actionFlags.some(f => actionFlags.includes(f));
+            if (!anyMatch) return;
+          }
+        }
+        // ⚠️ 无 action 时,actionFlag 类 tag 全部启用(调试兜底,详见函数头部注释)
+      }
+    }
+    
+    // 应用 tag 的 conversionDelta
+    const delta = tag.conversionDelta;
+    if (!delta) return;
+    
+    Object.keys(delta).forEach(sourceId => {
+      if (!conversion[sourceId]) conversion[sourceId] = {};
+      const srcDelta = delta[sourceId];
+      Object.keys(srcDelta).forEach(palamId => {
+        const current = conversion[sourceId][palamId] || 0;
+        conversion[sourceId][palamId] = current + srcDelta[palamId] * PERSONA_TAG_WEIGHT;
+      });
+    });
+  });
+  
+  // 4. 负值归零兜底
+  Object.keys(conversion).forEach(sourceId => {
+    Object.keys(conversion[sourceId]).forEach(palamId => {
+      if (conversion[sourceId][palamId] < 0) conversion[sourceId][palamId] = 0;
+    });
+  });
+  
+  // 5. 返回矩阵 + 主模板的 stageModifiers(tag 不参与 stageModifiers,保持语义清晰)
+  return {
+    conversion: conversion,
+    stageModifiers: mainTemplate.stageModifiers || {}
+  };
+}
+
 // ============================================================
 // [core/session.js]
 // ============================================================
@@ -4454,6 +4568,7 @@ InPalmEngine._debug = {
   applyEffects: applyEffects,
   classifyEffect: classifyEffect,
   resolveCoef: resolveCoef,
+  buildEffectiveConversion: buildEffectiveConversion,
   
   // session.js
   startSession: startSession,
