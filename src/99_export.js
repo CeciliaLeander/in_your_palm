@@ -14,6 +14,7 @@ InPalmEngine._debug = {
   // effects.js
   applyEffects: applyEffects,
   classifyEffect: classifyEffect,
+  resolveCoef: resolveCoef,
   
   // session.js
   startSession: startSession,

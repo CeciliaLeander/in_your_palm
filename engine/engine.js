@@ -33,7 +33,7 @@
     - 98_api.js
     - 99_export.js
   
-  构建时间: 2026-04-21T06:27:56.603Z
+  构建时间: 2026-04-21T06:32:45.766Z
 */
 
 (function(global) {
@@ -3440,6 +3440,32 @@ const PALAM_STAGE_CATEGORY = {
   resistance_palam:  'negative'
 };
 
+// 把系数解析成具体数字(处理"普通数字"和"阶段化对象"两种形态)
+// 输入:
+//   coef  - 可能是 number (如 0.5),也可能是 { type: 'staged', byStage: {...}, default: x }
+//   stage - 当前故事阶段 ('shock' | 'resist' | 'adapt' | 'transform')
+// 输出:
+//   number - 对应阶段下的实际系数;解析失败兜底为 0
+//
+// 使用场景:
+//   sources.js 里部分 Source→Palam 系数会随阶段变化(如 intimacy→resistance_palam
+//   早期 1.0、晚期 0.1)。这个函数把这种动态值解析成当前阶段的单一数字,
+//   方便后续直接乘算。
+function resolveCoef(coef, stage) {
+  // 普通数字:原样返回
+  if (typeof coef === 'number') return coef;
+  
+  // 阶段化对象:按 stage 查 byStage,找不到用 default
+  if (coef && typeof coef === 'object' && coef.type === 'staged') {
+    const val = coef.byStage && coef.byStage[stage];
+    if (typeof val === 'number') return val;
+    return typeof coef.default === 'number' ? coef.default : 0;
+  }
+  
+  // 其他异常情况:返回 0(不破坏引擎,方便后续排查)
+  return 0;
+}
+
 // ============================================================
 // [core/session.js]
 // ============================================================
@@ -4427,6 +4453,7 @@ InPalmEngine._debug = {
   // effects.js
   applyEffects: applyEffects,
   classifyEffect: classifyEffect,
+  resolveCoef: resolveCoef,
   
   // session.js
   startSession: startSession,
