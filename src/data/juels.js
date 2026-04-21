@@ -1,38 +1,42 @@
 /*
-  src/data/juels.js —— 珠谱系统（6 珠 × 4 级 + 120 条印痕）
+  src/data/juels.js —— 珠谱系统(6 珠 × 4 级 + 120 条印痕)
   
-  珠是 Palam 累积到阈值后产生的永久勋章，也是 AI prompt 的"印痕注入"来源。
-  每颗珠有 4 个等级（铜/银/金/黑曜），每级对应 5 种人格模板的不同印痕文本。
+  珠是 Palam 累积到阈值后产生的永久勋章,也是 AI prompt 的"印痕注入"来源。
+  每颗珠有 4 个等级(铜/银/金/黑曜),每级对应 5 种人格模板的不同印痕文本。
   
-  本文件包含三部分：
-  1. JUEL_DEFINITIONS     —— 6 种珠的完整定义（阈值 + 4 级 + 每级 5 人格印痕）
+  本文件包含三部分:
+  1. JUEL_DEFINITIONS     —— 6 种珠的完整定义(阈值 + 4 级 + 每级 5 人格印痕)
   2. JUEL_LEVEL_NAMES     —— 4 级的英文键和中文名
-  3. JUEL_SIMPLIFY_RULES  —— prompt 精简规则（珠数/tag 数过多时）
+  3. JUEL_SIMPLIFY_RULES  —— prompt 精简规则(珠数/tag 数过多时)
   
-  设计规范来源：DESIGN_PART2_juels_imprints.md 全文
+  设计规范来源:DESIGN_PART2_juels_imprints.md 全文
+  
+  v0.6.0-alpha.1.dev2 改动(palam 命名统一):
+  - sourcePalam 字段中所有 palam 引用统一加 _palam 后缀
+  - 珠 id(juel id)不变(desire / resistance / emptiness 等是珠的 id,不是 palam)
   
   ============================================================
-  数据结构（请在修改时严格遵守）
+  数据结构(请在修改时严格遵守)
   ============================================================
   
   JUEL_DEFINITIONS[juelId] = {
-    id:           string               珠 ID（与 key 相同）
-    name:         string               中文名（如"服从珠"）
-    semantic:     string               珠的语义描述（UI 用）
-    sourcePalam:  string | string[]    产出此珠的 palam（单个或多个，desire 珠是多源）
-    hidden:       boolean              是否隐藏解锁（仅 distortion 为 true）
-    thresholds: {                      4 级晋级阈值（永久累积值）
+    id:           string               珠 ID(与 key 相同)
+    name:         string               中文名(如"服从珠")
+    semantic:     string               珠的语义描述(UI 用)
+    sourcePalam:  string | string[]    产出此珠的 palam(单个或多个,desire 珠是多源)
+    hidden:       boolean              是否隐藏解锁(仅 distortion 为 true)
+    thresholds: {                      4 级晋级阈值(永久累积值)
       bronze:   number
       silver:   number
       gold:     number
       obsidian: number
     }
-    levels: [                          4 个等级详情（索引 0..3 = 铜..黑曜）
+    levels: [                          4 个等级详情(索引 0..3 = 铜..黑曜)
       {
         level:      number             0..3
         key:        string             'bronze' | 'silver' | 'gold' | 'obsidian'
         nameCn:     string             '铜级' | '银级' | '金级' | '黑曜级'
-        title:      string             本级中文标题（如"初现屈服"）
+        title:      string             本级中文标题(如"初现屈服")
         threshold:  number             本级阈值
         imprints: {                    5 模板的印痕文本
           resistant:  string
@@ -50,13 +54,13 @@
   特别说明
   ============================================================
   
-  * desire 珠（欲望珠）是多源珠：sourcePalam 是数组 ['pleasure','desire','lewdness']
+  * desire 珠(欲望珠)是多源珠:sourcePalam 是数组 ['pleasure_palam','desire_palam','lewdness_palam']
     引擎计算晋级时需把三者相加。参考 DESIGN_PART2 §3.2 和 palam.js 的 PALAM_TO_JUEL_MAP。
   
-  * distortion 珠（扭曲珠）hidden=true：晋级时不弹窗，只在珠谱中悄悄出现。
+  * distortion 珠(扭曲珠)hidden=true:晋级时不弹窗,只在珠谱中悄悄出现。
     参考 DESIGN_PART2 §3.2。
   
-  * 黑曜级的印痕，引擎在 prompt 精简时永远不删减，保留完整版。
+  * 黑曜级的印痕,引擎在 prompt 精简时永远不删减,保留完整版。
     参考 DESIGN_PART2 §3.4.2 规则 2。
 */
 
@@ -161,7 +165,7 @@ const JUEL_DEFINITIONS = {
   // ==========================================
   // 扭曲珠 (distortion)
   // ==========================================
-  // ⚠️ 扭曲珠的所有解锁不弹窗，仅在珠谱中安静出现。
+  // ⚠️ 扭曲珠的所有解锁不弹窗,仅在珠谱中安静出现。
   
   distortion: {
     id: 'distortion',
@@ -327,7 +331,7 @@ const JUEL_DEFINITIONS = {
     id: 'desire',
     name: '欲望珠',
     semantic: '身体对 user 刺激的记忆从"被动反应"到"主动寻求"',
-    sourcePalam: ['pleasure', 'desire', 'lewdness'],
+    sourcePalam: ['pleasure_palam', 'desire_palam', 'lewdness_palam'],
     hidden: false,
     thresholds: {
       bronze:   100,
@@ -407,7 +411,7 @@ const JUEL_DEFINITIONS = {
     id: 'emptiness',
     name: '空虚珠',
     semantic: 'char 精神能量的流失轨迹',
-    sourcePalam: 'depression',
+    sourcePalam: 'depression_palam',
     hidden: false,
     thresholds: {
       bronze:   60,
@@ -486,8 +490,8 @@ const JUEL_DEFINITIONS = {
   resistance: {
     id: 'resistance',
     name: '反抗珠',
-    semantic: 'char 抵抗意志的具象化收藏（囚禁者视角的"纪念物"）',
-    sourcePalam: 'resistance',
+    semantic: 'char 抵抗意志的具象化收藏(囚禁者视角的"纪念物")',
+    sourcePalam: 'resistance_palam',
     hidden: false,
     thresholds: {
       bronze:   40,
@@ -565,14 +569,14 @@ const JUEL_DEFINITIONS = {
 // 3. JUEL_SIMPLIFY_RULES —— prompt 精简规则
 // ============================================================
 /*
-  如果 6 珠全解锁 + 4 个 tag，注入的 [印痕] 行可能超过 500 字。
-  引擎应根据以下规则做精简（参考 DESIGN_PART2 §3.4.2 和 §3.11.4）：
+  如果 6 珠全解锁 + 4 个 tag,注入的 [印痕] 行可能超过 500 字。
+  引擎应根据以下规则做精简(参考 DESIGN_PART2 §3.4.2 和 §3.11.4):
   
-    珠数 ≥ 4 时：普通级印痕精简到 60 字内
-    tag 数 ≥ 4 时：tag 附加片段精简到 25 字内
-    黑曜级印痕：永远保留完整版，不参与精简
+    珠数 ≥ 4 时:普通级印痕精简到 60 字内
+    tag 数 ≥ 4 时:tag 附加片段精简到 25 字内
+    黑曜级印痕:永远保留完整版,不参与精简
   
-  本文件只声明规则常量，具体精简算法在引擎阶段 3（src/core/juels.js）实现。
+  本文件只声明规则常量,具体精简算法在引擎阶段 3(src/core/juels.js)实现。
 */
 
 const JUEL_SIMPLIFY_RULES = {
@@ -580,5 +584,5 @@ const JUEL_SIMPLIFY_RULES = {
   tagThreshold:  4,              // tag 数达到此值时触发 tag 片段精简
   imprintMaxChars: 60,           // 普通级精简后字符上限
   tagFragmentMaxChars: 25,       // tag 片段精简后字符上限
-  exemptLevels: ['obsidian']     // 豁免精简的等级（黑曜级永远完整）
+  exemptLevels: ['obsidian']     // 豁免精简的等级(黑曜级永远完整)
 };

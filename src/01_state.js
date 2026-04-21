@@ -13,6 +13,11 @@
   - 新增 STATE.char.juels(6 种珠的永久累积)
   - 新增 STATE.char.juelsUnlocked(已解锁印痕的档位)
   - 新增 STATE.session(调教会话容器,Palam 的累积场所)
+  
+  v0.6.0-alpha.1.dev2 改动(palam 命名统一):
+  - STATE.session.palam 的 8 个字段全部统一加 _palam 后缀
+    (推翻阶段 1 "按需加后缀" 的决议,改为全部加后缀以提高可读性)
+  - 详细命名约定见 src/data/palam.js 的注释
 */
 
 const STATE = {
@@ -103,6 +108,7 @@ const STATE = {
   // ========== v0.6.0 新增:调教会话(Palam 容器) ==========
   // 会话是 Palam 的生命周期容器:动作进入会话后产生的 Source 会转化为 Palam 累积在这里
   // 会话结束时(玩家主动结束 / 4h 超时 / 特定触发)统一结算为珠的增量
+  // 命名约定:全部 8 个 Palam 统一带 _palam 后缀(详见 src/data/palam.js)
   session: {
     active: false,              // 当前是否处于会话中
     startTime: null,            // 会话起始时间戳(Date.now())
@@ -111,14 +117,14 @@ const STATE = {
     
     // 8 种 Palam 的会话累积值(会话结束时统一结算为珠)
     palam: {
-      submission_palam: 0,      // 服从 Palam
-      shame_palam: 0,           // 羞耻 Palam
-      desire_palam: 0,          // 欲望 Palam
-      distortion_palam: 0,      // 扭曲 Palam
-      emptiness_palam: 0,       // 空虚 Palam
-      resistance_palam: 0,      // 反抗 Palam
-      intimacy_palam: 0,        // 亲密 Palam(转化到服从/扭曲)
-      dependence_palam: 0       // 依赖 Palam(转化到服从)
+      pleasure_palam: 0,        // 快感参数(汇向欲望珠)
+      desire_palam: 0,          // 欲情(汇向欲望珠)
+      lewdness_palam: 0,        // 淫欲(汇向欲望珠)
+      shame_palam: 0,           // 羞耻(汇向羞耻珠)
+      submission_palam: 0,      // 屈従(汇向服从珠)
+      depression_palam: 0,      // 抑郁(汇向空虚珠)
+      distortion_palam: 0,      // 扭曲(汇向扭曲珠,隐藏)
+      resistance_palam: 0       // 反感(汇向反抗珠)
     },
     
     // 本次动作(最近一次)产生的 Source 详情,用于 UI 短暂展示"+3 屈従"之类的漂浮提示
