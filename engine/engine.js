@@ -33,7 +33,7 @@
     - 98_api.js
     - 99_export.js
   
-  构建时间: 2026-04-21T07:46:19.392Z
+  构建时间: 2026-04-21T08:36:31.578Z
 */
 
 (function(global) {
@@ -3299,6 +3299,12 @@ const CUSTOM_ACTION_TEMPLATES = {
   - 新增 Source→Palam 转化全链路函数(PALAM_STAGE_CATEGORY / resolveCoef /
     buildEffectiveConversion / convertSourceToPalam / applyActionSources)
   - 这些函数供 2.4 的动作执行入口调用,2.5 的动作迁移开始后会真正被触发
+  
+  v0.6.0-alpha.1.dev2 修复(阶段 2.3 补丁):
+  - convertSourceToPalam 的 palamId 遍历改为:
+    sourceRow.keys ∪ stageModifiers 里 "sourceId.xxx" 的 palamId
+    (原版只看 conversion[sourceId] 的 keys,导致 "仅由 stageModifiers 激活
+    的 palam" 被遗漏,如 resistant 人格下 shame→desire_palam 的阶段化激活)
 */
 
 function clamp(value, min, max) {
@@ -3640,10 +3646,27 @@ function convertSourceToPalam(sourceId, sourceValue, ctx) {
   const stageModifiers = effective.stageModifiers || {};
   const repeatMul = getRepeatDecayMultiplier(actionId);
   
-  // 4. 遍历 sourceRow,对每个 palam 配对算 delta
+  // 4. 收集要处理的 palamId 列表:
+  //    sourceRow 的 keys(主模板 + tag 矩阵里显式出现的)
+  //    + stageModifiers 里 "sourceId.xxx" 对应的 palamId(主模板只靠阶段覆盖激活的)
+  //    取并集,确保两边都能贡献
+  //
+  //    为什么需要并集:某些 palam 在主模板 conversion 里系数为 0(或根本没出现),
+  //    但靠 stageModifiers 按阶段激活(如 resistant.shame → desire_palam 只在
+  //    resist/adapt/transform 阶段才生效)。如果只遍历 sourceRow.keys,这些
+  //    "阶段激活型" palam 永远拿不到机会。
+  const palamIdSet = new Set(Object.keys(sourceRow));
+  const modPrefix = sourceId + '.';
+  Object.keys(stageModifiers).forEach(key => {
+    if (key.startsWith(modPrefix)) {
+      palamIdSet.add(key.substring(modPrefix.length));
+    }
+  });
+  
+  // 4b. 遍历合并后的 palamId 列表,对每个 palam 配对算 delta
   const result = [];
-  Object.keys(sourceRow).forEach(palamId => {
-    const rawCoef = sourceRow[palamId];
+  palamIdSet.forEach(palamId => {
+    const rawCoef = sourceRow[palamId];  // 可能是 undefined(仅由 stageModifiers 激活的场景)
     let coef;
     
     // 4a. stageModifiers 优先:若主模板定义了 source.palam 的阶段覆盖,按 stage 直接查
@@ -3653,6 +3676,7 @@ function convertSourceToPalam(sourceId, sourceValue, ctx) {
       coef = (typeof modByStage[stage] === 'number') ? modByStage[stage] : 0;
     } else {
       // 4b. 无覆盖:走 resolveCoef,处理普通数字和 staged 对象
+      //     (若 rawCoef 本身是 undefined,resolveCoef 会兜底返回 0)
       coef = resolveCoef(rawCoef, stage);
     }
     
