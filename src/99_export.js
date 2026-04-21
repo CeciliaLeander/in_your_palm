@@ -11,11 +11,15 @@ global.InPalmEngine = InPalmEngine;
 // 目的:让浏览器 console 能直接验证 IIFE 内部的工具函数
 // 阶段 2.5 收工时(动作迁移完成后)删除这一整块
 InPalmEngine._debug = {
-  // effects.js
+  // effects.js —— 基础
   applyEffects: applyEffects,
   classifyEffect: classifyEffect,
+  
+  // effects.js —— 阶段 2.3 Source→Palam 链路
   resolveCoef: resolveCoef,
   buildEffectiveConversion: buildEffectiveConversion,
+  convertSourceToPalam: convertSourceToPalam,
+  applyActionSources: applyActionSources,
   
   // session.js
   startSession: startSession,

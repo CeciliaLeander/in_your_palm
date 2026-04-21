@@ -8,8 +8,19 @@
   - applyEffects: 应用状态变化(含阶段乘数+重复衰减的核心)
   - recordAction: 记录动作用于衰减追踪
   
-  依赖:STATE, STAT_MIN/MAX, STAGE_MULTIPLIERS, REPEAT_DECAY, EventBus
-  被依赖:大部分系统函数都会调用 applyEffects
+  v0.6.0 阶段 2.3 · Source → Palam 转化链路:
+  - PALAM_STAGE_CATEGORY: 8 个 palam 到 STAGE_MULTIPLIERS 分类的映射
+  - resolveCoef: 阶段化系数解析器
+  - buildEffectiveConversion: 人格合并矩阵构建
+  - convertSourceToPalam: 单 Source → 多 Palam 增量转化
+  - applyActionSources: 动作级入口(含会话启动 + 累积 + UI 漂浮数据记录)
+  
+  依赖:STATE, STAT_MIN/MAX, STAGE_MULTIPLIERS, REPEAT_DECAY, EventBus,
+        SOURCE_TO_PALAM_MAP (data/sources.js), 
+        PERSONA_TEMPLATES / TENDENCY_TAGS / PERSONA_TAG_WEIGHT (data/personas.js),
+        startSession / accumulatePalam / isSessionAction (core/session.js),
+        SOURCE_DEFINITIONS (data/sources.js, 供 UI 漂浮提示取中文名)
+  被依赖:大部分系统函数都会调用 applyEffects / applyActionSources
   
   v0.6.0-alpha.1.dev2 改动(阶段 2.1b):
   - 删除对 arousal / shame / trained / distortion 四个废弃字段的处理
@@ -17,6 +28,11 @@
     (避免"幽灵回魂":旧 effects.char.shame=5 悄悄把 shame 字段写回 STATE)
   - classifyEffect 已不处理 physical/training/distortion 类别的判别
     (这些类别留在 STAGE_MULTIPLIERS 里,会在阶段 2.3 的 convertSourceToPalam 中启用)
+  
+  v0.6.0-alpha.1.dev2 改动(阶段 2.3):
+  - 新增 Source→Palam 转化全链路函数(PALAM_STAGE_CATEGORY / resolveCoef /
+    buildEffectiveConversion / convertSourceToPalam / applyActionSources)
+  - 这些函数供 2.4 的动作执行入口调用,2.5 的动作迁移开始后会真正被触发
 */
 
 function clamp(value, min, max) {
@@ -312,4 +328,155 @@ function buildEffectiveConversion(personaConfig, action) {
     conversion: conversion,
     stageModifiers: mainTemplate.stageModifiers || {}
   };
+}
+
+// 单 Source 转化:把一个 Source 强度分发到多个 Palam 增量
+//
+// 输入:
+//   sourceId    - Source 标识(如 'shame', 'intimacy', 'submission')
+//   sourceValue - 该 Source 的强度数值(由动作的 sources 字段提供)
+//   ctx         - 可选上下文对象,形如:
+//                 { stage, personaConfig, action, actionId }
+//                 各字段都可选,缺省时从 STATE 读取兜底值
+//
+// 输出:
+//   [{ palam: 'shame_palam', delta: 13 }, { palam: 'resistance_palam', delta: 4 }, ...]
+//   delta 是已取整的正整数;delta === 0 的条目不出现在结果里
+//
+// 计算链路:
+//   rawCoef (人格矩阵)
+//     → stageModifiers 覆盖 或 resolveCoef 解析
+//     → × STAGE_MULTIPLIERS[category][stage]
+//     → × getRepeatDecayMultiplier(actionId)
+//     → Math.round
+function convertSourceToPalam(sourceId, sourceValue, ctx) {
+  // 1. 校验输入
+  if (typeof sourceValue !== 'number' || !isFinite(sourceValue)) {
+    console.warn('[convertSourceToPalam] invalid sourceValue:', sourceValue);
+    return [];
+  }
+  
+  // 2. 解析上下文(各字段都可选,缺省从 STATE 读)
+  ctx = ctx || {};
+  const stage         = ctx.stage         || (STATE && STATE.time && STATE.time.stage)   || 'shock';
+  const personaConfig = ctx.personaConfig || (STATE && STATE.char && STATE.char.config && STATE.char.config.persona) || null;
+  const action        = ctx.action || null;
+  const actionId      = ctx.actionId || (action && action.id) || null;
+  
+  // 3. 构建 char 的人格转化矩阵
+  const effective = buildEffectiveConversion(personaConfig, action);
+  const sourceRow = effective.conversion[sourceId];
+  if (!sourceRow) {
+    // 该 Source 在当前人格下不产生任何 palam(正常情况,如 fatigue)
+    return [];
+  }
+  
+  const stageModifiers = effective.stageModifiers || {};
+  const repeatMul = getRepeatDecayMultiplier(actionId);
+  
+  // 4. 遍历 sourceRow,对每个 palam 配对算 delta
+  const result = [];
+  Object.keys(sourceRow).forEach(palamId => {
+    const rawCoef = sourceRow[palamId];
+    let coef;
+    
+    // 4a. stageModifiers 优先:若主模板定义了 source.palam 的阶段覆盖,按 stage 直接查
+    const modKey = sourceId + '.' + palamId;
+    if (stageModifiers[modKey]) {
+      const modByStage = stageModifiers[modKey];
+      coef = (typeof modByStage[stage] === 'number') ? modByStage[stage] : 0;
+    } else {
+      // 4b. 无覆盖:走 resolveCoef,处理普通数字和 staged 对象
+      coef = resolveCoef(rawCoef, stage);
+    }
+    
+    if (coef <= 0) return;  // 系数为 0 或负 → 不产出这个 palam
+    
+    // 4c. 按 palam 分类取 stage 乘数
+    const category = PALAM_STAGE_CATEGORY[palamId];
+    const stageMul = (category && STAGE_MULTIPLIERS[category] && STAGE_MULTIPLIERS[category][stage]) || 1.0;
+    
+    // 4d. 合成 delta
+    let delta = sourceValue * coef * stageMul * repeatMul;
+    delta = Math.round(delta);
+    
+    if (delta > 0) {
+      result.push({ palam: palamId, delta: delta });
+    }
+  });
+  
+  return result;
+}
+
+// 动作链路总入口:把动作的所有 sources 转化并累积进会话
+//
+// 输入:
+//   action - 动作对象,必须含 sources 字段,形如:
+//            { id: 'train_sit', category: 'train', sources: { shame: 5, submission: 8 }, flags: [...] }
+//   ctx    - 可选上下文(透传给 convertSourceToPalam),允许传入预构建的 personaConfig 等
+//
+// 副作用:
+//   - 若动作属于 6 种调教类 → startSession()
+//   - 对每个 Source 调 convertSourceToPalam → accumulatePalam(入 session.palam)
+//   - 填充 STATE.session.sourcesThisAction(供 UI 短暂展示"+3 屈従"类漂浮提示)
+//
+// 返回:
+//   {
+//     sessionStarted: boolean,
+//     sources: [  // 本次动作所有 Source 的完整明细
+//       { sourceId, sourceName, sourceValue, palamDeltas: [{palam, delta}, ...] },
+//       ...
+//     ]
+//   }
+//
+// 本函数不调用 applyEffects —— Source→Palam 链路和旧的 effects 链路是两条独立通路。
+// 2.4 的动作执行入口会在同一个动作上同时调用两者(过渡期共存)。
+function applyActionSources(action, ctx) {
+  if (!action || !action.sources) {
+    return { sessionStarted: false, sources: [] };
+  }
+  
+  // 1. 会话类动作 → 启动会话(幂等,已启动则跳过)
+  let sessionStarted = false;
+  if (typeof isSessionAction === 'function' && isSessionAction(action)) {
+    if (typeof startSession === 'function') {
+      sessionStarted = startSession() === true;
+    }
+  }
+  
+  // 2. 准备上下文(补全 action / actionId,透传给 convertSourceToPalam)
+  const effectiveCtx = Object.assign({}, ctx || {}, {
+    action: action,
+    actionId: (ctx && ctx.actionId) || action.id || null
+  });
+  
+  // 3. 遍历 sources,转化并累积
+  const sourcesDetail = [];
+  Object.keys(action.sources).forEach(sourceId => {
+    const sourceValue = action.sources[sourceId];
+    const deltas = convertSourceToPalam(sourceId, sourceValue, effectiveCtx);
+    
+    // 累积进 session.palam(若会话未启动,accumulatePalam 会自己返回 false 并 warn)
+    deltas.forEach(d => {
+      if (typeof accumulatePalam === 'function') {
+        accumulatePalam(d.palam, d.delta);
+      }
+    });
+    
+    // 记录明细(供 UI 漂浮提示)
+    const sourceDef = (typeof SOURCE_DEFINITIONS !== 'undefined') ? SOURCE_DEFINITIONS[sourceId] : null;
+    sourcesDetail.push({
+      sourceId: sourceId,
+      sourceName: (sourceDef && sourceDef.name) || sourceId,
+      sourceValue: sourceValue,
+      palamDeltas: deltas
+    });
+  });
+  
+  // 4. 写入 sourcesThisAction(覆盖上一次动作的数据)
+  if (STATE && STATE.session) {
+    STATE.session.sourcesThisAction = sourcesDetail;
+  }
+  
+  return { sessionStarted: sessionStarted, sources: sourcesDetail };
 }
