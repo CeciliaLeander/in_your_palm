@@ -1,39 +1,49 @@
 /*
   src/core/effects.js —— 状态变化核心逻辑
   
-  包含：
+  包含:
   - clamp / clampStats: 数值边界限制
-  - classifyEffect: 判断数值变化类别（用于阶段乘数）
+  - classifyEffect: 判断数值变化类别(用于阶段乘数)
   - getRepeatDecayMultiplier: 重复衰减计算
-  - applyEffects: 应用状态变化（含阶段乘数+重复衰减的核心）
+  - applyEffects: 应用状态变化(含阶段乘数+重复衰减的核心)
   - recordAction: 记录动作用于衰减追踪
   
-  依赖：STATE, STAT_MIN/MAX, STAGE_MULTIPLIERS, REPEAT_DECAY, EventBus
-  被依赖：大部分系统函数都会调用 applyEffects
+  依赖:STATE, STAT_MIN/MAX, STAGE_MULTIPLIERS, REPEAT_DECAY, EventBus
+  被依赖:大部分系统函数都会调用 applyEffects
+  
+  v0.6.0-alpha.1.dev2 改动(阶段 2.1b):
+  - 删除对 arousal / shame / trained / distortion 四个废弃字段的处理
+  - 新增 LEGACY_STAT_BLACKLIST,让旧 action.effects 里残留的这些字段被静默忽略
+    (避免"幽灵回魂":旧 effects.char.shame=5 悄悄把 shame 字段写回 STATE)
+  - classifyEffect 已不处理 physical/training/distortion 类别的判别
+    (这些类别留在 STAGE_MULTIPLIERS 里,会在阶段 2.3 的 convertSourceToPalam 中启用)
 */
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
 
+// ========== v0.6.0 新增 ==========
+// 旧数值字段黑名单:出现在 action.effects.char 或 effects.state 里的这些字段会被忽略
+// 用途:让 v0.5.x 时代的动作定义在过渡期继续能跑,但不会把废弃字段写回 STATE
+const LEGACY_STAT_BLACKLIST_CHAR = ['arousal', 'shame', 'trained'];
+const LEGACY_STAT_BLACKLIST_STATE = ['distortion'];
+
 // 限制所有状态值在 [0, 100] 之间
 function clampStats() {
-  ['sanity', 'mood', 'sincerity', 'compliance', 'stamina', 'hunger', 'sleep', 'health',
-   'arousal', 'shame', 'trained'].forEach(k => {
+  // v0.6.0: 删除了 arousal / shame / trained 三项
+  ['sanity', 'mood', 'sincerity', 'compliance', 'stamina', 'hunger', 'sleep', 'health'].forEach(k => {
     if (STATE.char[k] !== undefined) {
       STATE.char[k] = clamp(STATE.char[k], STAT_MIN, STAT_MAX);
     }
   });
-  STATE.state.distortion = clamp(STATE.state.distortion, 0, 100);
+  // v0.6.0: 删除了 STATE.state.distortion 的 clamp
   STATE.state.riskLevel = clamp(STATE.state.riskLevel, 0, 100);
 }
 
-// 判断某个数值变化属于哪一类（正向/负向/身体/训练/扭曲）
+// 判断某个数值变化属于哪一类(用于阶段乘数 STAGE_MULTIPLIERS)
+// v0.6.0: 只判别 4 个心理值的正向/负向;其他 physical/training/distortion 字段已废弃
 function classifyEffect(key, delta) {
-  if (key === 'trained') return 'training';
-  if (key === 'distortion') return 'distortion';
-  if (key === 'arousal' || key === 'shame') return 'physical';
-  
   if (['mood', 'sincerity', 'compliance'].includes(key)) {
     return delta > 0 ? 'positive' : 'negative';
   }
@@ -64,7 +74,7 @@ function getRepeatDecayMultiplier(actionId) {
   return Math.max(multiplier, REPEAT_DECAY.minMultiplier);
 }
 
-// 应用状态变化（含阶段乘数 + 重复衰减）
+// 应用状态变化(含阶段乘数 + 重复衰减)
 function applyEffects(effects, actionId) {
   if (!effects) return;
   
@@ -73,6 +83,9 @@ function applyEffects(effects, actionId) {
   
   if (effects.char) {
     Object.keys(effects.char).forEach(k => {
+      // v0.6.0: 黑名单过滤——旧动作里残留的 arousal/shame/trained 一律忽略
+      if (LEGACY_STAT_BLACKLIST_CHAR.includes(k)) return;
+      
       let delta = effects.char[k];
       const category = classifyEffect(k, delta);
       
@@ -90,6 +103,9 @@ function applyEffects(effects, actionId) {
   
   if (effects.state) {
     Object.keys(effects.state).forEach(k => {
+      // v0.6.0: 黑名单过滤——旧动作里残留的 distortion 一律忽略
+      if (LEGACY_STAT_BLACKLIST_STATE.includes(k)) return;
+      
       let delta = effects.state[k];
       const category = classifyEffect(k, delta);
       

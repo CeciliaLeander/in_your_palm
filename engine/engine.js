@@ -21,6 +21,7 @@
     - data/risks.js
     - data/custom_templates.js
     - core/effects.js
+    - core/session.js
     - core/milestones.js
     - core/time.js
     - core/conditions.js
@@ -32,7 +33,7 @@
     - 98_api.js
     - 99_export.js
   
-  构建时间: 2026-04-21T01:23:10.542Z
+  构建时间: 2026-04-21T01:53:20.025Z
 */
 
 (function(global) {
@@ -47,7 +48,7 @@
   掌心的它 · In Your Palm
   00_constants.js —— 常量与版本
   
-  包含：
+  包含:
   - VERSION
   - STAT_MIN / STAT_MAX
   - MILESTONES (阈值提示配置)
@@ -55,6 +56,14 @@
   - STAGE_MULTIPLIERS (阶段乘数)
   - REPEAT_DECAY (重复衰减配置)
   - DAY_PHASES (每日时间节点)
+  
+  v0.6.0-alpha.1.dev2 改动(阶段 2.1b'):
+  - MILESTONES 里删除 arousal / shame / trained / distortion 四个 key
+    (这些字段在 2.1a 已从 STATE 删除,保留这里的配置会引用不存在的字段)
+  - 相关的珠/印痕系统会在阶段 3 提供新的里程碑(通过珠档位解锁,不走 MILESTONES)
+  - VERSION 保持 0.3.1(这个是引擎内部版本号,不对应扩展版本号;后续阶段可能重命名)
+  - STAGE_MULTIPLIERS 保留所有分类(positive/negative/physical/training/distortion)
+    physical/training/distortion 在 2.3 会被 convertSourceToPalam 启用
 */
 
 const VERSION = '0.3.1';
@@ -63,7 +72,8 @@ const VERSION = '0.3.1';
 const STAT_MIN = 0;
 const STAT_MAX = 100;
 
-// 关键时刻提示阈值（触发后仅提醒，不改变剧情）
+// 关键时刻提示阈值(触发后仅提醒,不改变剧情)
+// v0.6.0: 已删除 arousal / shame / trained / distortion 四项(对应字段已废弃)
 const MILESTONES = {
   sanity: [
     { value: 30, key: 'sanity_low', msg: '{{char}} 的理智已降至 30 以下。他/她的言语可能不再可信。' },
@@ -78,23 +88,12 @@ const MILESTONES = {
   ],
   health: [
     { value: 20, key: 'health_low', msg: '{{char}} 的身体正处于危险状态。' }
-  ],
-  distortion: [
-    { value: 70, key: 'distortion_high', msg: '你和 {{char}} 之间的某些东西正在改变。', direction: 'above' }
-  ],
-  arousal: [
-    { value: 70, key: 'arousal_high', msg: '{{char}} 的身体正在背叛他/她的意志。', direction: 'above' }
-  ],
-  shame: [
-    { value: 20, key: 'shame_low', msg: '{{char}} 的羞耻感正在消退——这不一定是好消息。' }
-  ],
-  trained: [
-    { value: 50, key: 'trained_mid', msg: '{{char}} 开始条件反射地配合某些动作。', direction: 'above' },
-    { value: 85, key: 'trained_high', msg: '{{char}} 的身体记住了你。', direction: 'above' }
   ]
+  // v0.6.0 删除(迁移到珠档位解锁系统,将在阶段 3 实现):
+  // distortion / arousal / shame / trained —— 替换为珠谱的自然解锁通知
 };
 
-// 阶段划分（仅作为叙事参考，不触发剧情）
+// 阶段划分(仅作为叙事参考,不触发剧情)
 const STAGES = [
   { id: 'shock',      name: '震惊期', dayMin: 1,  dayMax: 3,  tone: '冲击感、求生本能、原始反应' },
   { id: 'resist',     name: '对抗期', dayMin: 4,  dayMax: 10, tone: '心理博弈、策略行动、情绪拉锯' },
@@ -103,39 +102,38 @@ const STAGES = [
 ];
 
 // 阶段乘数系统 —— 决定动作的实际效果强度
-// 用于真实化角色反应：早期温柔动作不会快速建立好感
+// v0.6.0: positive/negative 仍用于当前 applyEffects 里的 sanity/mood/sincerity/compliance
+//         physical/training/distortion 目前闲置,阶段 2.3 的 convertSourceToPalam 会使用
 const STAGE_MULTIPLIERS = {
-  // 对"正向情感"类数值的影响乘数（mood +, sincerity +, compliance + 等）
-  // 早期温柔的效果被大幅削弱甚至反转
+  // 对"正向情感"类数值的影响乘数(mood +, sincerity +, compliance + 等)
   positive: {
-    shock: -0.5,      // 震惊期：温柔动作反而让 {{char}} 厌恶/恐惧
-    resist: 0.1,      // 对抗期：效果极小
-    adapt: 0.5,       // 适应期：开始有效
-    transform: 1.0    // 转化期：完整效果
+    shock: -0.5,      // 震惊期:温柔动作反而让 {{char}} 厌恶/恐惧
+    resist: 0.1,      // 对抗期:效果极小
+    adapt: 0.5,       // 适应期:开始有效
+    transform: 1.0    // 转化期:完整效果
   },
-  // 对"负向情感"类数值的影响乘数（mood -, sanity - 等）
-  // 早期负向动作冲击更大
+  // 对"负向情感"类数值的影响乘数(mood -, sanity - 等)
   negative: {
     shock: 1.3,
     resist: 1.1,
     adapt: 0.9,
     transform: 0.7
   },
-  // 身体反应类（arousal, shame）
+  // 身体反应类(用于阶段 2.3 的 shame/intimacy Source 转化)
   physical: {
     shock: 1.2,
     resist: 1.0,
     adapt: 0.8,
     transform: 0.6
   },
-  // 训练度（trained）：逐渐加速
+  // 训练相关(用于阶段 2.3 的 submission Source 转化)
   training: {
     shock: 0.3,
     resist: 0.6,
     adapt: 1.0,
     transform: 1.3
   },
-  // 扭曲度（distortion）：全程累积，但后期更快
+  // 扭曲类(用于阶段 2.3 的 distortion_palam 累积)
   distortion: {
     shock: 0.8,
     resist: 1.0,
@@ -144,7 +142,7 @@ const STAGE_MULTIPLIERS = {
   }
 };
 
-// 重复衰减追踪（记录同一动作的连续使用次数）
+// 重复衰减追踪(记录同一动作的连续使用次数)
 const REPEAT_DECAY = {
   threshold: 3,
   decayFactor: 0.6,
@@ -159,7 +157,6 @@ const DAY_PHASES = [
   { hour: 23, name: 'night',     label: '深夜' },
   { hour: 3,  name: 'deepnight', label: '凌晨' }
 ];
-
 
 // ============================================================
 // [01_state.js]
@@ -3223,39 +3220,49 @@ const CUSTOM_ACTION_TEMPLATES = {
 /*
   src/core/effects.js —— 状态变化核心逻辑
   
-  包含：
+  包含:
   - clamp / clampStats: 数值边界限制
-  - classifyEffect: 判断数值变化类别（用于阶段乘数）
+  - classifyEffect: 判断数值变化类别(用于阶段乘数)
   - getRepeatDecayMultiplier: 重复衰减计算
-  - applyEffects: 应用状态变化（含阶段乘数+重复衰减的核心）
+  - applyEffects: 应用状态变化(含阶段乘数+重复衰减的核心)
   - recordAction: 记录动作用于衰减追踪
   
-  依赖：STATE, STAT_MIN/MAX, STAGE_MULTIPLIERS, REPEAT_DECAY, EventBus
-  被依赖：大部分系统函数都会调用 applyEffects
+  依赖:STATE, STAT_MIN/MAX, STAGE_MULTIPLIERS, REPEAT_DECAY, EventBus
+  被依赖:大部分系统函数都会调用 applyEffects
+  
+  v0.6.0-alpha.1.dev2 改动(阶段 2.1b):
+  - 删除对 arousal / shame / trained / distortion 四个废弃字段的处理
+  - 新增 LEGACY_STAT_BLACKLIST,让旧 action.effects 里残留的这些字段被静默忽略
+    (避免"幽灵回魂":旧 effects.char.shame=5 悄悄把 shame 字段写回 STATE)
+  - classifyEffect 已不处理 physical/training/distortion 类别的判别
+    (这些类别留在 STAGE_MULTIPLIERS 里,会在阶段 2.3 的 convertSourceToPalam 中启用)
 */
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
 
+// ========== v0.6.0 新增 ==========
+// 旧数值字段黑名单:出现在 action.effects.char 或 effects.state 里的这些字段会被忽略
+// 用途:让 v0.5.x 时代的动作定义在过渡期继续能跑,但不会把废弃字段写回 STATE
+const LEGACY_STAT_BLACKLIST_CHAR = ['arousal', 'shame', 'trained'];
+const LEGACY_STAT_BLACKLIST_STATE = ['distortion'];
+
 // 限制所有状态值在 [0, 100] 之间
 function clampStats() {
-  ['sanity', 'mood', 'sincerity', 'compliance', 'stamina', 'hunger', 'sleep', 'health',
-   'arousal', 'shame', 'trained'].forEach(k => {
+  // v0.6.0: 删除了 arousal / shame / trained 三项
+  ['sanity', 'mood', 'sincerity', 'compliance', 'stamina', 'hunger', 'sleep', 'health'].forEach(k => {
     if (STATE.char[k] !== undefined) {
       STATE.char[k] = clamp(STATE.char[k], STAT_MIN, STAT_MAX);
     }
   });
-  STATE.state.distortion = clamp(STATE.state.distortion, 0, 100);
+  // v0.6.0: 删除了 STATE.state.distortion 的 clamp
   STATE.state.riskLevel = clamp(STATE.state.riskLevel, 0, 100);
 }
 
-// 判断某个数值变化属于哪一类（正向/负向/身体/训练/扭曲）
+// 判断某个数值变化属于哪一类(用于阶段乘数 STAGE_MULTIPLIERS)
+// v0.6.0: 只判别 4 个心理值的正向/负向;其他 physical/training/distortion 字段已废弃
 function classifyEffect(key, delta) {
-  if (key === 'trained') return 'training';
-  if (key === 'distortion') return 'distortion';
-  if (key === 'arousal' || key === 'shame') return 'physical';
-  
   if (['mood', 'sincerity', 'compliance'].includes(key)) {
     return delta > 0 ? 'positive' : 'negative';
   }
@@ -3286,7 +3293,7 @@ function getRepeatDecayMultiplier(actionId) {
   return Math.max(multiplier, REPEAT_DECAY.minMultiplier);
 }
 
-// 应用状态变化（含阶段乘数 + 重复衰减）
+// 应用状态变化(含阶段乘数 + 重复衰减)
 function applyEffects(effects, actionId) {
   if (!effects) return;
   
@@ -3295,6 +3302,9 @@ function applyEffects(effects, actionId) {
   
   if (effects.char) {
     Object.keys(effects.char).forEach(k => {
+      // v0.6.0: 黑名单过滤——旧动作里残留的 arousal/shame/trained 一律忽略
+      if (LEGACY_STAT_BLACKLIST_CHAR.includes(k)) return;
+      
       let delta = effects.char[k];
       const category = classifyEffect(k, delta);
       
@@ -3312,6 +3322,9 @@ function applyEffects(effects, actionId) {
   
   if (effects.state) {
     Object.keys(effects.state).forEach(k => {
+      // v0.6.0: 黑名单过滤——旧动作里残留的 distortion 一律忽略
+      if (LEGACY_STAT_BLACKLIST_STATE.includes(k)) return;
+      
       let delta = effects.state[k];
       const category = classifyEffect(k, delta);
       
@@ -3336,6 +3349,203 @@ function recordAction(actionId) {
   if (!actionId) return;
   STATE.recentActions.push({ actionId: actionId, timestamp: Date.now() });
   if (STATE.recentActions.length > 10) STATE.recentActions.shift();
+}
+
+// ============================================================
+// [core/session.js]
+// ============================================================
+
+/*
+  src/core/session.js —— 调教会话生命周期管理
+  
+  会话(Session)是 v0.6.0 引入的概念——Palam 的累积容器。
+  动作产生的 Source 在会话内累积为 Palam,会话结束时统一结算为珠的增量。
+  
+  会话规则:
+  - 特定类型的动作(调教类)会触发会话启动
+  - 4 小时内无新动作 → 自动结束
+  - 玩家主动结束(点击"结束会话"按钮)
+  - 会话结束时 Palam 归零,按阈值换算为珠
+  
+  包含:
+  - startSession()           · 启动会话(若当前无 active 会话)
+  - endSession()             · 结束会话并触发结算
+  - accumulatePalam(id, val) · 把 Palam 增量累积进当前会话
+  - checkSessionTimeout()    · 检查是否应该因超时自动结束
+  - isSessionAction(action)  · 判断一个动作是否属于"会话类"动作
+  
+  依赖:STATE (含 STATE.session), EventBus
+  被依赖:阶段 2.3 的 applyActionSources / 阶段 2.4 的动作入口
+  
+  v0.6.0-alpha.1.dev2 新增(阶段 2.2)
+  
+  注意:本文件只定义函数,不接入引擎调用——接入是阶段 2.3/2.4 的事。
+        所以此刻 build 出来后,即使代码全部到位,运行时也不会主动启动会话。
+*/
+
+// ========== 常量 ==========
+
+// 会话超时时长(毫秒):4 小时无动作 → 自动结束
+const SESSION_TIMEOUT_MS = 4 * 60 * 60 * 1000;
+
+// 会话类动作的分类标签(出现在 action.category 里)
+// 这些类别的动作会启动/推进会话;其他类别(env/delivery/contact)不会
+// 参考 DESIGN_PART1_architecture_actions.md:调教类 = 触碰/束缚/训练/刺激/药物/羞辱
+const SESSION_ACTION_CATEGORIES = [
+  'touch',          // 触碰类(touch_hair / hold_hand / embrace 等)
+  'bind',           // 束缚类(bind_wrists / bind_full 等)
+  'train',          // 训练类(train_sit / train_response 等)
+  'stimulate',      // 刺激类(tease_light / stimulate_direct / edge 等)
+  'drug',           // 药物类(drug_sedative 等)
+  'humiliate'       // 羞辱类(v0.6.0 新增,阶段 8 落地)
+];
+
+// ========== 核心函数 ==========
+
+/**
+ * 启动会话(幂等:已在会话中则跳过)
+ * @returns {boolean} 是否真正启动了新会话(已在进行中返回 false)
+ */
+function startSession() {
+  if (STATE.session.active) {
+    return false;  // 已在会话中,不重复启动
+  }
+  
+  const now = Date.now();
+  STATE.session.active = true;
+  STATE.session.startTime = now;
+  STATE.session.lastActionTime = now;
+  STATE.session.actionCount = 0;
+  STATE.session.sourcesThisAction = null;
+  
+  // Palam 归零(新会话不继承上一次残留——上一次应在结束时已结算)
+  // 防御性写法:如果上一次因为异常未归零,这里兜底
+  Object.keys(STATE.session.palam).forEach(k => {
+    STATE.session.palam[k] = 0;
+  });
+  
+  EventBus.emit('sessionStarted', {
+    startTime: now,
+    palam: STATE.session.palam
+  });
+  
+  addLog('session', '调教会话开始。');
+  return true;
+}
+
+/**
+ * 结束会话并触发结算
+ * 
+ * 本阶段(2.2)只做"清空 + 事件广播",不做珠增量计算。
+ * 珠结算逻辑将在阶段 3(珠系统)实现,届时这里会调用 settleSessionToJuels()。
+ * 
+ * @param {string} reason 结束原因:'manual' | 'timeout' | 'auto'
+ * @returns {object|null} 结算快照(本次会话的 Palam 总量,供 UI 展示)
+ */
+function endSession(reason) {
+  if (!STATE.session.active) {
+    return null;  // 不在会话中,无需结束
+  }
+  
+  // 拍一份 Palam 快照(给结算弹窗/UI 用)
+  const palamSnapshot = Object.assign({}, STATE.session.palam);
+  const duration = Date.now() - (STATE.session.startTime || Date.now());
+  const actionCount = STATE.session.actionCount;
+  
+  // ========== TODO 阶段 3 接入 ==========
+  // const juelsDeltas = settleSessionToJuels(palamSnapshot);
+  // 临时:阶段 2 仅清空,不结算
+  
+  // 重置会话状态
+  STATE.session.active = false;
+  STATE.session.startTime = null;
+  STATE.session.lastActionTime = null;
+  STATE.session.actionCount = 0;
+  STATE.session.sourcesThisAction = null;
+  Object.keys(STATE.session.palam).forEach(k => {
+    STATE.session.palam[k] = 0;
+  });
+  
+  EventBus.emit('sessionEnded', {
+    reason: reason || 'manual',
+    duration: duration,
+    actionCount: actionCount,
+    palamSnapshot: palamSnapshot
+  });
+  
+  addLog('session', `调教会话结束(${reason || 'manual'},共 ${actionCount} 个动作)。`);
+  
+  return {
+    reason: reason || 'manual',
+    duration: duration,
+    actionCount: actionCount,
+    palamSnapshot: palamSnapshot
+  };
+}
+
+/**
+ * 累积 Palam 增量到当前会话
+ * 如果当前无活跃会话,该次累积被忽略(返回 false)——上游应保证在调用前已 startSession
+ * 
+ * @param {string} palamId  Palam 标识,如 'submission_palam' / 'shame_palam'
+ * @param {number} value    增量值(可正可负,但 Palam 下限为 0)
+ * @returns {boolean} 是否成功累积
+ */
+function accumulatePalam(palamId, value) {
+  if (!STATE.session.active) {
+    console.warn(`[session] accumulatePalam("${palamId}", ${value}) called while no active session`);
+    return false;
+  }
+  
+  if (!(palamId in STATE.session.palam)) {
+    console.warn(`[session] unknown palamId: "${palamId}"`);
+    return false;
+  }
+  
+  if (typeof value !== 'number' || !isFinite(value)) {
+    console.warn(`[session] invalid value for ${palamId}: ${value}`);
+    return false;
+  }
+  
+  STATE.session.palam[palamId] += value;
+  // Palam 下限为 0(不支持负数 Palam)
+  if (STATE.session.palam[palamId] < 0) {
+    STATE.session.palam[palamId] = 0;
+  }
+  
+  return true;
+}
+
+/**
+ * 检查当前会话是否应该因超时自动结束
+ * 应在每次执行动作之前调用一次——若超时就先结束旧会话,再让新动作决定是否启动新会话
+ * 
+ * @returns {boolean} 是否触发了超时结算
+ */
+function checkSessionTimeout() {
+  if (!STATE.session.active) return false;
+  if (!STATE.session.lastActionTime) return false;
+  
+  const elapsed = Date.now() - STATE.session.lastActionTime;
+  if (elapsed >= SESSION_TIMEOUT_MS) {
+    endSession('timeout');
+    return true;
+  }
+  return false;
+}
+
+/**
+ * 判断一个动作是否属于会话类动作
+ * (即执行它时应该确保会话处于 active 状态)
+ * 
+ * @param {object} action 动作定义对象(通常是 ACTION_LIBRARY[id] 或 TRAINING_ACTIONS[id])
+ * @returns {boolean}
+ */
+function isSessionAction(action) {
+  if (!action) return false;
+  if (action.isSessionAction === true) return true;  // 显式标记
+  if (!action.category) return false;
+  return SESSION_ACTION_CATEGORIES.includes(action.category);
 }
 
 

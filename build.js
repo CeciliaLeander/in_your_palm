@@ -44,6 +44,7 @@ const BUILD_ORDER = [
   // 第三层：核心逻辑（依赖数据和状态）
   // effects 和 milestones 相互引用，所以先定义函数 hoisting 会处理
   'core/effects.js',
+  'core/session.js',
   'core/milestones.js',
   'core/time.js',
   'core/conditions.js',
